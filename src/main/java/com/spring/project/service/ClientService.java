@@ -1,5 +1,7 @@
 package com.spring.project.service;
 
+import com.spring.project.Exception.ClientNotFoundException;
+import com.spring.project.Exception.InvalidCredentialsException;
 import com.spring.project.model.Client;
 import com.spring.project.repository.ClientRepository;
 import com.spring.project.token.ConfirmationToken;
@@ -26,7 +28,7 @@ public class ClientService implements UserDetailsService {
     private final ConfirmationTokenService confirmationTokenService;
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return clientRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(CLIENT_NOT_FOUND_ERROR,email)));
+        return clientRepository.findByEmail(email).orElseThrow(() -> new ClientNotFoundException(String.format(CLIENT_NOT_FOUND_ERROR,email)));
     }
 
     @Bean
@@ -39,9 +41,9 @@ public class ClientService implements UserDetailsService {
                 .isPresent();
         if(userExists) {
             if (clientRepository.findByEmail(client.getEmail()).orElse(null).getEnabled()) {
-                throw new IllegalStateException("Account already exist");
+                throw new InvalidCredentialsException("Account already exist");
             } else {
-                Client alreadyExistClient = clientRepository.findByEmail(client.getEmail()).orElseThrow(() -> new IllegalArgumentException("Client does not exist"));
+                Client alreadyExistClient = clientRepository.findByEmail(client.getEmail()).orElseThrow(() -> new ClientNotFoundException("Client does not exist"));
                 String encodedPassword = passwordEncoder().encode(client.getPassword());
 
                 alreadyExistClient.setFirstName(client.getFirstName());

@@ -29,6 +29,8 @@ public class PasswordResetToken {
 
     private LocalDateTime expiredAt;
 
+    private boolean alreadyUsed;
+
     @ManyToOne
     @JoinColumn(
             nullable = false,
@@ -41,6 +43,7 @@ public class PasswordResetToken {
         this.createdAt = LocalDateTime.now();
         this.confirmedAt = null;
         this.expiredAt = createdAt.plusMinutes(20);
+        this.alreadyUsed = false;
         this.client = client;
     }
 }

@@ -1,6 +1,8 @@
 package com.spring.project.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,10 +22,20 @@ public class Client implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
+
+    @NotBlank(message = "First Name cannot be blank")
     private String firstName;
+
+    @NotBlank(message = "Last Name cannot be blank")
     private String lastName;
+
+    @NotBlank(message = "Email cannot be blank")
     private String email;
+
+    @NotBlank(message = "Password cannot be blank")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
+
     @Enumerated(EnumType.STRING)
     private ClientRole clientRole;
     private Boolean enabled = false;
