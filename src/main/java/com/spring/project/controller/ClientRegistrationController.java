@@ -14,7 +14,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +27,7 @@ import java.time.LocalDateTime;
 @RequestMapping(path ="project/auth")
 @AllArgsConstructor
 @Validated
-public class ClientRegistration {
+public class ClientRegistrationController {
     private final RegistrationService registrationService;
     private final ClientRepository clientRepository;
     private final PasswordResetTokenService passwordResetTokenService;
@@ -42,11 +44,11 @@ public class ClientRegistration {
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
-        Client client = clientRepository.findByEmail(request.getEmail()).orElse(null);
-        if(client != null && client.getEnabled() && registrationService.checkPasswordsMatch(request.getPassword(),client.getPassword())){
-                return ResponseEntity.ok(registrationService.authenticate(request));
-        }else{
-            throw new InvalidCredentialsException("Invalid email or passoword");
+        try {
+            AuthenticationResponse authenticationResponse = registrationService.authenticate(request);
+            return ResponseEntity.ok(authenticationResponse);
+        }catch (AuthenticationException ex){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AuthenticationResponse("Nu jwt", "Nu jwt"));
         }
     }
 
@@ -94,11 +96,6 @@ public class ClientRegistration {
         }else{
             throw new EmailNotAvailableException("Activate your request first");
         }
-    }
-
-    @GetMapping("/demo")
-    public ResponseEntity<String> sayHello(){
-        return ResponseEntity.ok("Ai accesat secured endpoint");
     }
 }
 

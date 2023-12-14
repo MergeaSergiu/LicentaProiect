@@ -9,6 +9,7 @@ import com.spring.project.dto.PasswordResetRequest;
 import com.spring.project.dto.RegistrationRequest;
 import com.spring.project.email.EmailSender;
 import com.spring.project.model.Client;
+import com.spring.project.model.ClientRole;
 import com.spring.project.repository.ClientRepository;
 import com.spring.project.token.ConfirmationToken;
 import com.spring.project.token.PasswordResetToken;
@@ -18,7 +19,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,9 +40,6 @@ public class RegistrationService {
     private final PasswordResetTokenService passwordResetTokenService;
     private final EmailSender emailSender;
 
-    public boolean checkPasswordsMatch(String rawPassword, String hashedPassword) {
-        return new BCryptPasswordEncoder().matches(rawPassword, hashedPassword);
-    }
     public String register(RegistrationRequest request){
         boolean isValidEmail = emailValidator.test(request.getEmail());
         if(!isValidEmail){
@@ -55,13 +52,11 @@ public class RegistrationService {
         }
 
         String receivedToken = clientService.signUpClient(
-                new Client(
-                        request.getFirstName(),
+                new Client.Builder(request.getFirstName(),
                         request.getLastName(),
                         request.getEmail(),
                         request.getPassword(),
-                        request.getClientRole()
-                )
+                        request.getClientRole()).build()
         );
 
         String link = "http://localhost:8080/project/auth/confirm?token=" + receivedToken;
@@ -100,8 +95,8 @@ public class RegistrationService {
             );
         var client = clientRepository.findByEmail(authenticationRequest.getEmail())
                 .orElseThrow();
-            String jwt = jwtService.generateToken(client);
-            String refreshJwt = jwtService.generateRefreshToken(client);
+            String jwt = jwtService.generateToken(client.getEmail(), String.valueOf(client.getClientRole()));
+            String refreshJwt = jwtService.generateRefreshToken(client.getEmail(), String.valueOf(client.getClientRole()));
             return AuthenticationResponse.builder()
                     .accessToken(jwt)
                     .refreshToken(refreshJwt)
@@ -291,6 +286,8 @@ public class RegistrationService {
                 "</div></div>";
     }
 
+
+
     public void updateClientPassword(Client client, String newPassword) {
         boolean isValidPassword = passwordValidator.test(newPassword);
         if(!isValidPassword){
@@ -303,20 +300,20 @@ public class RegistrationService {
                              HttpServletResponse response) throws IOException {
 
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String refreshjwt;
+        final String refreshJwt;
         final String clientEmail;
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             return;
         }
-        refreshjwt = authHeader.substring(7);
-        clientEmail = jwtService.extractClientUsername(refreshjwt);
+        refreshJwt = authHeader.substring(7);
+        clientEmail = jwtService.extractClientUsername(refreshJwt);
         if (clientEmail != null){
             var clientDetails = this.clientRepository.findByEmail(clientEmail).orElseThrow();
-            if(jwtService.isTokenValid(refreshjwt, clientDetails)){
-                var accessToken = jwtService.generateToken(clientDetails);
+            if(jwtService.isTokenValid(refreshJwt, clientDetails)){
+                var accessToken = jwtService.generateToken(clientDetails.getEmail(), String.valueOf(clientDetails.getClientRole()));
                 var authResponse = AuthenticationResponse.builder()
                         .accessToken(accessToken)
-                        .refreshToken(refreshjwt)
+                        .refreshToken(refreshJwt)
                         .build();
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }

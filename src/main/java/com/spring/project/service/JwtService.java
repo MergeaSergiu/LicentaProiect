@@ -8,14 +8,15 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
@@ -30,23 +31,33 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String generateToken(UserDetails clientDetails){
-        return generateToken(new HashMap<>(), clientDetails,jwtExpiration);
+    public String extractClientRole(String token){
+        return extractAllClaims(token).get("role", String.class);
+    }
+
+    public String generateToken(String email, String role){
+        Map<String,Object> extraClaims = new HashMap<>();
+        extraClaims.put("sub", email);
+        extraClaims.put("role", role);
+        return generateToken(extraClaims, email,jwtExpiration);
     }
     public String generateToken(Map<String, Object> extraClaims,
-                                UserDetails userDetails,
+                                String email,
                                 long jwtExpiration){
 
         return Jwts.builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername()).setIssuedAt(new Date(System.currentTimeMillis()))
+                .setSubject(email).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String generateRefreshToken(UserDetails clientDetails){
-        return generateToken(new HashMap<>(), clientDetails,refreshExpiration);
+    public String generateRefreshToken(String email, String role){
+        Map<String,Object> extraClaims = new HashMap<>();
+        extraClaims.put("sub", email);
+        extraClaims.put("role", role);
+        return generateToken(extraClaims, email,refreshExpiration);
     }
 
 
@@ -80,5 +91,17 @@ public class JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public Collection<? extends GrantedAuthority> getAuthorities(String jwt) {
+        String rolesClaim = extractClientRole(jwt);
+
+        // Split the roles string into a list
+        List<String> rolesList = Arrays.asList(rolesClaim.split(","));
+
+        // Convert the list of roles to a list of GrantedAuthority objects
+        return rolesList.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                .collect(Collectors.toList());
     }
 }

@@ -29,10 +29,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
-        if(request.getServletPath().contains("/project/auth/demo")){
-            filterChain.doFilter(request, response);
-            return;
-        }
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String clientEmail;
@@ -45,7 +41,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (clientEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails clientDetails = this.clientDetailsService.loadUserByUsername(clientEmail);
             if(jwtService.isTokenValid(jwt, clientDetails)){
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(clientDetails, null, clientDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        clientDetails,
+                        null,
+                        jwtService.getAuthorities(jwt));
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }

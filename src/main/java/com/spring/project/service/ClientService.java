@@ -3,10 +3,13 @@ package com.spring.project.service;
 import com.spring.project.Exception.ClientNotFoundException;
 import com.spring.project.Exception.InvalidCredentialsException;
 import com.spring.project.model.Client;
+import com.spring.project.model.FotballInsideReservation;
 import com.spring.project.repository.ClientRepository;
 import com.spring.project.token.ConfirmationToken;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -26,6 +30,8 @@ public class ClientService implements UserDetailsService {
     private final ClientRepository clientRepository;
 
     private final ConfirmationTokenService confirmationTokenService;
+
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return clientRepository.findByEmail(email).orElseThrow(() -> new ClientNotFoundException(String.format(CLIENT_NOT_FOUND_ERROR,email)));
@@ -81,6 +87,12 @@ public class ClientService implements UserDetailsService {
         }
     }
 
+
+
+    public List<Client> getAllClients(){
+        return clientRepository.findAll();
+    }
+
     public int enableClient(String email){
         return clientRepository.enableClient(email);
     }
@@ -89,4 +101,5 @@ public class ClientService implements UserDetailsService {
         client.setPassword(passwordEncoder().encode(newPassword));
         clientRepository.save(client);
     }
+
 }

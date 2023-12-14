@@ -8,8 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 @Getter
 @Setter
@@ -40,6 +40,7 @@ public class Client implements UserDetails {
     private ClientRole clientRole;
     private Boolean enabled = false;
 
+
     public Client(String firstName,
                   String lastName,
                   String email,
@@ -52,54 +53,36 @@ public class Client implements UserDetails {
         this.clientRole = clientRole;
     }
 
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
     public static class Builder{
-        private final Client client = new Client();
+        private final Client client;
 
-        public Builder firstName(String firstName) {
-            client.firstName = firstName;
-            return this;
-        }
+        public Builder(String firstName,
+                       String lastName,
+                       String email,
+                       String password,
+                       ClientRole clientRole) {
+            this.client = new Client();
+            this.client.firstName = firstName;
+            this.client.lastName = lastName;
+            this.client.email = email;
+            this.client.password = password;
+            this.client.clientRole = clientRole;
 
-        public Builder lastName(String lastName) {
-            client.lastName = lastName;
-            return this;
         }
-
-        public Builder password(String password) {
-            client.password = password;
-            return this;
-        }
-        public Builder enable(Boolean enable) {
-            client.enabled = enable;
-            return this;
-        }
-
-        public Builder role(ClientRole role) {
-            client.clientRole = role;
-            return this;
-        }
-
-        public Builder email(String email) {
-            client.email = email;
-            return this;
-        }
-
         public Client build() {
             // Validation logic, if any
             return client;
         }
 
-
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(clientRole.name());
-        return Collections.singleton(authority);
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + clientRole.name());
+        return Arrays.asList(authority);
+    }
+
+    public ClientRole getClientRole(){
+        return clientRole;
     }
 
     @Override
