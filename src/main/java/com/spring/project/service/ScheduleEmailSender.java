@@ -1,6 +1,5 @@
-package com.spring.project.controller;
+package com.spring.project.service;
 
-import com.spring.project.service.ReservationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 

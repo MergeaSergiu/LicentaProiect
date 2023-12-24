@@ -2,7 +2,6 @@ package com.spring.project.controller;
 
 import com.spring.project.dto.ReservationResponse;
 import com.spring.project.model.FotballInsideReservation;
-import com.spring.project.service.ClientService;
 import com.spring.project.service.UserAccountService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -16,14 +15,14 @@ import java.util.List;
 
 @AllArgsConstructor
 @Controller
-@RequestMapping(path = "/project/user")
+@RequestMapping(path = "/project/api/user")
 public class ClientAccountController {
 
     @Autowired
     private final UserAccountService userAccountService;
     @GetMapping("/account")
-    public ResponseEntity<List<ReservationResponse>> getReservationHistory(HttpServletRequest request){
-            List<FotballInsideReservation> reservationResponses = userAccountService.getAllClientReservation(request);
+    public ResponseEntity<List<ReservationResponse>> getReservationHistory(){
+            List<FotballInsideReservation> reservationResponses = userAccountService.getAllClientReservation();
             List<ReservationResponse> reservations = new ArrayList<>();
             for(FotballInsideReservation fotballInsideReservation: reservationResponses){
                 ReservationResponse reservationResponse = new ReservationResponse(fotballInsideReservation.getLocalDate(), fotballInsideReservation.getHourSchedule(), fotballInsideReservation.getEmail());

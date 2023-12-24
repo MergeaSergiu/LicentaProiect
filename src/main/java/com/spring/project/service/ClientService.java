@@ -3,13 +3,10 @@ package com.spring.project.service;
 import com.spring.project.Exception.ClientNotFoundException;
 import com.spring.project.Exception.InvalidCredentialsException;
 import com.spring.project.model.Client;
-import com.spring.project.model.FotballInsideReservation;
 import com.spring.project.repository.ClientRepository;
 import com.spring.project.token.ConfirmationToken;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,7 +31,7 @@ public class ClientService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return clientRepository.findByEmail(email).orElseThrow(() -> new ClientNotFoundException(String.format(CLIENT_NOT_FOUND_ERROR,email)));
+        return clientRepository.findByEmail(email).orElseThrow(() -> new ClientNotFoundException(String.format(CLIENT_NOT_FOUND_ERROR, email)));
     }
 
     @Bean
@@ -42,10 +39,10 @@ public class ClientService implements UserDetailsService {
         return new BCryptPasswordEncoder();
     }
 
-    public String signUpClient(Client client){
+    public String signUpClient(Client client) {
         boolean userExists = clientRepository.findByEmail(client.getEmail())
                 .isPresent();
-        if(userExists) {
+        if (userExists) {
             if (clientRepository.findByEmail(client.getEmail()).orElse(null).getEnabled()) {
                 throw new InvalidCredentialsException("Account already exist");
             } else {
@@ -68,8 +65,7 @@ public class ClientService implements UserDetailsService {
 
                 return token;
             }
-        }
-        else {
+        } else {
             String token = UUID.randomUUID().toString();
             ConfirmationToken confirmationToken = new ConfirmationToken(
                     token,
@@ -88,18 +84,16 @@ public class ClientService implements UserDetailsService {
     }
 
 
-
-    public List<Client> getAllClients(){
-        return clientRepository.findAll();
+    public List<Client> getAllClients() {
+        return clientRepository.findAllByLastName();
     }
 
-    public int enableClient(String email){
+    public int enableClient(String email) {
         return clientRepository.enableClient(email);
     }
 
-    public void resetClientPassword(Client client, String newPassword){
+    public void resetClientPassword(Client client, String newPassword) {
         client.setPassword(passwordEncoder().encode(newPassword));
         clientRepository.save(client);
     }
-
 }

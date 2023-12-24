@@ -43,7 +43,7 @@ public class ClientRegistrationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest request){
         try {
             AuthenticationResponse authenticationResponse = registrationService.authenticate(request);
             return ResponseEntity.ok(authenticationResponse);

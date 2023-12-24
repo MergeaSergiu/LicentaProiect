@@ -2,20 +2,25 @@ package com.spring.project.service;
 
 import com.spring.project.Exception.EmailNotAvailableException;
 import com.spring.project.Exception.InvalidCredentialsException;
+import com.spring.project.dto.CreateSubscriptionRequest;
 import com.spring.project.dto.TrainerRequest;
 import com.spring.project.dto.TrainerResponse;
 import com.spring.project.email.EmailSender;
 import com.spring.project.model.Client;
 import com.spring.project.model.ClientRole;
 import com.spring.project.model.FotballInsideReservation;
+import com.spring.project.model.Subscription;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -23,75 +28,46 @@ public class AdminService {
 
     private EmailValidator emailValidator;
     private PasswordValidator passwordValidator;
-    private final UserDetailsService clientDetailsService;
     private final ClientService clientService;
     private final EmailSender emailSender;
-    private final JwtService jwtService;
     private final ReservationService reservationService;
+    private final SubscriptionService subscriptionService;
 
-    public TrainerResponse createTrainer(HttpServletRequest httpServletRequest, TrainerRequest request) {
+    public TrainerResponse createTrainer(TrainerRequest request) {
 
-        TrainerResponse trainerResponse = new TrainerResponse();
-
-        final String authHeader = httpServletRequest.getHeader("Authorization");
-        final String jwt;
-        final String clientEmail;
-        final String clientRole;
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new InvalidCredentialsException("Admin is not loged In");
-        }
-        jwt = authHeader.substring(7);
-        clientEmail = jwtService.extractClientUsername(jwt);
-        clientRole = jwtService.extractClientRole(jwt);
-        if (clientEmail != null && clientRole.equals("ADMIN") && SecurityContextHolder.getContext().getAuthentication() != null) {
-            UserDetails clientDetails = this.clientDetailsService.loadUserByUsername(clientEmail);
-            if (jwtService.isTokenValid(jwt, clientDetails)) {
-                boolean isValidEmail = emailValidator.test(request.getEmail());
-                if (!isValidEmail) {
-                    throw new EmailNotAvailableException("Email is not valid");
-                }
-                boolean isValidPassword = passwordValidator.test(request.getPassword());
-                if (!isValidPassword) {
-                    throw new InvalidCredentialsException("Password do not respect the criteria");
-                }
-                String receivedToken = clientService.signUpClient(
-                                new Client.Builder(request.getFirstName(),
-                                        request.getLastName(),
-                                        request.getEmail(),
-                                        request.getPassword(),
-                                        ClientRole.TRAINER).build()
-                                );
-                String link = "http://localhost:8080/project/auth/confirm?token=" + receivedToken;
-                emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
-                trainerResponse.setEmail(request.getEmail());
-                trainerResponse.setLastName(request.getLastName());
-                trainerResponse.setFirstName(request.getFirstName());
-            }else{
-                throw new InvalidCredentialsException("Username is not loged In");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getName() != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            boolean isValidEmail = emailValidator.test(request.getEmail());
+            if (!isValidEmail) {
+                throw new EmailNotAvailableException("Email is not valid");
             }
+            boolean isValidPassword = passwordValidator.test(request.getPassword());
+            if (!isValidPassword) {
+                throw new InvalidCredentialsException("Password do not respect the criteria");
+            }
+            String receivedToken = clientService.signUpClient(
+                    new Client.Builder(request.getFirstName(),
+                            request.getLastName(),
+                            request.getEmail(),
+                            request.getPassword(),
+                            ClientRole.TRAINER).build()
+            );
+            String link = "http://localhost:8080/project/auth/confirm?token=" + receivedToken;
+            emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
+            TrainerResponse trainerResponse = new TrainerResponse();
+            trainerResponse.setEmail(request.getEmail());
+            trainerResponse.setLastName(request.getLastName());
+            trainerResponse.setFirstName(request.getFirstName());
             return trainerResponse;
-        }else {
-            return null;
+        } else {
+            throw new InvalidCredentialsException("Username is not loged In");
         }
     }
 
-    public List<Client> getAllClients(HttpServletRequest httpServletRequest){
-
-        final String authHeader = httpServletRequest.getHeader("Authorization");
-        final String jwt;
-        final String clientEmail;
-        final String clientRole;
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new InvalidCredentialsException("Admin is not loged In");
-        }
-        jwt = authHeader.substring(7);
-        clientEmail = jwtService.extractClientUsername(jwt);
-        clientRole = jwtService.extractClientRole(jwt);
-        if (clientEmail != null && clientRole.equals("ADMIN") && SecurityContextHolder.getContext().getAuthentication() != null) {
-            UserDetails clientDetails = this.clientDetailsService.loadUserByUsername(clientEmail);
-            if (jwtService.isTokenValid(jwt, clientDetails)) {
+    public List<Client> getAllClients(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getName() != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
                 return clientService.getAllClients();
-            }
         }
         return null;
     }
@@ -164,24 +140,63 @@ public class AdminService {
                 "</div></div>";
     }
 
-    public List<FotballInsideReservation> getAllReservations(HttpServletRequest request) {
-
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String clientEmail;
-        final String clientRole;
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new InvalidCredentialsException("Admin is not loged In");
-        }
-        jwt = authHeader.substring(7);
-        clientEmail = jwtService.extractClientUsername(jwt);
-        clientRole = jwtService.extractClientRole(jwt);
-        if (clientEmail != null && clientRole.equals("ADMIN") && SecurityContextHolder.getContext().getAuthentication() != null) {
-            UserDetails clientDetails = this.clientDetailsService.loadUserByUsername(clientEmail);
-            if (jwtService.isTokenValid(jwt, clientDetails)) {
+    public List<FotballInsideReservation> getAllReservations() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getName() != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CLIENT"))) {
                 return reservationService.getAllReservations();
             }
-        }
         return null;
+        }
+
+    public void createSubscription(CreateSubscriptionRequest createSubscriptionRequest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getName() != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            Subscription subscription = new Subscription(
+                    createSubscriptionRequest.getSubscriptionName(),
+                    createSubscriptionRequest.getSubscriptionPrice(),
+                    createSubscriptionRequest.getSubscriptionTime(),
+                    createSubscriptionRequest.getSubscriptionDescription()
+            );
+            subscriptionService.saveSubscription(subscription);
+        }
+    }
+
+    public void updateSubscription(Integer id, Map<String, Object> fields) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getName() != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            Subscription subscription = subscriptionService.findById(id).orElse(null);
+
+            fields.forEach((key, value) -> {
+                switch (key) {
+                    case "subscriptionName":
+                        subscription.setSubscriptionName((String) value);
+                        break;
+
+                    case "subscriptionPrice":
+                        subscription.setSubscriptionPrice((Double) value);
+                        break;
+
+                    case "subscriptionTime":
+                        subscription.setSubscriptionTime((Integer) value);
+                        break;
+
+                    case "subscriptionDescription":
+                        subscription.setSubscriptionDescription((String) value);
+                        break;
+
+                    default:
+                        throw new IllegalArgumentException("Invalid field:" + key);
+                }
+            });
+            subscriptionService.saveSubscription(subscription);
+        }
+    }
+
+    public void deleteSubscription(Integer id) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getName() != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            subscriptionService.deleteSubscription(id);
+        }
     }
 }

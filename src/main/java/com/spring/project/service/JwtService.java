@@ -20,13 +20,16 @@ import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
-
     private static String SECRET_KEY = "3ydqfkokUNlvGpjJL1CwHXPNbL+HjG0PF6VElzLhbabLmDAAYzUPKpXjTi+bn4kd";
 
     @Value("${application.security.jwt.expiration}")
     private long jwtExpiration;
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
+
+    public JwtService() {
+    }
+
     public String extractClientUsername(String token){
         return extractClaim(token, Claims::getSubject);
     }

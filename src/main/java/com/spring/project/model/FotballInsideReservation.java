@@ -3,6 +3,7 @@ package com.spring.project.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
 
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Table(name = "_insidefootball")
+@NoArgsConstructor
 public class FotballInsideReservation {
 
     @Id
@@ -22,10 +24,6 @@ public class FotballInsideReservation {
     private String hourSchedule;
 
     private String email;
-
-    public FotballInsideReservation(){
-
-    }
 
     public FotballInsideReservation(LocalDate localDate, String hourSchedule, String email) {
         this.localDate = localDate;

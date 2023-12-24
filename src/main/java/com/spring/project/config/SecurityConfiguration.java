@@ -1,6 +1,7 @@
 package com.spring.project.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -18,6 +19,7 @@ public class SecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
 
@@ -25,8 +27,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("project/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("project/api/trainer/**").hasRole("TRAINER")
-                        .requestMatchers("/project/api/reservation/**").hasRole("CLIENT")
-                        .requestMatchers("/project/user/**").hasRole("CLIENT")
+                        .requestMatchers("/project/api/user/**").hasRole("CLIENT")
                         .anyRequest()
                         .permitAll()
                 )

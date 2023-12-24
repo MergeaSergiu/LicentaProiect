@@ -21,5 +21,6 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
             "SET a.enabled = TRUE WHERE a.email = ?1")
     int enableClient(String email);
 
-    List<Client> findAll();
+    @Query("SELECT a From Client a ORDER BY a.lastName ASC")
+    List<Client> findAllByLastName();
 }
