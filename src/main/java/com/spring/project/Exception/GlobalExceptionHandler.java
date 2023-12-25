@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ClientNotFoundException.class)
@@ -64,7 +64,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({CustomExpiredJwtException.class})
+    @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<ErrorResponseContainer> handleExpiredJwtException(ExpiredJwtException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
 

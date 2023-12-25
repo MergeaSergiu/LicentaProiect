@@ -1,6 +1,7 @@
 package com.spring.project.controller;
 
 import com.spring.project.dto.ReservationResponse;
+import com.spring.project.model.EnrollmentTrainingClass;
 import com.spring.project.model.FotballInsideReservation;
 import com.spring.project.service.UserAccountService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +21,7 @@ public class ClientAccountController {
 
     @Autowired
     private final UserAccountService userAccountService;
-    @GetMapping("/account")
+    @GetMapping("/accountReservations")
     public ResponseEntity<List<ReservationResponse>> getReservationHistory(){
             List<FotballInsideReservation> reservationResponses = userAccountService.getAllClientReservation();
             List<ReservationResponse> reservations = new ArrayList<>();
@@ -30,4 +31,5 @@ public class ClientAccountController {
             }
             return ResponseEntity.ok(reservations);
     }
+
 }

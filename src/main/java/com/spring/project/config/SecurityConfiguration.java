@@ -1,7 +1,6 @@
 package com.spring.project.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -25,6 +24,8 @@ public class SecurityConfiguration {
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/project/api/user/classes").hasAnyRole("CLIENT", "ADMIN")
+                        .requestMatchers("/project/api/user/subscriptions").hasAnyRole("CLIENT", "ADMIN")
                                 .requestMatchers("project/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("project/api/trainer/**").hasRole("TRAINER")
                         .requestMatchers("/project/api/user/**").hasRole("CLIENT")

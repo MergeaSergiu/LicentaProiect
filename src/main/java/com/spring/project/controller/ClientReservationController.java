@@ -3,11 +3,10 @@ package com.spring.project.controller;
 import com.spring.project.dto.ReservationRequest;
 import com.spring.project.dto.ReservationResponse;
 import com.spring.project.service.ReservationService;
-import jakarta.servlet.http.HttpServletRequest;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +21,13 @@ public class ClientReservationController {
     @Autowired
     private final ReservationService reservationService;
     @PostMapping("/createReservation")
-    public ResponseEntity<ReservationResponse> createReservation(HttpServletRequest request, @Valid @RequestBody ReservationRequest reservationRequest){
-            return ResponseEntity.ok(reservationService.saveReservation(request,reservationRequest));
+    public ResponseEntity<ReservationResponse> createReservation(@Valid @RequestBody ReservationRequest reservationRequest){
+            return ResponseEntity.ok(reservationService.saveReservation(reservationRequest));
     }
 
     @DeleteMapping("/deleteReservation")
-    public ResponseEntity<String> deleteReservation(HttpServletRequest request, @RequestParam("hourSchedule") String hourSchedule, @RequestParam("localDate") LocalDate localDate){
-        reservationService.deleteReservation(request, hourSchedule, localDate);
+    public ResponseEntity<String> deleteReservation(@RequestParam("hourSchedule") String hourSchedule, @RequestParam("localDate") LocalDate localDate){
+        reservationService.deleteReservation(hourSchedule, localDate);
         return ResponseEntity.ok("Reservation was Deleted");
     }
 

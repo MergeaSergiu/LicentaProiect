@@ -3,6 +3,7 @@ package com.spring.project.controller;
 
 import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.model.Subscription;
+import com.spring.project.model.TrainingClass;
 import com.spring.project.service.ClientSubscriptionService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -30,4 +30,5 @@ public class ClientSubscriptionController {
             return ResponseEntity.ok(subscriptions);
 
     }
+
 }

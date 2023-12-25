@@ -1,12 +1,17 @@
 package com.spring.project.service;
 
 import com.spring.project.Exception.ClientNotFoundException;
+import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.Exception.InvalidCredentialsException;
 import com.spring.project.model.Client;
+import com.spring.project.model.EnrollmentTrainingClass;
+import com.spring.project.model.TrainingClass;
 import com.spring.project.repository.ClientRepository;
 import com.spring.project.token.ConfirmationToken;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,10 +34,18 @@ public class ClientService implements UserDetailsService {
 
     private final ConfirmationTokenService confirmationTokenService;
 
+    private final TrainingClassService trainingClassService;
+
+    private final EnrollmentTrainingClassService enrollmentTrainingClassService;
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return clientRepository.findByEmail(email).orElseThrow(() -> new ClientNotFoundException(String.format(CLIENT_NOT_FOUND_ERROR, email)));
+    }
+
+    public Client findClientByEmail(String email) {
+        return clientRepository.findByEmail(email).orElse(null);
     }
 
     @Bean
@@ -95,5 +109,52 @@ public class ClientService implements UserDetailsService {
     public void resetClientPassword(Client client, String newPassword) {
         client.setPassword(passwordEncoder().encode(newPassword));
         clientRepository.save(client);
+    }
+
+    public List<TrainingClass> getTrainingClasses() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<TrainingClass> trainingClasses = new ArrayList<>();
+        if(authentication.isAuthenticated()){
+            trainingClasses = trainingClassService.getTrainingClasses();
+        }
+        return trainingClasses;
+
+    }
+
+    public void enrollUserToTrainingClass(String className) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            TrainingClass trainingClass = trainingClassService.getTrainingClassByName(className);
+            if(trainingClass != null){
+                Client client = clientRepository.findByEmail(authentication.getName()).orElse(null);
+                if(client != null){
+                    EnrollmentTrainingClass  enrollmentTrainingClass= new EnrollmentTrainingClass(
+                            client,
+                            trainingClass
+                    );
+                    enrollmentTrainingClassService.saveEnrollmentAction(enrollmentTrainingClass);
+                }
+            }
+        }
+    }
+
+    public List<String> getEnrollClasses() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.isAuthenticated()) {
+            Client client = findClientByEmail(authentication.getName());
+            List<EnrollmentTrainingClass> enrollClasses = enrollmentTrainingClassService.getClassesByUserId(client.getId());
+            if (enrollClasses != null) {
+                List<String> classesName = new ArrayList<>();
+                for (EnrollmentTrainingClass enrollClass : enrollClasses) {
+                    Integer training_class_id = enrollClass.getTrainingClass().getId();
+                    TrainingClass trainingClass = trainingClassService.findById(training_class_id);
+                    classesName.add(trainingClass.getClassName());
+                }
+                return classesName;
+            }
+        }
+        return null;
     }
 }

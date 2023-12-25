@@ -3,14 +3,18 @@ package com.spring.project.controller;
 import com.spring.project.dto.*;
 import com.spring.project.model.Client;
 import com.spring.project.model.FotballInsideReservation;
+import com.spring.project.model.Subscription;
 import com.spring.project.service.AdminService;
+import com.spring.project.service.ClientService;
 import com.spring.project.service.SubscriptionService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +29,9 @@ public class AdminController {
 
     @Autowired
     private final AdminService adminService;
+
+    @Autowired
+    private final ClientService clientService;
 
     @GetMapping("/secured")
     public ResponseEntity<String> getAdmin(){
@@ -80,4 +87,26 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @PostMapping("/createClass")
+    public ResponseEntity<String> createTrainingClass(@RequestBody @Valid CreateClassRequest classRequest) {
+        if (clientService.findClientByEmail(classRequest.getTrainerEmail()) != null) {
+            if (clientService.findClientByEmail(classRequest.getTrainerEmail()).getClientRole().toString().equals("TRAINER")) {
+                adminService.createTrainingClass(classRequest);
+                return ResponseEntity.status(HttpStatus.CREATED).build();
+            }
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @PatchMapping("/updateClass/{id}")
+    public ResponseEntity<String> updateTrainingClass(@PathVariable("id") Integer id, @RequestBody Map<String, Object> fields){
+        adminService.updateTrainingClass(id,fields);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/deleteClass/{id}")
+    public ResponseEntity<String> deleteTrainingClass(@PathVariable("id") Integer id){
+        adminService.deleteTrainingClass(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

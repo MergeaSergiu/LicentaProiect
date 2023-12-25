@@ -1,6 +1,7 @@
 package com.spring.project.config;
 
 import com.spring.project.Exception.CustomExpiredJwtException;
+import com.spring.project.Exception.InvalidCredentialsException;
 import com.spring.project.service.JwtService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -39,9 +40,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String clientEmail;
+            final String authHeader = request.getHeader("Authorization");
+            final String jwt;
+            final String clientEmail;
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 filterChain.doFilter(request, response);
                 return;

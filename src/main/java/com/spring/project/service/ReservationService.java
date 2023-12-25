@@ -1,15 +1,13 @@
 package com.spring.project.service;
 
-import com.spring.project.Exception.InvalidCredentialsException;
+import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.dto.ReservationRequest;
 import com.spring.project.dto.ReservationResponse;
 import com.spring.project.model.FotballInsideReservation;
 import com.spring.project.repository.FotballInsideReservationRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,50 +18,30 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ReservationService {
 
-    private final JwtService jwtService;
-    private final UserDetailsService clientDetailsService;
     private final FotballReservationService fotballReservationService;
     private final FotballInsideReservationRepository fotballInsideReservationRepository;
     private final EmailService emailService;
 
-    public ReservationResponse saveReservation(HttpServletRequest request, ReservationRequest reservationRequest) {
+    public ReservationResponse saveReservation(ReservationRequest reservationRequest) {
 
-        ReservationResponse reservationResponse = new ReservationResponse();
-
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String clientEmail;
-        final String clientRole;
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new InvalidCredentialsException("Username not logIn");
-        }
-        jwt = authHeader.substring(7);
-        clientEmail = jwtService.extractClientUsername(jwt);
-        clientRole = jwtService.extractClientRole(jwt);
-        if (clientEmail != null && clientRole.equals("CLIENT") && SecurityContextHolder.getContext().getAuthentication() != null) {
-            UserDetails clientDetails = this.clientDetailsService.loadUserByUsername(clientEmail);
-            if (jwtService.isTokenValid(jwt, clientDetails)) {
-                FotballInsideReservation fotballInsideReservation = new FotballInsideReservation(
-                        reservationRequest.getLocalDate(),
-                        reservationRequest.getHourSchedule(),
-                        clientDetails.getUsername()
-                );
-                fotballReservationService.save(fotballInsideReservation);
-                reservationResponse.setEmail(clientDetails.getUsername());
-                reservationResponse.setLocalDate(reservationRequest.getLocalDate());
-                reservationResponse.setHourSchedule(reservationRequest.getHourSchedule());
-                emailService.sendReservationResponse(clientEmail,buildReservationEmail(clientEmail,reservationRequest.getHourSchedule().split("-")[0], reservationRequest.getLocalDate().toString()));
-            }else{
-                throw new InvalidCredentialsException("Sesiunea nu mai este valabila");
-            }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getName() != null && authentication.isAuthenticated()) {
+            FotballInsideReservation fotballInsideReservation = new FotballInsideReservation(
+                    reservationRequest.getLocalDate(),
+                    reservationRequest.getHourSchedule(),
+                    authentication.getName()
+            );
+            fotballReservationService.save(fotballInsideReservation);
+            ReservationResponse reservationResponse = new ReservationResponse();
+            reservationResponse.setEmail(authentication.getName());
+            reservationResponse.setLocalDate(reservationRequest.getLocalDate());
+            reservationResponse.setHourSchedule(reservationRequest.getHourSchedule());
+            emailService.sendReservationResponse(authentication.getName(), buildReservationEmail(authentication.getName(), reservationRequest.getHourSchedule().split("-")[0], reservationRequest.getLocalDate().toString()));
             return reservationResponse;
-        }else{
-            throw new InvalidCredentialsException("Nu s-a putut crea rezervare");
+        }else {
+            throw new CustomExpiredJwtException("Session has expired");
         }
-
     }
-
-
 
     private String buildReservationEmail(String email, String hourSchedule, String dateTime) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
@@ -295,24 +273,11 @@ public class ReservationService {
         return fotballInsideReservationRepository.findReservationsByUser(clientEmail);
     }
 
-    public void deleteReservation(HttpServletRequest request, String hourSchedule, LocalDate localDate) {
-
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String clientEmail;
-        final String clientRole;
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new InvalidCredentialsException("Username not logIn");
-        }
-        jwt = authHeader.substring(7);
-        clientEmail = jwtService.extractClientUsername(jwt);
-        clientRole = jwtService.extractClientRole(jwt);
-        if (clientEmail != null && clientRole.equals("CLIENT") && SecurityContextHolder.getContext().getAuthentication() != null) {
-            UserDetails clientDetails = this.clientDetailsService.loadUserByUsername(clientEmail);
-            if (jwtService.isTokenValid(jwt, clientDetails)) {
-                fotballReservationService.deleteReservation(clientEmail,hourSchedule, localDate);
-                emailService.sendReservationDeleteResponse(clientEmail,buildReservationDeletedEmail(clientEmail));
+    public void deleteReservation(String hourSchedule, LocalDate localDate) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getName() != null && authentication.isAuthenticated()) {
+                fotballReservationService.deleteReservation(authentication.getName(),hourSchedule, localDate);
+                emailService.sendReservationDeleteResponse(authentication.getName(),buildReservationDeletedEmail(authentication.getName()));
             }
         }
-    }
 }

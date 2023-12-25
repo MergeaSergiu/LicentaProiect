@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @Setter
 public class ReservationRequest {
 
-    @NotBlank(message = "You must select a localDate")
     LocalDate localDate;
 
     @NotBlank(message = "You must select an hour Schedule")
