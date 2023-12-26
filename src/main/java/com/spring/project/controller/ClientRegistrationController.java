@@ -44,12 +44,8 @@ public class ClientRegistrationController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest request){
-        try {
             AuthenticationResponse authenticationResponse = registrationService.authenticate(request);
             return ResponseEntity.ok(authenticationResponse);
-        }catch (AuthenticationException ex){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AuthenticationResponse("Nu jwt", "Nu jwt"));
-        }
     }
 
     @PostMapping("/refresh-token")

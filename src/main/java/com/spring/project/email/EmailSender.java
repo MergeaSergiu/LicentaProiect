@@ -11,4 +11,6 @@ public interface EmailSender {
     void sendReservationDeleteResponse(String to, String email);
 
     void sendCreateClassResponse(String to, String email);
+
+    void sendEnrollClassResponse(String to, String email);
 }

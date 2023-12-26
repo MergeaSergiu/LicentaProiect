@@ -89,13 +89,13 @@ public class AdminController {
 
     @PostMapping("/createClass")
     public ResponseEntity<String> createTrainingClass(@RequestBody @Valid CreateClassRequest classRequest) {
-        if (clientService.findClientByEmail(classRequest.getTrainerEmail()) != null) {
-            if (clientService.findClientByEmail(classRequest.getTrainerEmail()).getClientRole().toString().equals("TRAINER")) {
-                adminService.createTrainingClass(classRequest);
-                return ResponseEntity.status(HttpStatus.CREATED).build();
+            if (clientService.findClientByEmail(classRequest.getTrainerEmail()) != null) {
+                if (clientService.findClientByEmail(classRequest.getTrainerEmail()).getClientRole().toString().equals("TRAINER")) {
+                    adminService.createTrainingClass(classRequest);
+                    return ResponseEntity.status(HttpStatus.CREATED).build();
+                }
             }
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @PatchMapping("/updateClass/{id}")

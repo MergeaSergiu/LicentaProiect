@@ -8,6 +8,7 @@ import com.spring.project.dto.TrainerRequest;
 import com.spring.project.dto.TrainerResponse;
 import com.spring.project.email.EmailSender;
 import com.spring.project.model.*;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -35,31 +36,32 @@ public class AdminService {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated()) {
-            boolean isValidEmail = emailValidator.test(request.getEmail());
-            if (!isValidEmail) {
-                throw new EmailNotAvailableException("Email is not valid");
+            String trainerEmail = request.getEmail();
+                boolean isValidEmail = emailValidator.test(request.getEmail());
+                if (!isValidEmail) {
+                    throw new EmailNotAvailableException("Email is not valid");
+                }
+                boolean isValidPassword = passwordValidator.test(request.getPassword());
+                if (!isValidPassword) {
+                    throw new EmailNotAvailableException("Password do not respect the criteria");
+                }
+                String receivedToken = clientService.signUpClient(
+                        new Client.Builder(request.getFirstName(),
+                                request.getLastName(),
+                                request.getEmail(),
+                                request.getPassword(),
+                                ClientRole.TRAINER).build()
+                );
+                String link = "http://localhost:8080/project/auth/confirm?token=" + receivedToken;
+                emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
+                TrainerResponse trainerResponse = new TrainerResponse();
+                trainerResponse.setEmail(request.getEmail());
+                trainerResponse.setLastName(request.getLastName());
+                trainerResponse.setFirstName(request.getFirstName());
+                return trainerResponse;
+            } else {
+                throw new InvalidCredentialsException("User is not loged in");
             }
-            boolean isValidPassword = passwordValidator.test(request.getPassword());
-            if (!isValidPassword) {
-                throw new InvalidCredentialsException("Password do not respect the criteria");
-            }
-            String receivedToken = clientService.signUpClient(
-                    new Client.Builder(request.getFirstName(),
-                            request.getLastName(),
-                            request.getEmail(),
-                            request.getPassword(),
-                            ClientRole.TRAINER).build()
-            );
-            String link = "http://localhost:8080/project/auth/confirm?token=" + receivedToken;
-            emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
-            TrainerResponse trainerResponse = new TrainerResponse();
-            trainerResponse.setEmail(request.getEmail());
-            trainerResponse.setLastName(request.getLastName());
-            trainerResponse.setFirstName(request.getFirstName());
-            return trainerResponse;
-        } else {
-            throw new InvalidCredentialsException("Username is not loged In");
-        }
     }
 
     public List<Client> getAllClients() {
@@ -168,24 +170,11 @@ public class AdminService {
 
             fields.forEach((key, value) -> {
                 switch (key) {
-                    case "subscriptionName":
-                        subscription.setSubscriptionName((String) value);
-                        break;
-
-                    case "subscriptionPrice":
-                        subscription.setSubscriptionPrice((Double) value);
-                        break;
-
-                    case "subscriptionTime":
-                        subscription.setSubscriptionTime((Integer) value);
-                        break;
-
-                    case "subscriptionDescription":
-                        subscription.setSubscriptionDescription((String) value);
-                        break;
-
-                    default:
-                        throw new IllegalArgumentException("Invalid field:" + key);
+                    case "subscriptionName" -> subscription.setSubscriptionName((String) value);
+                    case "subscriptionPrice" -> subscription.setSubscriptionPrice((Double) value);
+                    case "subscriptionTime" -> subscription.setSubscriptionTime((Integer) value);
+                    case "subscriptionDescription" -> subscription.setSubscriptionDescription((String) value);
+                    default -> throw new IllegalArgumentException("Invalid field:" + key);
                 }
             });
             subscriptionService.saveSubscription(subscription);
@@ -217,7 +206,7 @@ public class AdminService {
                 trainingClassService.createTrainingClass(trainingClass);
                 emailSender.sendCreateClassResponse(authentication.getName(), buildCreateClassEmail(authentication.getName(), classRequest.getClassName()));
             } else {
-                throw new EntityNotFoundException("There is already a class with this name");
+                throw new EntityExistsException("There is already a class with this name");
             }
         }
     }
@@ -299,32 +288,20 @@ public class AdminService {
 
             fields.forEach((key, value) -> {
                 switch (key) {
-                    case "className":
-                        trainingClass.setClassName((String) value);
-                        break;
-
-                    case "duration":
-                        trainingClass.setDuration((Integer) value);
-                        break;
-
-                    case "intensity":
-                        trainingClass.setIntensity((String) value);
-                        break;
-
-                    case "localDate":
+                    case "className" -> trainingClass.setClassName((String) value);
+                    case "duration" -> trainingClass.setDuration((Integer) value);
+                    case "intensity" -> trainingClass.setIntensity((String) value);
+                    case "localDate" -> {
                         LocalDate localDate = LocalDate.parse((String) value);
                         trainingClass.setLocalDate(localDate);
-                        break;
-
-                    case "trainerEmail":
+                    }
+                    case "trainerEmail" -> {
                         if (clientService.findClientByEmail((String) value) != null && clientService.findClientByEmail((String) value).getClientRole().toString().equals("TRAINER")) {
                             Client trainer = clientService.findClientByEmail((String) value);
                             trainingClass.setTrainer(trainer);
                         }
-                        break;
-
-                    default:
-                        throw new IllegalArgumentException("Invalid field:" + key);
+                    }
+                    default -> throw new IllegalArgumentException("Invalid field:" + key);
                 }
             });
             trainingClassService.createTrainingClass(trainingClass);

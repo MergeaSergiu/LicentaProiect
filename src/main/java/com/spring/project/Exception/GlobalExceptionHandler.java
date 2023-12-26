@@ -1,20 +1,20 @@
 package com.spring.project.Exception;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.persistence.EntityExistsException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.security.core.AuthenticationException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ClientNotFoundException.class)
-    public ResponseEntity<ErrorResponseContainer> handleClientNotFoundException(ClientNotFoundException ex, WebRequest webRequest) {
+    public ResponseEntity<ErrorResponseContainer> handleClientNotFoundException(ClientNotFoundException ex) {
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
 
         errorResponseContainer.setHttpStatusCode(HttpStatus.NOT_FOUND.value());
@@ -22,8 +22,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(EntityExistsException.class)
+    public ResponseEntity<ErrorResponseContainer> handleEntityExistsException(EntityExistsException ex){
+        ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
+
+        errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
+        errorResponseContainer.setErrorMessage(ex.getMessage());
+        return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.BAD_REQUEST);
+    }
+
+
     @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<ErrorResponseContainer> handleInvalidCredentialsException(InvalidCredentialsException ex, WebRequest webRequest){
+    public ResponseEntity<ErrorResponseContainer> handleInvalidCredentialsException(InvalidCredentialsException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
 
         errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
@@ -32,7 +42,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(EmailNotAvailableException.class)
-    public ResponseEntity<ErrorResponseContainer> handleEmailNotAvailableException(EmailNotAvailableException ex, WebRequest webRequest){
+    public ResponseEntity<ErrorResponseContainer> handleEmailNotAvailableException(EmailNotAvailableException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
 
         errorResponseContainer.setHttpStatusCode(HttpStatus.GONE.value());
@@ -64,12 +74,21 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponseContainer> handleAuthenticationException(AuthenticationException ex){
+        ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
+
+        errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
+        errorResponseContainer.setErrorMessage(ex.getMessage());
+        return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<ErrorResponseContainer> handleExpiredJwtException(ExpiredJwtException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
 
         errorResponseContainer.setHttpStatusCode(HttpStatus.UNAUTHORIZED.value());
         errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.UNAUTHORIZED);
     }
 }

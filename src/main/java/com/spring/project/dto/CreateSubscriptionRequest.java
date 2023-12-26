@@ -16,11 +16,9 @@ public class CreateSubscriptionRequest {
     @NotBlank(message = "Subscription Title can not be blank")
     private String subscriptionName;
 
-    @NotBlank(message = "Select a price for the subscription")
     @NotNull
     private Double subscriptionPrice;
 
-    @NotBlank
     @NotNull
     private Integer subscriptionTime;
 

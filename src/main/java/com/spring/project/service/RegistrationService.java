@@ -9,7 +9,6 @@ import com.spring.project.dto.PasswordResetRequest;
 import com.spring.project.dto.RegistrationRequest;
 import com.spring.project.email.EmailSender;
 import com.spring.project.model.Client;
-import com.spring.project.model.ClientRole;
 import com.spring.project.repository.ClientRepository;
 import com.spring.project.token.ConfirmationToken;
 import com.spring.project.token.PasswordResetToken;
@@ -87,14 +86,14 @@ public class RegistrationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest){
-             authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authenticationRequest.getEmail(),
-                        authenticationRequest.getPassword()
-                )
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            authenticationRequest.getEmail(),
+                            authenticationRequest.getPassword()
+                    )
             );
-        var client = clientRepository.findByEmail(authenticationRequest.getEmail())
-                .orElseThrow();
+            var client = clientRepository.findByEmail(authenticationRequest.getEmail())
+                    .orElseThrow();
             String jwt = jwtService.generateToken(client.getEmail(), String.valueOf(client.getClientRole()));
             String refreshJwt = jwtService.generateRefreshToken(client.getEmail(), String.valueOf(client.getClientRole()));
             return AuthenticationResponse.builder()
@@ -120,7 +119,6 @@ public class RegistrationService {
         if(expiredAt.isBefore(LocalDateTime.now())){
             throw new EmailNotAvailableException("Email expired. Please request a new one.");
         }
-
         confirmationTokenService.setConfirmedAt(token);
         clientService.enableClient(
                 confirmationToken.getClient().getEmail());

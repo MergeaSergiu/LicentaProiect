@@ -28,6 +28,10 @@ public class SubscriptionService {
 
     }
 
+    public Subscription findBySubscriptionName(String subscriptionName){
+        return subscriptionRepository.findBySubscriptionName(subscriptionName);
+    }
+
     public void deleteSubscription(Integer id) {
         subscriptionRepository.deleteById(id);
     }

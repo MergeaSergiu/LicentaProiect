@@ -13,6 +13,9 @@ import java.util.List;
 public class EnrollmentTrainingClassService {
 
     @Autowired
+    private final EmailService emailService;
+
+    @Autowired
     private final EnrollmentTrainingClassRepository enrollmentTrainingClassRepository;
 
     public void saveEnrollmentAction(EnrollmentTrainingClass enrollmentTrainingClass){
@@ -22,4 +25,5 @@ public class EnrollmentTrainingClassService {
     public List<EnrollmentTrainingClass> getClassesByUserId(Integer id) {
         return enrollmentTrainingClassRepository.findAllByUser_Id(id);
     }
+
 }

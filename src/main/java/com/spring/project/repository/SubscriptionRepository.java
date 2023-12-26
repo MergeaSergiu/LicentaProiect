@@ -12,4 +12,7 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Inte
 
     @Query("SELECT s from Subscription s")
     List<Subscription> findAllSubscriptions();
+
+    @Query("SELECT s From Subscription s WHERE s.subscriptionName = :subscriptionName")
+    Subscription findBySubscriptionName(String subscriptionName);
 }

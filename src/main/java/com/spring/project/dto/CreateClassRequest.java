@@ -27,7 +27,6 @@ public class CreateClassRequest {
     private String intensity;
 
     @NotNull(message = "Please set a date for the event")
-    @NotBlank
     private LocalDate localDate;
 
     @NotNull(message = "Plase add a trainer for the training class")
