@@ -1,4 +1,4 @@
-package com.spring.project.service;
+package com.spring.project.service.impl;
 
 import com.spring.project.model.Client;
 import io.jsonwebtoken.Claims;

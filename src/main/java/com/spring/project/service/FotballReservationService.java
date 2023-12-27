@@ -1,29 +1,16 @@
 package com.spring.project.service;
 
 import com.spring.project.model.FotballInsideReservation;
-import com.spring.project.repository.FotballInsideReservationRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Service
-@AllArgsConstructor
-public class FotballReservationService {
+public interface FotballReservationService {
 
-    private final FotballInsideReservationRepository fotballInsideReservationRepository;
+    FotballInsideReservation save(FotballInsideReservation fotballInsideReservation);
 
-    public FotballInsideReservation save(FotballInsideReservation fotballInsideReservation){
-        return fotballInsideReservationRepository.save(fotballInsideReservation);
-    }
+    List<FotballInsideReservation> getReservationWithCurrentDay();
 
-    public List<FotballInsideReservation> getReservationWithCurrentDay(){
-            LocalDate localDate = LocalDate.now();
-            return fotballInsideReservationRepository.findByLocalDateCurrentDate(localDate);
-    }
+    void deleteReservation(String email, String hourSchedule, LocalDate localDate);
 
-    public void deleteReservation(String email, String hourSchedule, LocalDate localDate){
-        fotballInsideReservationRepository.deleteReservation(email,hourSchedule, localDate);
-    }
 }

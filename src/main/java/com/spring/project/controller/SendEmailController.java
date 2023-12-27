@@ -1,6 +1,6 @@
 package com.spring.project.controller;
 
-import com.spring.project.service.EmailSendingService;
+import com.spring.project.service.impl.EmailSendingService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

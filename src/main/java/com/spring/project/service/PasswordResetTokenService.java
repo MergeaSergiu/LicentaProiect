@@ -1,31 +1,14 @@
 package com.spring.project.service;
 
-
-import com.spring.project.repository.PasswordResetTokenRepository;
 import com.spring.project.token.PasswordResetToken;
-import lombok.AllArgsConstructor;
 
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 import java.util.Optional;
 
-@Service
-@AllArgsConstructor
-public class PasswordResetTokenService {
+public interface PasswordResetTokenService {
 
-    private PasswordResetTokenRepository passwordResetTokenRepository;
+    void savePasswordResetToken(PasswordResetToken passwordResetToken);
 
-    public void savePasswordResetToken(PasswordResetToken passwordResetToken) {
-        passwordResetTokenRepository.save(passwordResetToken);
-    }
+    void setConfirmedAt(String passwordResetToken);
 
-    public void setConfirmedAt(String passwordResetToken) {
-        passwordResetTokenRepository.updateConfirmedAt(
-                passwordResetToken, LocalDateTime.now());
-    }
-
-    public Optional<PasswordResetToken> getToken(String resetToken) {
-        return passwordResetTokenRepository.findByToken(resetToken);
-    }
+    Optional<PasswordResetToken> getToken(String resetToken);
 }

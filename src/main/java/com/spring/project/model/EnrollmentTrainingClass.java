@@ -21,7 +21,7 @@ public class EnrollmentTrainingClass {
     private Client user;
 
     @ManyToOne
-    @JoinColumn(name = "traing_class_id")
+    @JoinColumn(name = "training_class_id")
     private TrainingClass trainingClass;
 
     public EnrollmentTrainingClass(Client user, TrainingClass trainingClass){

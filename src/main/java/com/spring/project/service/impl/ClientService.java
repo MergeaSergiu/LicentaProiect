@@ -1,12 +1,17 @@
-package com.spring.project.service;
+package com.spring.project.service.impl;
 
 import com.spring.project.Exception.ClientNotFoundException;
 import com.spring.project.Exception.InvalidCredentialsException;
+import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.model.Client;
 import com.spring.project.model.EnrollmentTrainingClass;
 import com.spring.project.model.TrainingClass;
 import com.spring.project.repository.ClientRepository;
+import com.spring.project.service.ConfirmationTokenService;
+import com.spring.project.service.EnrollmentTrainingClassService;
+import com.spring.project.service.TrainingClassService;
 import com.spring.project.token.ConfirmationToken;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
@@ -18,10 +23,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -37,7 +44,7 @@ public class ClientService implements UserDetailsService {
 
     private final EnrollmentTrainingClassService enrollmentTrainingClassService;
 
-    private final EmailService emailService;
+    private final EmailServiceImpl emailService;
 
 
     @Override
@@ -96,10 +103,6 @@ public class ClientService implements UserDetailsService {
         }
     }
 
-    public List<Client> getAllClients() {
-        return clientRepository.findAllByLastName();
-    }
-
     public int enableClient(String email) {
         return clientRepository.enableClient(email);
     }
@@ -109,15 +112,23 @@ public class ClientService implements UserDetailsService {
         clientRepository.save(client);
     }
 
-    public List<TrainingClass> getTrainingClasses() {
+    public List<TrainingClassResponse> getTrainingClasses() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        List<TrainingClass> trainingClasses = new ArrayList<>();
-        if(authentication.isAuthenticated()){
-            trainingClasses = trainingClassService.getTrainingClasses();
+        if(authentication.isAuthenticated()) {
+            List<TrainingClass> trainingClasses = trainingClassService.getTrainingClasses();
+            return trainingClasses.stream()
+                    .map(trainingClass -> TrainingClassResponse.builder()
+                            .className(trainingClass.getClassName())
+                            .duration(trainingClass.getDuration())
+                            .intensity(trainingClass.getIntensity())
+                            .localDate(trainingClass.getLocalDate())
+                            .trainerEmail(trainingClass.getTrainer().getEmail())
+                            .build())
+                    .collect(Collectors.toList());
         }
-        return trainingClasses;
-
+        return null;
     }
+
 
     public void enrollUserToTrainingClass(String className) {
 
@@ -132,7 +143,7 @@ public class ClientService implements UserDetailsService {
                             trainingClass
                     );
                     enrollmentTrainingClassService.saveEnrollmentAction(enrollmentTrainingClass);
-                    emailService.sendEnrollClassResponse(authentication.getName(),buildEnrollClassEmail(authentication.getName(),className));
+                    emailService.send(authentication.getName(),buildEnrollClassEmail(authentication.getName(),className), "Enrollment was succesfull");
                 }
             }
         }
@@ -227,5 +238,19 @@ public class ClientService implements UserDetailsService {
                 "  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" +
                 "\n" +
                 "</div></div>";
+    }
+
+    public void unEnrollUserFromTrainingClass(String className) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            TrainingClass trainingClass = trainingClassService.getTrainingClassByName(className);
+            if(trainingClass != null && LocalDate.now().isBefore(trainingClass.getLocalDate())){
+                Integer trainingClassId = trainingClass.getId();
+                Integer clientId = findClientByEmail(authentication.getName()).getId();
+                enrollmentTrainingClassService.deleteEnrollmentForUser(trainingClassId, clientId);
+            }else{
+                throw new EntityNotFoundException("The training Class does not exist");
+            }
+        }
     }
 }

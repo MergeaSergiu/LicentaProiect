@@ -1,4 +1,4 @@
-package com.spring.project.service;
+package com.spring.project.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

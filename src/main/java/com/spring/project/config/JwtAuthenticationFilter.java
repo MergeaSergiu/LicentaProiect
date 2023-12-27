@@ -1,9 +1,7 @@
 package com.spring.project.config;
 
-import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.Exception.GlobalExceptionHandler;
-import com.spring.project.service.JwtService;
-import io.jsonwebtoken.ExpiredJwtException;
+import com.spring.project.service.impl.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

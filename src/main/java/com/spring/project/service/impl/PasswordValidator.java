@@ -1,4 +1,4 @@
-package com.spring.project.service;
+package com.spring.project.service.impl;
 
 import org.springframework.stereotype.Service;
 
@@ -7,18 +7,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class EmailValidator implements Predicate<String> {
+public class PasswordValidator implements Predicate<String> {
+
     @Override
     public boolean test(String s) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+
+        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$";
 
         // Create a Pattern object
-        Pattern pattern = Pattern.compile(emailRegex);
+        Pattern pattern = Pattern.compile(passwordRegex);
 
         // Create matcher object
         Matcher matcher = pattern.matcher(s);
 
-        // Return true if the input string matches the email pattern
+        // Return true if the input string matches the password pattern
         return matcher.matches();
     }
 }

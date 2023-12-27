@@ -1,29 +1,14 @@
 package com.spring.project.service;
 
 import com.spring.project.model.EnrollmentTrainingClass;
-import com.spring.project.repository.EnrollmentTrainingClassRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class EnrollmentTrainingClassService {
+public interface EnrollmentTrainingClassService {
 
-    @Autowired
-    private final EmailService emailService;
+    void saveEnrollmentAction(EnrollmentTrainingClass enrollmentTrainingClass);
 
-    @Autowired
-    private final EnrollmentTrainingClassRepository enrollmentTrainingClassRepository;
+    List<EnrollmentTrainingClass> getClassesByUserId(Integer id);
 
-    public void saveEnrollmentAction(EnrollmentTrainingClass enrollmentTrainingClass){
-        enrollmentTrainingClassRepository.save(enrollmentTrainingClass);
-    }
-
-    public List<EnrollmentTrainingClass> getClassesByUserId(Integer id) {
-        return enrollmentTrainingClassRepository.findAllByUser_Id(id);
-    }
-
+    void deleteEnrollmentForUser(Integer trainingClassId, Integer clientId);
 }

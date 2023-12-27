@@ -1,4 +1,4 @@
-package com.spring.project.service;
+package com.spring.project.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class ScheduleEmailSender {
 
-    private final ReservationService reservationService;
+    private final ReservationServiceImpl reservationServiceImpl;
 
     public void sendScheduleEmails(){
-         reservationService.sendEmails();
+         reservationServiceImpl.sendEmails();
     }
 
 }

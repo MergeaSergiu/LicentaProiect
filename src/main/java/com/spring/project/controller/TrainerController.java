@@ -1,9 +1,7 @@
 package com.spring.project.controller;
 
 import com.spring.project.model.TrainingClass;
-import com.spring.project.service.ClientService;
 import com.spring.project.service.TrainerService;
-import com.spring.project.service.TrainingClassService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
