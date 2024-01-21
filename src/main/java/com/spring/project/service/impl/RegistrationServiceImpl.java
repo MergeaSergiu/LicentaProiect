@@ -9,6 +9,7 @@ import com.spring.project.dto.PasswordResetRequest;
 import com.spring.project.dto.RegistrationRequest;
 import com.spring.project.email.EmailSender;
 import com.spring.project.model.Client;
+import com.spring.project.model.ClientRole;
 import com.spring.project.repository.ClientRepository;
 import com.spring.project.service.RegistrationService;
 import com.spring.project.token.ConfirmationToken;
@@ -50,14 +51,21 @@ public class RegistrationServiceImpl implements RegistrationService {
         if(!isValidPassword){
             throw new InvalidCredentialsException("Password do not respect the criteria");
         }
+        ClientRole clientRole;
+        if(request.isAdmin()){
+            clientRole = ClientRole.ADMIN;
+        }else{
+            clientRole = ClientRole.CLIENT;
+        }
 
-        String receivedToken = clientService.signUpClient(
-                new Client.Builder(request.getFirstName(),
-                        request.getLastName(),
-                        request.getEmail(),
-                        request.getPassword(),
-                        request.getClientRole()).build()
+        Client client = new Client(
+                request.getFirstName(),
+                request.getLastName(),
+                request.getEmail(),
+                request.getPassword(),
+                clientRole
         );
+        String receivedToken = clientService.signUpClient(client);
 
         String link = "http://localhost:8080/project/auth/confirm?token=" + receivedToken;
         emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link), "Please confirm your account");
@@ -105,7 +113,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Transactional
     public String confirmToken(String token) {
-
         ConfirmationToken confirmationToken = confirmationTokenServiceImpl.getToken(token).orElse(null);
 
         if(confirmationToken == null){

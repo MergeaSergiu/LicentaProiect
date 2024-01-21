@@ -1,7 +1,8 @@
 package com.spring.project.service.impl;
 
-import com.spring.project.model.FotballInsideReservation;
-import com.spring.project.repository.FotballInsideReservationRepository;
+import com.spring.project.dto.ReservationResponse;
+import com.spring.project.model.CourtReservation;
+import com.spring.project.repository.ReservationRepository;
 import com.spring.project.service.FotballReservationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,18 +14,23 @@ import java.util.List;
 @AllArgsConstructor
 public class FotballReservationServiceImpl implements FotballReservationService {
 
-    private final FotballInsideReservationRepository fotballInsideReservationRepository;
+    private final ReservationRepository reservationRepository;
 
-    public FotballInsideReservation save(FotballInsideReservation fotballInsideReservation){
-        return fotballInsideReservationRepository.save(fotballInsideReservation);
+    public CourtReservation save(CourtReservation courtReservation){
+        return reservationRepository.save(courtReservation);
     }
 
-    public List<FotballInsideReservation> getReservationWithCurrentDay(){
+    public List<CourtReservation> getReservationWithCurrentDay(){
             LocalDate localDate = LocalDate.now();
-            return fotballInsideReservationRepository.findByLocalDateCurrentDate(localDate);
+            return reservationRepository.findByLocalDateCurrentDate(localDate);
     }
 
-    public void deleteReservation(String email, String hourSchedule, LocalDate localDate){
-        fotballInsideReservationRepository.deleteReservation(email,hourSchedule, localDate);
+
+    public void deleteReservation(String email,String hourSchedule, LocalDate localDate, String court){
+        reservationRepository.deleteReservation(email,hourSchedule, localDate, court);
+    }
+
+    public List<CourtReservation> getReservationsByCourt(String court) {
+       return reservationRepository.findByCourt(court);
     }
 }

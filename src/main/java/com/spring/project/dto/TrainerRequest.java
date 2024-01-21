@@ -13,14 +13,14 @@ import lombok.NoArgsConstructor;
 public class TrainerRequest {
 
     @NotBlank(message = "FirstName cannot be blank")
-    String firstName;
+    private String firstName;
 
     @NotBlank(message = "LastName cannot be blank")
-    String lastName;
+    private String lastName;
 
     @NotBlank(message = "Email cannot be blank")
-    String email;
+    private String email;
 
     @NotBlank(message = "Password cannot be blank")
-    String password;
+    private String password;
 }

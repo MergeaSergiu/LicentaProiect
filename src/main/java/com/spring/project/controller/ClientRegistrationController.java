@@ -75,7 +75,7 @@ public class ClientRegistrationController {
                                 @RequestParam("resetToken") String resetToken){
 
         if(passwordResetRequest.getNewPassword().isEmpty() || passwordResetRequest.getNewPassword().isBlank()){
-            throw new InvalidCredentialsException("Password field is emplty. Please choose a password");
+            throw new InvalidCredentialsException("Password field is empty. Please choose a password");
         }
         PasswordResetToken passwordResetToken = passwordResetTokenService.getToken(resetToken).orElseThrow();
         if(passwordResetToken.isAlreadyUsed()){

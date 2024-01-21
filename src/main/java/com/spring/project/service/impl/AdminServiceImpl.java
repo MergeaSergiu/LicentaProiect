@@ -6,7 +6,7 @@ import com.spring.project.dto.*;
 import com.spring.project.email.EmailSender;
 import com.spring.project.model.*;
 import com.spring.project.repository.ClientRepository;
-import com.spring.project.service.AdminService;
+import com.spring.project.service.*;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -28,15 +28,13 @@ public class AdminServiceImpl implements AdminService {
     private PasswordValidator passwordValidator;
     private final ClientService clientService;
     private final EmailSender emailSender;
-    private final ReservationServiceImpl reservationServiceImpl;
-    private final SubscriptionServiceImpl subscriptionServiceImpl;
-    private final TrainingClassServiceImpl trainingClassServiceImpl;
+    private final SubscriptionService subscriptionService;
+    private final TrainingClassService trainingClassService;
     private final ClientRepository clientRepository;
+    private final EnrollmentTrainingClassService enrollmentTrainingClassService;
 
     public TrainerResponse createTrainer(TrainerRequest request) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.isAuthenticated()) {
                 boolean isValidEmail = emailValidator.test(request.getEmail());
                 if (!isValidEmail) {
                     throw new EmailNotAvailableException("Email is not valid");
@@ -45,13 +43,14 @@ public class AdminServiceImpl implements AdminService {
                 if (!isValidPassword) {
                     throw new EmailNotAvailableException("Password do not respect the criteria");
                 }
-                String receivedToken = clientService.signUpClient(
-                        new Client.Builder(request.getFirstName(),
-                                request.getLastName(),
-                                request.getEmail(),
-                                request.getPassword(),
-                                ClientRole.TRAINER).build()
+                Client trainer = new Client(
+                        request.getFirstName(),
+                        request.getLastName(),
+                        request.getEmail(),
+                        request.getPassword(),
+                        ClientRole.TRAINER
                 );
+                String receivedToken = clientService.signUpClient(trainer);
                 String link = "http://localhost:8080/project/auth/confirm?token=" + receivedToken;
                 emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link), "Trainer account was created");
                 return TrainerResponse.builder()
@@ -59,14 +58,9 @@ public class AdminServiceImpl implements AdminService {
                          .lastName(request.getLastName())
                          .firstName(request.getFirstName())
                          .build();
-            } else {
-                throw new InvalidCredentialsException("User is not loged in");
-            }
     }
 
     public List<ClientResponse> getAllClients() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.isAuthenticated()) {
             List<Client> clients = clientRepository.findAll();
               return clients.stream()
                     .map(client -> ClientResponse.builder()
@@ -74,27 +68,8 @@ public class AdminServiceImpl implements AdminService {
                                 .lastName(client.getLastName())
                                 .email(client.getEmail()).build())
                     .collect(Collectors.toList());
-        }else {
-            throw new EntityNotFoundException("Session is already expired");
-        }
     }
 
-    public List<ReservationResponse> getAllReservations() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.isAuthenticated()) {
-            List<FotballInsideReservation> reservations = reservationServiceImpl.getAllReservations();
-            return reservations.stream()
-                    .map(reservation -> ReservationResponse.builder()
-                            .hourSchedule(reservation.getHourSchedule())
-                            .localDate(reservation.getLocalDate())
-                            .email(reservation.getEmail())
-                            .build())
-                    .collect(Collectors.toList());
-        }
-        else {
-            throw new EntityNotFoundException("Session is already expired");
-        }
-    }
 
     private String buildEmail(String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
@@ -176,14 +151,14 @@ public class AdminServiceImpl implements AdminService {
                     createSubscriptionRequest.getSubscriptionTime(),
                     createSubscriptionRequest.getSubscriptionDescription()
             );
-            subscriptionServiceImpl.saveSubscription(subscription);
+            subscriptionService.saveSubscription(subscription);
         }
     }
 
     public void updateSubscription(Integer id, Map<String, Object> fields) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getName() != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            Subscription subscription = subscriptionServiceImpl.findById(id).orElse(null);
+            Subscription subscription = subscriptionService.findById(id).orElse(null);
             if(subscription != null) {
                 fields.forEach((key, value) -> {
                     switch (key) {
@@ -194,7 +169,7 @@ public class AdminServiceImpl implements AdminService {
                         default -> throw new IllegalArgumentException("Invalid field:" + key);
                     }
                 });
-                subscriptionServiceImpl.saveSubscription(subscription);
+                subscriptionService.saveSubscription(subscription);
             }else {
                 throw new EntityNotFoundException("There is no subscription with this name");
             }
@@ -202,18 +177,16 @@ public class AdminServiceImpl implements AdminService {
     }
 
     public void deleteSubscription(Integer id) {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getName() != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            subscriptionServiceImpl.deleteSubscription(id);
+            subscriptionService.deleteSubscription(id);
         }
     }
-
 
     public void createTrainingClass(CreateClassRequest classRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getName() != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            if (trainingClassServiceImpl.getTrainingClassByName(classRequest.getClassName()) == null) {
+            if (trainingClassService.getTrainingClassByName(classRequest.getClassName()) == null) {
                 Client client = clientService.findClientByEmail(classRequest.getTrainerEmail());
                 TrainingClass trainingClass = new TrainingClass(
                         classRequest.getClassName(),
@@ -222,7 +195,7 @@ public class AdminServiceImpl implements AdminService {
                         classRequest.getLocalDate(),
                         client
                 );
-                trainingClassServiceImpl.createTrainingClass(trainingClass);
+                trainingClassService.createTrainingClass(trainingClass);
                 emailSender.send(authentication.getName(), buildCreateClassEmail(authentication.getName(), classRequest.getClassName()),"Training class was created");
             } else {
                 throw new EntityExistsException("There is already a class with this name");
@@ -303,11 +276,16 @@ public class AdminServiceImpl implements AdminService {
     public void updateTrainingClass(Integer id, Map<String, Object> fields) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getName() != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            TrainingClass trainingClass = trainingClassServiceImpl.findById(id);
+            TrainingClass trainingClass = trainingClassService.findById(id);
 
             fields.forEach((key, value) -> {
                 switch (key) {
-                    case "className" -> trainingClass.setClassName((String) value);
+                    case "className" -> {
+                        TrainingClass foundTrainingClass = trainingClassService.getTrainingClassByName((String) value);
+                        if(foundTrainingClass == null){
+                            trainingClass.setClassName((String) value);
+                        }
+                    }
                     case "duration" -> trainingClass.setDuration((Integer) value);
                     case "intensity" -> trainingClass.setIntensity((String) value);
                     case "localDate" -> {
@@ -323,14 +301,17 @@ public class AdminServiceImpl implements AdminService {
                     default -> throw new IllegalArgumentException("Invalid field:" + key);
                 }
             });
-            trainingClassServiceImpl.createTrainingClass(trainingClass);
+            trainingClassService.createTrainingClass(trainingClass);
         }
     }
 
-    public void deleteTrainingClass(Integer id) {
+    @Override
+    public void deleteTrainingClass(String className) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getName() != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            trainingClassServiceImpl.deleteTrainingClass(id);
+            Integer trainingClassId = trainingClassService.getTrainingClassByName(className).getId();
+            enrollmentTrainingClassService.deleteAllEnrollsForTrainingClass(trainingClassId);
+            trainingClassService.deleteTrainingClass(className);
         }
     }
 }

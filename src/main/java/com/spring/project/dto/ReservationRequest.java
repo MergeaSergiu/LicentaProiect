@@ -1,6 +1,5 @@
 package com.spring.project.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -16,6 +15,9 @@ public class ReservationRequest {
 
     LocalDate localDate;
 
-    @NotBlank(message = "You must select an hour Schedule")
-    String hourSchedule;
+    String startTime;
+
+    String endTime;
+
+    String court;
 }

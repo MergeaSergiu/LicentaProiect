@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -113,8 +112,6 @@ public class ClientService implements UserDetailsService {
     }
 
     public List<TrainingClassResponse> getTrainingClasses() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.isAuthenticated()) {
             List<TrainingClass> trainingClasses = trainingClassService.getTrainingClasses();
             return trainingClasses.stream()
                     .map(trainingClass -> TrainingClassResponse.builder()
@@ -125,15 +122,12 @@ public class ClientService implements UserDetailsService {
                             .trainerEmail(trainingClass.getTrainer().getEmail())
                             .build())
                     .collect(Collectors.toList());
-        }
-        return null;
     }
 
 
     public void enrollUserToTrainingClass(String className) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.isAuthenticated()){
             TrainingClass trainingClass = trainingClassService.getTrainingClassByName(className);
             if(trainingClass != null){
                 Client client = clientRepository.findByEmail(authentication.getName()).orElse(null);
@@ -147,28 +141,6 @@ public class ClientService implements UserDetailsService {
                 }
             }
         }
-    }
-
-    public List<String> getEnrollClasses() {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.isAuthenticated()) {
-            Client client = findClientByEmail(authentication.getName());
-            List<EnrollmentTrainingClass> enrollClasses = enrollmentTrainingClassService.getClassesByUserId(client.getId());
-            if (enrollClasses != null) {
-                List<String> classesName = new ArrayList<>();
-                for (EnrollmentTrainingClass enrollClass : enrollClasses) {
-                    Integer training_class_id = enrollClass.getTrainingClass().getId();
-                    TrainingClass trainingClass = trainingClassService.findById(training_class_id);
-                    classesName.add(trainingClass.getClassName());
-                }
-                return classesName;
-            }
-        }
-        return null;
-    }
-
-
 
     private String buildEnrollClassEmail(String email, String className) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
@@ -242,15 +214,13 @@ public class ClientService implements UserDetailsService {
 
     public void unEnrollUserFromTrainingClass(String className) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.isAuthenticated()){
-            TrainingClass trainingClass = trainingClassService.getTrainingClassByName(className);
-            if(trainingClass != null && LocalDate.now().isBefore(trainingClass.getLocalDate())){
-                Integer trainingClassId = trainingClass.getId();
-                Integer clientId = findClientByEmail(authentication.getName()).getId();
-                enrollmentTrainingClassService.deleteEnrollmentForUser(trainingClassId, clientId);
-            }else{
-                throw new EntityNotFoundException("The training Class does not exist");
-            }
+        TrainingClass trainingClass = trainingClassService.getTrainingClassByName(className);
+        if(trainingClass != null && LocalDate.now().isBefore(trainingClass.getLocalDate())){
+            Integer trainingClassId = trainingClass.getId();
+            Integer clientId = findClientByEmail(authentication.getName()).getId();
+            enrollmentTrainingClassService.deleteEnrollmentForUser(trainingClassId, clientId);
+        }else{
+            throw new EntityNotFoundException("The training Class does not exist");
         }
     }
 }

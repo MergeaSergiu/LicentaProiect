@@ -4,8 +4,8 @@ import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.dto.ReservationRequest;
 import com.spring.project.dto.ReservationResponse;
 import com.spring.project.email.EmailSender;
-import com.spring.project.model.FotballInsideReservation;
-import com.spring.project.repository.FotballInsideReservationRepository;
+import com.spring.project.model.CourtReservation;
+import com.spring.project.repository.ReservationRepository;
 import com.spring.project.service.ReservationService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,28 +22,20 @@ import java.util.stream.Collectors;
 public class ReservationServiceImpl implements ReservationService {
 
     private final FotballReservationServiceImpl fotballReservationServiceImpl;
-    private final FotballInsideReservationRepository fotballInsideReservationRepository;
+    private final ReservationRepository reservationRepository;
     private final EmailSender emailSender;
 
-    public ReservationResponse saveReservation(ReservationRequest reservationRequest) {
-
+    public void saveReservation(ReservationRequest reservationRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getName() != null && authentication.isAuthenticated()) {
-            FotballInsideReservation fotballInsideReservation = new FotballInsideReservation(
-                    reservationRequest.getLocalDate(),
-                    reservationRequest.getHourSchedule(),
-                    authentication.getName()
-            );
-            fotballReservationServiceImpl.save(fotballInsideReservation);
-            ReservationResponse reservationResponse = new ReservationResponse();
-            reservationResponse.setEmail(authentication.getName());
-            reservationResponse.setLocalDate(reservationRequest.getLocalDate());
-            reservationResponse.setHourSchedule(reservationRequest.getHourSchedule());
-            emailSender.send(authentication.getName(), buildReservationEmail(authentication.getName(), reservationRequest.getHourSchedule().split("-")[0], reservationRequest.getLocalDate().toString()), "Thank you for your reversation");
-            return reservationResponse;
-        }else {
-            throw new CustomExpiredJwtException("Session has expired");
-        }
+        String hourSchedule = reservationRequest.getStartTime()+ "-" + reservationRequest.getEndTime();
+        CourtReservation courtReservation = new CourtReservation(
+                reservationRequest.getLocalDate(),
+                hourSchedule,
+                reservationRequest.getCourt(),
+                authentication.getName()
+        );
+        emailSender.send(authentication.getName(), buildReservationEmail(authentication.getName(), reservationRequest.getStartTime(), reservationRequest.getLocalDate().toString()), "Thank you for your reservation");
+        fotballReservationServiceImpl.save(courtReservation);
     }
 
     private String buildReservationEmail(String email, String hourSchedule, String dateTime) {
@@ -256,9 +249,9 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     public void sendEmails() {
-        List<FotballInsideReservation> reservations = fotballReservationServiceImpl.getReservationWithCurrentDay();
+        List<CourtReservation> reservations = fotballReservationServiceImpl.getReservationWithCurrentDay();
         for(String email : reservations.stream()
-                .map(FotballInsideReservation::getEmail)
+                .map(CourtReservation::getEmail)
                 .distinct()
                 .collect(Collectors.toList())
         )
@@ -266,20 +259,34 @@ public class ReservationServiceImpl implements ReservationService {
             emailSender.send(email, buildRemainderEmail(email), "RemainderEmail");
         }
     }
-
-    public List<FotballInsideReservation> getAllReservations() {
-        return fotballInsideReservationRepository.findAll();
+    public List<CourtReservation> getAllClientReservation(String clientEmail) {
+        return reservationRepository.findReservationsByUser(clientEmail);
     }
 
-    public List<FotballInsideReservation> getAllClientReservation(String clientEmail) {
-        return fotballInsideReservationRepository.findReservationsByUser(clientEmail);
-    }
-
-    public void deleteReservation(String hourSchedule, LocalDate localDate) {
+    @Override
+    public void deleteReservation(String startTime, String endTime, LocalDate localDate, String court) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getName() != null && authentication.isAuthenticated()) {
-                fotballReservationServiceImpl.deleteReservation(authentication.getName(),hourSchedule, localDate);
-            emailSender.send(authentication.getName(),buildReservationDeletedEmail(authentication.getName()), "Reservation was deleted");
-            }
+        String hourSchedule = startTime + "-" + endTime;
+        fotballReservationServiceImpl.deleteReservation(authentication.getName(),hourSchedule, localDate, court);
+        emailSender.send(authentication.getName(),buildReservationDeletedEmail(authentication.getName()), "Reservation was deleted");
         }
+
+    @Override
+    public List<ReservationResponse> getReservationsByCourt(String court) {
+            List<CourtReservation> courtReservations = fotballReservationServiceImpl.getReservationsByCourt(court);
+            if(courtReservations != null) {
+                return courtReservations.stream()
+                        .map(courtReservation -> ReservationResponse.builder()
+                                .localDate(courtReservation.getLocalDate())
+                                .startTime(courtReservation.getHourSchedule().split("-")[0])
+                                .endTime(courtReservation.getHourSchedule().split("-")[1])
+                                .clientEmail(courtReservation.getEmail())
+                                .court(null)
+                                .build())
+                        .collect(Collectors.toList());
+            }else {
+                return new ArrayList<>();
+            }
+    }
+
 }

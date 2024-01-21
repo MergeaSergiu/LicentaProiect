@@ -2,20 +2,20 @@ package com.spring.project.service;
 
 import com.spring.project.dto.ReservationRequest;
 import com.spring.project.dto.ReservationResponse;
-import com.spring.project.model.FotballInsideReservation;
+import com.spring.project.model.CourtReservation;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface ReservationService {
 
-    ReservationResponse saveReservation(ReservationRequest reservationRequest);
+    void saveReservation(ReservationRequest reservationRequest);
 
     void sendEmails();
 
-    List<FotballInsideReservation> getAllReservations();
+    List<CourtReservation> getAllClientReservation(String clientEmail);
 
-    List<FotballInsideReservation> getAllClientReservation(String clientEmail);
+    void deleteReservation(String startTime, String endTime, LocalDate localDate, String court);
 
-    void deleteReservation(String hourSchedule, LocalDate localDate);
+    List<ReservationResponse> getReservationsByCourt(String court);
 }

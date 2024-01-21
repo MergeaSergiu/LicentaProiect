@@ -38,6 +38,7 @@ public class Client implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private ClientRole clientRole;
+
     private Boolean enabled = false;
 
 
@@ -53,28 +54,6 @@ public class Client implements UserDetails {
         this.clientRole = clientRole;
     }
 
-    public static class Builder{
-        private final Client client;
-
-        public Builder(String firstName,
-                       String lastName,
-                       String email,
-                       String password,
-                       ClientRole clientRole) {
-            this.client = new Client();
-            this.client.firstName = firstName;
-            this.client.lastName = lastName;
-            this.client.email = email;
-            this.client.password = password;
-            this.client.clientRole = clientRole;
-
-        }
-        public Client build() {
-            // Validation logic, if any
-            return client;
-        }
-
-    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + clientRole.name());

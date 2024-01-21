@@ -1,5 +1,6 @@
 package com.spring.project.controller;
 
+import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.model.TrainingClass;
 import com.spring.project.service.TrainerService;
 import lombok.AllArgsConstructor;
@@ -18,14 +19,10 @@ public class TrainerController {
 
     @Autowired
     private final TrainerService trainerService;
-    @GetMapping
-    public ResponseEntity<String> TrainerPage(){
-        return ResponseEntity.ok("Ai accesat pagina trainerului");
-    }
 
     @GetMapping("/classes")
-    public ResponseEntity<List<TrainingClass>> getTrainingClasses(){
-        List<TrainingClass> trainingClassesForTrainer = trainerService.getTrainingClassesForTrainer();
+    public ResponseEntity<List<TrainingClassResponse>> getTrainingClasses(){
+        List<TrainingClassResponse> trainingClassesForTrainer = trainerService.getTrainingClassesForTrainer();
         return ResponseEntity.ok(trainingClassesForTrainer);
     }
 }

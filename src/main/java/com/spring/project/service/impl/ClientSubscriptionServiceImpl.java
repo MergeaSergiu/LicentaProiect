@@ -19,19 +19,15 @@ public class ClientSubscriptionServiceImpl implements ClientSubscriptionService 
     private final SubscriptionServiceImpl subscriptionServiceImpl;
 
     public List<SubscriptionResponse> getSubscriptions() {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication.isAuthenticated()) {
-                List<Subscription> subscriptions = subscriptionServiceImpl.getAllSubscriptionPlans();
-                return subscriptions.stream()
-                        .map(subscription -> SubscriptionResponse.builder()
-                                .subscriptionName(subscription.getSubscriptionName())
-                                .subscriptionPrice(subscription.getSubscriptionPrice())
-                                .subscriptionTime(subscription.getSubscriptionTime())
-                                .subscriptionDescription(subscription.getSubscriptionDescription())
-                                .build())
-                        .collect(Collectors.toList());
-            }else {
-                throw new CustomExpiredJwtException("Session expired");
-            }
+        List<Subscription> subscriptions = subscriptionServiceImpl.getAllSubscriptionPlans();
+        return subscriptions.stream()
+                .map(subscription -> SubscriptionResponse.builder()
+                        .subscriptionName(subscription.getSubscriptionName())
+                        .subscriptionPrice(subscription.getSubscriptionPrice())
+                        .subscriptionTime(subscription.getSubscriptionTime())
+                        .subscriptionDescription(subscription.getSubscriptionDescription())
+                        .build())
+                .collect(Collectors.toList());
     }
 }
+

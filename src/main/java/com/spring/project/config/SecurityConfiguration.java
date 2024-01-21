@@ -24,18 +24,17 @@ public class SecurityConfiguration {
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("project/auth/**").permitAll()
                         .requestMatchers("/project/api/user/classes").hasAnyRole("CLIENT", "ADMIN")
                         .requestMatchers("/project/api/user/subscriptions").hasAnyRole("CLIENT", "ADMIN")
+                        .requestMatchers("/project/api/user/getReservationsByCourt").hasAnyRole("CLIENT", "ADMIN")
                                 .requestMatchers("project/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("project/api/trainer/**").hasRole("TRAINER")
                         .requestMatchers("/project/api/user/**").hasRole("CLIENT")
-                        .anyRequest()
-                        .permitAll()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
         return httpSecurity.build();
     }
 }

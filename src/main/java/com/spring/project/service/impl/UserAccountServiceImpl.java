@@ -1,11 +1,10 @@
 package com.spring.project.service.impl;
 
-import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.dto.ReservationResponse;
 import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.model.Client;
 import com.spring.project.model.EnrollmentTrainingClass;
-import com.spring.project.model.FotballInsideReservation;
+import com.spring.project.model.CourtReservation;
 import com.spring.project.model.TrainingClass;
 import com.spring.project.service.EnrollmentTrainingClassService;
 import com.spring.project.service.ReservationService;
@@ -33,27 +32,25 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public List<ReservationResponse> getAllClientReservation() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.isAuthenticated()) {
-            List<FotballInsideReservation> fotballInsideReservations = reservationService.getAllClientReservation(authentication.getName());
-            if(fotballInsideReservations != null) {
-                return fotballInsideReservations.stream()
-                        .map(fotballInsideReservation -> ReservationResponse.builder()
-                                .hourSchedule(fotballInsideReservation.getHourSchedule())
-                                .localDate(fotballInsideReservation.getLocalDate())
-                                .email(fotballInsideReservation.getEmail())
+            List<CourtReservation> courtReservations = reservationService.getAllClientReservation(authentication.getName());
+            if(courtReservations != null) {
+                return courtReservations.stream()
+                        .map(courtReservation -> ReservationResponse.builder()
+                                .startTime(courtReservation.getHourSchedule().split("-")[0])
+                                .endTime(courtReservation.getHourSchedule().split("-")[1])
+                                .localDate(courtReservation.getLocalDate())
+                                .court(courtReservation.getCourt())
+                                .clientEmail(null)
                                 .build())
                         .collect(Collectors.toList());
             }else {
                 throw new EntityNotFoundException("You do not have any reservation yet");
             }
         }
-        return null;
-    }
 
     @Override
     public List<TrainingClassResponse> getEnrollClasses() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.isAuthenticated()) {
             Client client = clientService.findClientByEmail(authentication.getName());
             List<EnrollmentTrainingClass> enrollmentTrainingClasses = enrollmentTrainingClassService.getClassesByUserId(client.getId());
             if (enrollmentTrainingClasses != null) {
@@ -72,7 +69,5 @@ public class UserAccountServiceImpl implements UserAccountService {
             }else{
                 return null;
             }
-        }
-        return null;
     }
 }

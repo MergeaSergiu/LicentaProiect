@@ -6,6 +6,7 @@ import com.spring.project.service.EnrollmentTrainingClassService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,6 +30,11 @@ public class EnrollmentTrainingClassServiceImpl implements EnrollmentTrainingCla
     @Override
     public void deleteEnrollmentForUser(Integer userId, Integer trainingClassId) {
         enrollmentTrainingClassRepository.deleteByTrainingClassIdAndUserId(userId, trainingClassId);
+    }
+
+    @Override
+    public void deleteAllEnrollsForTrainingClass(Integer trainingClassId) {
+        enrollmentTrainingClassRepository.deleteAllByTrainingClass_Id(trainingClassId);
     }
 
 }

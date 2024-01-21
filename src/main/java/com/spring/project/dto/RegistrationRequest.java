@@ -1,7 +1,7 @@
 package com.spring.project.dto;
 
-import com.spring.project.model.ClientRole;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Data
@@ -21,6 +21,8 @@ public class RegistrationRequest {
 
     @NotBlank(message = "The password can not be blank")
     private String password;
-    private ClientRole clientRole;
+
+    @NotNull
+    private boolean isAdmin;
 
 }

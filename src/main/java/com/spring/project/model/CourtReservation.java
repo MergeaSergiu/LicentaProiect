@@ -10,9 +10,9 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Setter
-@Table(name = "_insidefootball")
+@Table(name = "_reservation")
 @NoArgsConstructor
-public class FotballInsideReservation {
+public class CourtReservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -20,15 +20,16 @@ public class FotballInsideReservation {
 
     private LocalDate localDate;
 
-    @NotBlank(message = "An hour schedule must be selected for the reservation")
     private String hourSchedule;
+
+    private String court;
 
     private String email;
 
-    public FotballInsideReservation(LocalDate localDate, String hourSchedule, String email) {
+    public CourtReservation(LocalDate localDate, String hourSchedule, String court, String email) {
         this.localDate = localDate;
         this.hourSchedule = hourSchedule;
+        this.court = court;
         this.email = email;
     }
-
 }

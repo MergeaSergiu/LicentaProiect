@@ -11,4 +11,6 @@ public interface EnrollmentTrainingClassService {
     List<EnrollmentTrainingClass> getClassesByUserId(Integer id);
 
     void deleteEnrollmentForUser(Integer trainingClassId, Integer clientId);
+
+    void deleteAllEnrollsForTrainingClass(Integer trainingClassId);
 }

@@ -20,6 +20,10 @@ public interface EnrollmentTrainingClassRepository extends JpaRepository<Enrollm
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM EnrollmentTrainingClass  WHERE trainingClass.id = :trainingClassId AND user.id = :userId")
+    @Query("DELETE FROM EnrollmentTrainingClass WHERE trainingClass.id = :trainingClassId AND user.id = :userId")
     void deleteByTrainingClassIdAndUserId(@Param("trainingClassId") Integer trainingClassId, @Param("userId") Integer userId);
+
+    @Modifying
+    @Transactional
+    void deleteAllByTrainingClass_Id(@Param("trainingClassId") Integer trainingClassId);
 }
