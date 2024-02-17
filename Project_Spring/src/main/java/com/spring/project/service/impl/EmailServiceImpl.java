@@ -26,7 +26,7 @@ public class EmailServiceImpl implements EmailSender {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
             mimeMessageHelper.setText(email, true);
             mimeMessageHelper.setTo(to);
-            mimeMessageHelper.setSubject("Confirm your account");
+            mimeMessageHelper.setSubject(subject);
             mimeMessageHelper.setFrom("sportsArena@gmail.com");
             javaMailSender.send(mimeMessage);
         }catch(MessagingException e){

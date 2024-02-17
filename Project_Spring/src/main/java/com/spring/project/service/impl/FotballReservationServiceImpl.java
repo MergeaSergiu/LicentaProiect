@@ -1,6 +1,5 @@
 package com.spring.project.service.impl;
 
-import com.spring.project.dto.ReservationResponse;
 import com.spring.project.model.CourtReservation;
 import com.spring.project.repository.ReservationRepository;
 import com.spring.project.service.FotballReservationService;

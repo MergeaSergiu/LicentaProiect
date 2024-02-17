@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-transparent"> 
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <button class="btn btn-danger" type="button" (click)="logout()" >Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+  <div class="row justify-content-center align-items-center" style="height: 70vh;">
+      <div class="col">
+        <div class="card" (click)="redirectToReservations()">
+          <div class="card-body">
+            <h5 class="card-title">Reservations</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" (click)="redirectToTrainers()">
+          <div class="card-body">
+            <h5 class="card-title">Trainers</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" (click)="redirectToGym()"> 
+          <div class="card-body">
+            <h5 class="card-title">Gym</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" (click)="redirectToAccount()">
+          <div class="card-body">
+            <h5 class="card-title">Account</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

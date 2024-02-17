@@ -13,14 +13,10 @@ public class PasswordValidator implements Predicate<String> {
     public boolean test(String s) {
 
         String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$";
-
-        // Create a Pattern object
         Pattern pattern = Pattern.compile(passwordRegex);
 
-        // Create matcher object
         Matcher matcher = pattern.matcher(s);
 
-        // Return true if the input string matches the password pattern
         return matcher.matches();
     }
 }

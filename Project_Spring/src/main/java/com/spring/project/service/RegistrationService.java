@@ -1,10 +1,6 @@
 package com.spring.project.service;
 
-import com.spring.project.dto.AuthenticationRequest;
-import com.spring.project.dto.AuthenticationResponse;
-import com.spring.project.dto.PasswordResetRequest;
-import com.spring.project.dto.RegistrationRequest;
-import com.spring.project.model.Client;
+import com.spring.project.dto.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -12,9 +8,9 @@ import java.io.IOException;
 
 public interface RegistrationService {
 
-    String register(RegistrationRequest registrationRequest);
+    RegistrationResponse register(RegistrationRequest registrationRequest);
 
-    String sendResetPasswordEmail(PasswordResetRequest request);
+    SendResetPassEmailResponse sendResetPasswordEmail(SendResetPassEmailRequest resetRequest);
 
     AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest);
 
@@ -22,9 +18,8 @@ public interface RegistrationService {
 
     String confirmPasswordResetToken(String token);
 
-    void updateClientPassword(Client client, String newPassword);
+    PasswordResetResponse updateClientPassword(PasswordResetRequest passwordResetRequest);
 
-    void refreshToken(HttpServletRequest request,
-                      HttpServletResponse response) throws IOException;
+    AuthenticationResponse refreshToken(HttpServletRequest request);
 
 }
