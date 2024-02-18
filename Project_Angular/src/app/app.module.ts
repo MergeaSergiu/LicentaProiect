@@ -17,6 +17,7 @@ import { AuthInterceptor } from './auth/auth.interceptor';
 import { AccountComponent } from './client/account/account.component';
 import { GymComponent } from './client/gym/gym.component';
 import { ReservationComponent } from './client/reservation/reservation.component';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { ReservationComponent } from './client/reservation/reservation.component
       multi: true
     },
     RegistrationService,
-    provideClientHydration()
+    provideClientHydration(),
+    provideHttpClient(withFetch())
   ],
   bootstrap: [AppComponent]
 })

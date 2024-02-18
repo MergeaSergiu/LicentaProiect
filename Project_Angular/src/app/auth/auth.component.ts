@@ -8,14 +8,20 @@ import { RegistrationRequest } from "./models/registration-request.model";
     templateUrl: './auth.component.html',
     styleUrls: ['./auth.component.css']
 })
-export class AuthenticationComponent{
+export class AuthenticationComponent {
     isAdmin: boolean = false;
     alertMessage: string;
     succesfullMessage: string;
 
+    ngOnInit():void{
+        this.registrationService.clear();
+    }
+
     constructor(private registrationService: RegistrationService ) {
         
     }
+
+
 
     onSubmitSignUp(form: NgForm){
         const signUpData: RegistrationRequest = {

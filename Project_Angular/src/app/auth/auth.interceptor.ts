@@ -33,7 +33,7 @@ export class AuthInterceptor implements HttpInterceptor{
                                 this.registrationService.clear();
                                 this.router.navigate(['./login']);
                             }
-                            throw throwError(refresh_token);
+                            return throwError (() => (error.error.errorMessage));
                         })
                        );
                     }

@@ -8,28 +8,25 @@ import { Router } from '@angular/router';
   styleUrl: './client.component.css'
 })
 export class ClientComponent {
-
-  constructor(private registrationService: RegistrationService, private router: Router ) {
-      
-    }
+  constructor(private registrationService: RegistrationService, private router: Router ) {}
 
 
 redirectToAccount() {
-  this.router.navigate(['/account']);
+  this.router.navigate(['/client/account']);
   }
 redirectToReservations() {
-  this.router.navigate(['/reservations']);
+  this.router.navigate(['/client/reservations']);
 }
 redirectToTrainers() {
-  this.router.navigate(['/trainers']);
+  this.router.navigate(['/client/trainers']);
 }
 redirectToGym() {
-  this.router.navigate(['/gym']);
+  this.router.navigate(['/client/gym']);
 }
 
   public logout(){
     this.registrationService.clear();
-    this.router.navigate(['/']);
+    this.router.navigate(['/login']);
   }
 
 }

@@ -196,8 +196,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new ResetPasswordException("Password are not matching. Please write again the passwords");
         }
         if(passwordResetToken.getConfirmedAt() != null && client != null && passwordResetToken.getExpiredAt().compareTo(LocalDateTime.now()) > 0 ) {
-            clientService.resetClientPassword(client, passwordResetRequest.getNewPassword());
             passwordResetToken.setAlreadyUsed(true);
+            clientService.resetClientPassword(client, passwordResetRequest.getNewPassword());
             return PasswordResetResponse.builder()
                     .passwordResetResponse("Password was updated. Please log in")
                     .build();

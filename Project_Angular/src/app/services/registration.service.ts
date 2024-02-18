@@ -12,9 +12,12 @@ import { LoginRequest } from '../auth/models/login-request.model';
 export class RegistrationService {
     
 
-  API_PATH = "http://localhost:8080/project";
+  API_PATH = "http://localhost:8080/project"
   requestHeader = new HttpHeaders({ 'No-Auth': 'True' });
   constructor(private httpClient: HttpClient) {
+
+   }
+   ngOnInit(){
 
    }
 
@@ -59,11 +62,11 @@ export class RegistrationService {
    }
 
    public setToken(jwtToken: string){
-    localStorage.setItem('jwtToken', jwtToken);
+    localStorage.setItem('jwtToken',jwtToken);
    }
 
    setResetPassToken(resetPassToken: string) {
-    localStorage.setItem('resetPassToken', resetPassToken);
+    localStorage.setItem('resetPassToken',resetPassToken);
   }
 
   public getResetPassToken(): string{
@@ -76,7 +79,7 @@ export class RegistrationService {
   
 
    public getToken(): string{
-    return localStorage.getItem('jwtToken');
+      return localStorage.getItem('jwtToken');
    }
 
    public getRefreshToken(): string{
@@ -85,6 +88,10 @@ export class RegistrationService {
 
    public clear(){
     localStorage.clear();
+   }
+
+   public isLoggedIn(){
+    return !!localStorage.getItem('jwtToken');
    }
 
 }

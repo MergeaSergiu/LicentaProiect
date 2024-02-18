@@ -14,10 +14,11 @@ export class LoginComponent{
     alertMessage: string;
     password: string = '';
 
-    constructor(private registrationService: RegistrationService,
-        private router: Router) { 
+    constructor(private registrationService: RegistrationService, private router: Router) { 
     }
-    
+
+    ngOnInit():void{
+    }
     onSubmitLogIn(form: NgForm){
         const logInData: LoginRequest = {
             email: form.value.email,
@@ -29,13 +30,12 @@ export class LoginComponent{
                 this.registrationService.setToken(response.access_token);
                 this.registrationService.setRefreshToken(response.refresh_token);
                 const role = response.user_Role;
-                console.log(response);
                 if(role === 'CLIENT'){
-                    this.router.navigate(['/clientDashboard'])
+                    this.router.navigate(['client/clientDashboard'])
                 }else if(role == 'ADMIN'){
-                    this.router.navigate(['/adminDashboard'])
+                    this.router.navigate(['admin/adminDashboard'])
                 }else if(role == 'TRAINER'){
-                    this.router.navigate(['/trainerDashboard'])
+                    this.router.navigate(['trainer/trainerDashboard'])
                 }
             },
             error: (errorMessage) => {

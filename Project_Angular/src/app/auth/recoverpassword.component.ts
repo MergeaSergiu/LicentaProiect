@@ -18,6 +18,16 @@ export class RecoverPasswordComponent{
     constructor(private registrationService: RegistrationService) { 
     }
 
+    ngOnInit(): void {
+        // Determine which form was last submitted and set the flag accordingly
+        const lastSubmittedForm = localStorage.getItem('lastSubmittedForm');
+        if (lastSubmittedForm === 'resetPasswordForm') {
+          this.resetPasswordFormSubmitted = false;
+        } else if (lastSubmittedForm === 'updatePasswordForm') {
+          this.resetPasswordFormSubmitted = true;
+        }
+      }
+
     onSubmitResetPassword(form: NgForm){
         const resetPassRequest: ResetPasswordRequest = {
             email: form.value.email
@@ -26,14 +36,17 @@ export class RecoverPasswordComponent{
                 next: (response: any) =>{
                     this.registrationService.setResetPassToken(response.token);
                     this.resetPasswordFormSubmitted = true;
+                    localStorage.setItem('lastSubmittedForm', 'updatePasswordForm');
                 },error: (errorMessage) => {
                     this.alertMessageResetEmail = errorMessage; 
                     setTimeout(() => {
                         this.alertMessageResetEmail = '';
                     }, 2000);
                     this.resetPasswordFormSubmitted = false;
+                    localStorage.setItem('lastSubmittedForm', 'resetPasswordForm');
                   }
                 });
+                
             form.reset();
     }
 
@@ -55,6 +68,7 @@ export class RecoverPasswordComponent{
                 setTimeout(() => {
                     this.alertMessageUpdatePassword = '';
                 }, 2000);
+
             }
         });
         form.reset();
