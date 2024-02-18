@@ -1,0 +1,123 @@
+.container{
+    border: 2px solid;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 420px;
+    height: 500px;
+    transform: translate(-50%, -50%);
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.8);
+    font-family: 'Poppings', sans-serif;
+    box-sizing: border-box;
+    box-shadow: 2px 15px 20px rgba(0,0,0,1);
+}
+
+.container .title{
+    color: black;
+    font-weight: bold;
+    font-size: 25px;
+    width: 380px;
+    text-align: center;
+    line-height: 65px;
+}
+
+.container .form{
+    padding: 10px 30px 50px 30px;
+    position: relative;
+}
+
+.container .alert-message{
+    font-size: 20px;
+    margin-top: 5px;
+    color: rgb(208, 0, 0);
+    text-align: center;
+    font-weight: bold;
+    animation: .2s linear;
+}
+
+.container form .form-group{
+    position: relative;
+    margin-top: 20px;
+    height: 90%;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.toggle-icon{
+    position: absolute;
+}
+
+.container form .form-group input{
+    width: 100%;
+    margin-bottom: 10px;
+    border: 2px solid black;
+    border-radius: 40px;
+    outline: none;
+}
+
+.container form .form-group input::placeholder{
+    color: #bbb;
+    font-weight: 300;
+}
+
+#hide1{
+    display: none;
+}
+
+.container form .form-group label{
+    color: black;
+    margin-top: -10px;
+    font-weight: bold;
+}
+
+
+.container form .buttons .login-btn{
+    color: white;
+    margin-bottom: 10px;
+    background: linear-gradient(-135deg ,  rgb(149, 149, 150), rgb(15, 14, 15));
+    font-size: 18px;
+    width: 250px;
+    margin-top: 20px;
+    font-weight: 500;
+    margin-left: 60px;
+    border-radius: 10px 10px 10px 10px;
+    border: none;
+    padding-left: none;
+    cursor: pointer;
+}
+
+.container form .buttons .login-btn:disabled{
+    opacity: 0.5; /* Reduce the opacity to visually indicate that the button is disabled */
+    cursor: not-allowed;
+}
+
+.container form .buttons .signup-btn{
+    color: White;
+    margin-bottom: 10px;
+    background: linear-gradient(-135deg ,  rgb(149, 149, 150), rgb(15, 14, 15));
+    margin-top: 7px;
+    font-size: 18px;
+    margin-left: 60px;
+    width: 250px;
+    font-weight: 500;
+    border-radius: 10px 10px 10px 10px;
+    border: none;
+    padding-left: none;
+    cursor: pointer;
+}
+
+
+.container form .reset-btn{
+    color: White;
+    background: linear-gradient(-135deg ,  rgb(149, 149, 150), rgb(15, 14, 15));
+    margin-top: 7px;
+    font-size: 18px;
+    margin-left: 60px;
+    width: 250px;
+    font-weight: 500;
+    border-radius: 10px 10px 10px 10px;
+    border: none;
+    padding-left: none;
+    cursor: pointer;
+}

@@ -20,10 +20,4 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
     @Query("UPDATE Client a " +
             "SET a.enabled = TRUE WHERE a.email = ?1")
     int enableClient(String email);
-
-    @Query("SELECT a From Client a ORDER BY a.lastName ASC")
-    List<Client> findAllByLastName();
-
-    @Query()
-    String findRoleByEmail(String email);
 }
