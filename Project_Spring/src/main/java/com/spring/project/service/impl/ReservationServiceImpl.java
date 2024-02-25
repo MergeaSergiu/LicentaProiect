@@ -32,19 +32,19 @@ public class ReservationServiceImpl implements ReservationService {
 
     public void saveReservation(ReservationRequest reservationRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String hourSchedule = reservationRequest.getStartTime()+ "-" + reservationRequest.getEndTime();
         CourtReservation courtReservation = new CourtReservation(
                 reservationRequest.getLocalDate(),
-                hourSchedule,
+                reservationRequest.getHourSchedule(),
                 reservationRequest.getCourt(),
                 authentication.getName()
         );
+        fotballReservationServiceImpl.save(courtReservation);
         String emailTemplate = loadEmailTemplateFromResource("reservationResponseEmail.html");
         emailTemplate = emailTemplate.replace("${email}", authentication.getName());
-        emailTemplate = emailTemplate.replace("${hourSchedule}", reservationRequest.getStartTime());
+        emailTemplate = emailTemplate.replace("${hourSchedule}", reservationRequest.getHourSchedule());
         emailTemplate = emailTemplate.replace("${dateTime}",reservationRequest.getLocalDate().toString());
         emailSender.send(authentication.getName(), emailTemplate, "Thank you for your reservation");
-        fotballReservationServiceImpl.save(courtReservation);
+
     }
 
     private String loadEmailTemplateFromResource(String fileName) {
@@ -71,15 +71,20 @@ public class ReservationServiceImpl implements ReservationService {
             emailSender.send(email, emailTemplate, "RemainderEmail");
         }
     }
+
+    @Override
+    public List<CourtReservation> getAllReservations() {
+        return reservationRepository.findAll();
+    }
+
     public List<CourtReservation> getAllClientReservation(String clientEmail) {
         return reservationRepository.findReservationsByUser(clientEmail);
     }
 
     @Override
-    public void deleteReservation(String startTime, String endTime, LocalDate localDate, String court) {
+    public void deleteReservation(Integer id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String hourSchedule = startTime + "-" + endTime;
-        fotballReservationServiceImpl.deleteReservation(authentication.getName(),hourSchedule, localDate, court);
+        fotballReservationServiceImpl.deleteReservation(id);
         String emailTemplate = loadEmailTemplateFromResource("deleteReservationEmail.html");
         emailTemplate = emailTemplate.replace("${email}", authentication.getName());
         emailSender.send(authentication.getName(), emailTemplate, "Reservation was deleted");
@@ -91,9 +96,9 @@ public class ReservationServiceImpl implements ReservationService {
             if(courtReservations != null) {
                 return courtReservations.stream()
                         .map(courtReservation -> ReservationResponse.builder()
-                                .localDate(courtReservation.getLocalDate())
-                                .startTime(courtReservation.getHourSchedule().split("-")[0])
-                                .endTime(courtReservation.getHourSchedule().split("-")[1])
+                                .id(courtReservation.getId())
+                                .localDate(courtReservation.getLocalDate().toString())
+                                .hourSchedule(courtReservation.getHourSchedule())
                                 .clientEmail(courtReservation.getEmail())
                                 .court(null)
                                 .build())

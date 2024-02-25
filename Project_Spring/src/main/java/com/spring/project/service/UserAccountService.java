@@ -6,7 +6,7 @@ import com.spring.project.dto.TrainingClassResponse;
 import java.util.List;
 
 public interface UserAccountService {
-    List<ReservationResponse> getAllClientReservation();
+    List<ReservationResponse> getAllClientReservations();
 
     List<TrainingClassResponse> getEnrollClasses();
 }

@@ -1,8 +1,8 @@
 import { Component } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { RegistrationService } from "../services/registration.service";
-import { ResetPasswordRequest } from "./models/resetPass-request.model";
-import { UpdatePasswordRequest } from "./models/updatePassword-request.model";
+import { ResetPasswordRequest } from "../models/resetPass-request.model";
+import { UpdatePasswordRequest } from "../models/updatePassword-request.model";
 
 @Component({
     selector: 'app-recoverPass',

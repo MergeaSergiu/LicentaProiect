@@ -20,6 +20,6 @@ public interface RegistrationService {
 
     PasswordResetResponse updateClientPassword(PasswordResetRequest passwordResetRequest);
 
-    AuthenticationResponse refreshToken(HttpServletRequest request);
+    AuthenticationResponse refreshToken(JwtRefreshToken jwtRefreshToken);
 
 }

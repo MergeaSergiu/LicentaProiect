@@ -1,1 +1,38 @@
-<p>account works!</p>
+<app-navbar></app-navbar>
+<br>
+<br>
+<mat-card>
+    <mat-form-field>
+      <input matInput (keyup)="Filterchange($event)" placeholder="Enter text">
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="Date">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let reservation" style="width: 3%;">{{ reservation.localDate }}</td>
+    </ng-container>
+    <ng-container matColumnDef="HourSchedule">
+      <th mat-header-cell *matHeaderCellDef>Hour Schedule</th>
+      <td mat-cell *matCellDef="let reservation" style="width: 3%;">{{ reservation.hourSchedule }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Court">
+      <th mat-header-cell *matHeaderCellDef>Court</th>
+      <td mat-cell *matCellDef="let reservation" style="width: 3%;">{{ reservation.court }}</td>
+    </ng-container>
+    <ng-container matColumnDef="Delete">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let reservation" style="width: 3%;">
+          <button mat-icon-button matTooltip="Delete the reservation" color="warn" aria-label="Delete" (click)="deleteReservation(reservation.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  
+  <mat-paginator #paginator1 [pageSizeOptions]="[5]" showFirstLastButtons></mat-paginator>
+</mat-card>
+<div *ngIf="deleteMessage" class="alert alert-success" role="alert">
+    {{deleteMessage}}
+</div>

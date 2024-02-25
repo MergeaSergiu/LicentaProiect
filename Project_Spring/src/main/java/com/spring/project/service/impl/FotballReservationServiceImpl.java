@@ -25,8 +25,9 @@ public class FotballReservationServiceImpl implements FotballReservationService 
     }
 
 
-    public void deleteReservation(String email,String hourSchedule, LocalDate localDate, String court){
-        reservationRepository.deleteReservation(email,hourSchedule, localDate, court);
+    @Override
+    public void deleteReservation(Integer id){
+        reservationRepository.deleteById(id);
     }
 
     public List<CourtReservation> getReservationsByCourt(String court) {

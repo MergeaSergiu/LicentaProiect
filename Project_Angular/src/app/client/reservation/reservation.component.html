@@ -1,1 +1,38 @@
-<p>reservation works!</p>
+<app-navbar></app-navbar>
+  <br>
+  <br>
+  <br>
+  <div class="container">
+    <div class="calendar-container">
+      <mat-card class="demo-inline-calendar-card">
+      <mat-calendar [(selected)]="selectedDate" [minDate]="minDate" [maxDate]="maxDate" (selectedChange)="onDateSelected($event)"></mat-calendar>
+    </mat-card>
+    </div>
+    <div class="schedule-container" *ngIf="selectedDate">
+      <ul>
+        <li *ngFor="let schedule of hourSchedulesFootball"> <mat-card>
+          <mat-card [ngClass]="{'reserved-card': schedule.reserved}"></mat-card>
+          <button mat-raised-button matTooltip="Select the time slot" [disabled]="schedule.reserved" [color]="schedule.reserved ? '' : 'primary'" (click)="saveReservation(selectedDate, schedule, 'Fotball', schedule)">{{ schedule.time }}</button>
+        </mat-card> </li>
+      </ul>
+    </div>
+    <div class="schedule-container" *ngIf="selectedDate">
+      <ul>
+        <li *ngFor="let schedule of hourSchedulesBasketball"> <mat-card>
+          <mat-card [ngClass]="{'reserved-card': schedule.reserved}"></mat-card>
+          <button mat-raised-button matTooltip="Select the time slot" [disabled]="schedule.reserved" [color]="schedule.reserved ? '' : 'primary'" (click)="saveReservation(selectedDate, schedule, 'Basketball')">{{ schedule.time }}</button>
+        </mat-card> </li>
+      </ul>
+    </div>
+    <div class="schedule-container" *ngIf="selectedDate">
+      <ul>
+        <li *ngFor="let schedule of hourSchedulesTenis"> <mat-card>
+          <mat-card [ngClass]="{'reserved-card': schedule.reserved}"></mat-card>
+          <button mat-raised-button matTooltip="Select the time slot" [disabled]="schedule.reserved" [color]="schedule.reserved ? '' : 'primary'" (click)="saveReservation(selectedDate, schedule, 'Tenis')">{{ schedule.time }}</button>
+        </mat-card> </li>
+      </ul>
+    </div>
+  </div>
+  <div *ngIf="successfullMessage" class="alert alert-success" role="alert">
+    {{successfullMessage}}
+</div>

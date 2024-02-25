@@ -65,7 +65,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException ex) {
-            response.setStatus(HttpStatus.EXPECTATION_FAILED.value());
+            response.setStatus(HttpStatus.FORBIDDEN.value());
             response.getWriter().println("{ \"error\": \"Session has expired\" }");
         }
     }

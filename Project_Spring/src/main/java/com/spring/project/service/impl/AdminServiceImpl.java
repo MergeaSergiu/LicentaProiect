@@ -1,5 +1,6 @@
 package com.spring.project.service.impl;
 
+import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.Exception.EmailNotAvailableException;
 import com.spring.project.Exception.InvalidCredentialsException;
 import com.spring.project.dto.*;
@@ -7,6 +8,7 @@ import com.spring.project.email.EmailSender;
 import com.spring.project.model.*;
 import com.spring.project.repository.ClientRepository;
 import com.spring.project.service.*;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -33,6 +35,7 @@ public class AdminServiceImpl implements AdminService {
     private PasswordValidator passwordValidator;
     private final ClientService clientService;
     private final EmailSender emailSender;
+    private final ReservationService reservationService;
     private final SubscriptionService subscriptionService;
     private final TrainingClassService trainingClassService;
     private final ClientRepository clientRepository;
@@ -85,6 +88,19 @@ public class AdminServiceImpl implements AdminService {
                                 .lastName(client.getLastName())
                                 .email(client.getEmail()).build())
                     .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ReservationResponse> getAllReservations() {
+            List<CourtReservation> reservations = reservationService.getAllReservations();
+            return reservations.stream()
+                    .map(reservation -> ReservationResponse.builder()
+                            .localDate(reservation.getLocalDate().toString())
+                            .hourSchedule(reservation.getHourSchedule())
+                            .clientEmail(reservation.getEmail())
+                            .court(reservation.getCourt()).build())
+                    .collect(Collectors.toList());
+
     }
 
 

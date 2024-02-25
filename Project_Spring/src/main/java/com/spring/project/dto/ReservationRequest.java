@@ -13,11 +13,7 @@ import java.time.LocalDate;
 @Setter
 public class ReservationRequest {
 
-    LocalDate localDate;
-
-    String startTime;
-
-    String endTime;
-
+    String localDate;
+    String hourSchedule;
     String court;
 }

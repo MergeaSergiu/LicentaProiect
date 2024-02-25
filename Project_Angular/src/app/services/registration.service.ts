@@ -1,10 +1,11 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RegistrationRequest } from '../auth/models/registration-request.model';
-import { Observable, catchError, throwError } from 'rxjs';
-import { ResetPasswordRequest } from '../auth/models/resetPass-request.model';
-import { UpdatePasswordRequest } from '../auth/models/updatePassword-request.model';
-import { LoginRequest } from '../auth/models/login-request.model';
+import { RegistrationRequest } from '../models/registration-request.model';
+import { Observable, catchError, tap, throwError } from 'rxjs';
+import { ResetPasswordRequest } from '../models/resetPass-request.model';
+import { UpdatePasswordRequest } from '../models/updatePassword-request.model';
+import { LoginRequest } from '../models/login-request.model';
+import { JwtRefreshToken } from '../auth/refresh-token.model';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,15 @@ export class RegistrationService {
     .pipe(
       catchError(this.handleError)
     );
+   }
+
+   public refreshToken(refreshToken: JwtRefreshToken): Observable<any>{
+    return this.httpClient.post(this.API_PATH + "/auth/refreshToken", refreshToken)
+    .pipe((tap((response: any) =>{
+      localStorage.setItem('jwtRefreshToken', response.refresh_token);
+    }))
+    );
+      
    }
 
    public sendResetPasswordEmail(resetPassData: ResetPasswordRequest): Observable<any>{
