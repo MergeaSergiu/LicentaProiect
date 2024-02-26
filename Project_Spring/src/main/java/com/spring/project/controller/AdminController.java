@@ -37,7 +37,7 @@ public class AdminController {
     }
 
     @PostMapping("/createTrainer")
-    public ResponseEntity<TrainerResponse> createTrainer(@Valid @RequestBody TrainerRequest trainerRequest) {
+    public ResponseEntity<TrainerResponse> createTrainer(@RequestBody TrainerRequest trainerRequest) {
         return ResponseEntity.ok(adminService.createTrainer(trainerRequest));
     }
 

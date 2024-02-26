@@ -20,11 +20,9 @@ interface HourSchedule {
 })
 export class ReservationComponent {
 
-
   reservationsTenis: ReservationResponse[] = [];
   reservationsBasketball: ReservationResponse[] = [];
   reservationsFotball: ReservationResponse[] = [];
-  private datePipe: DatePipe;
 
   selectedDate: Date | null;
   hourSchedulesFootball: HourSchedule[] = [
@@ -64,10 +62,7 @@ export class ReservationComponent {
     this.maxDate = new Date(today.getFullYear(), today.getMonth() + 2, 0); // End of next month
   }
 
-  ngOnInit(): void{
-      
-      
-    }
+  ngOnInit(): void{}
 
     fetchFootballReservations():void{
       this.clientService.getReservations('Fotball').subscribe(
@@ -146,13 +141,29 @@ export class ReservationComponent {
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-indexed
       const day = date.getDate().toString().padStart(2, '0');
-
       // Format the date as 'yyyy-mm-dd'
       const formattedDate = `${year}-${month}-${day}`;
+
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = currentDate.getMonth() + 1; // Adding 1 because getMonth() returns zero-based month (0-11)
+      const currentDay = currentDate.getDate();
+      const formattedCurrentDate = `${currentYear}-${currentMonth}-${currentDay}`;
+
+      const date1 = new Date(formattedDate);
+      const date2 = new Date(formattedCurrentDate);
+
+      if (date1 < date2) {
+        alert('Reservation can not be in the past');
+        return; // Stop further execution
+      }
+
+
       const registrationRequest: ReservationRequest = {
             localDate: formattedDate,
             hourSchedule: schedule.time,
-            court: court};
+            court: court
+    };
 
       this.clientService.createReservation(registrationRequest).subscribe({
         next: (response: any) =>{

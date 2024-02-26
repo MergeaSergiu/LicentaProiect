@@ -1,14 +1,11 @@
 package com.spring.project.service.impl;
 
-import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.Exception.EmailNotAvailableException;
-import com.spring.project.Exception.InvalidCredentialsException;
 import com.spring.project.dto.*;
 import com.spring.project.email.EmailSender;
 import com.spring.project.model.*;
 import com.spring.project.repository.ClientRepository;
 import com.spring.project.service.*;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -51,7 +48,6 @@ public class AdminServiceImpl implements AdminService {
         }
     }
     public TrainerResponse createTrainer(TrainerRequest request) {
-
                 boolean isValidEmail = emailValidator.test(request.getEmail());
                 if (!isValidEmail) {
                     throw new EmailNotAvailableException("Email is not valid");
