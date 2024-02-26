@@ -61,7 +61,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidCredentialsException("Password do not respect the criteria");
         }
         ClientRole clientRole;
-        if(request.isAdmin()){
+        if(request.getIsAdmin()){
             clientRole = ClientRole.ADMIN;
         }else{
             clientRole = ClientRole.CLIENT;
@@ -206,12 +206,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    public AuthenticationResponse refreshToken(HttpServletRequest request) {
-
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String refreshJwt;
+    public AuthenticationResponse refreshToken(JwtRefreshToken jwtRefreshToken) {
         final String clientEmail;
-        refreshJwt = authHeader.substring(7);
+        String refreshJwt = jwtRefreshToken.getRefreshToken();
         clientEmail = jwtService.extractClientUsername(refreshJwt);
         if (clientEmail != null){
             var clientDetails = this.clientRepository.findByEmail(clientEmail).orElseThrow();

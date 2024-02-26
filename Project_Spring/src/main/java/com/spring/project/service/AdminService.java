@@ -10,6 +10,8 @@ public interface AdminService {
 
      List<ClientResponse> getAllClients();
 
+     List<ReservationResponse> getAllReservations();
+
      void createSubscription(CreateSubscriptionRequest createSubscriptionRequest);
 
      void updateSubscription(Integer id, Map<String, Object> fields);

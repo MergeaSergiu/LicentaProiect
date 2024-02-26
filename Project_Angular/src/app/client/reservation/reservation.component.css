@@ -1,0 +1,21 @@
+/* calendar.component.css */
+
+/* calendar.component.css */
+
+  
+.demo-inline-calendar-card {
+  width: 300px;
+}
+
+.container {
+  display: flex;
+}
+
+.calendar-container {
+  flex: 1; /* Allow the calendar container to grow and fill available space */
+  /* Add margin for spacing */
+}
+
+.schedule-container {
+  flex: 0 0 200px; /* Fixed width for schedule container */
+}

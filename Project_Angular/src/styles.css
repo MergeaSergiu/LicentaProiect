@@ -1,8 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+
+
+/*@import '~@angular/material/prebuilt-themes/indigo-pink.css'; */
+
 body {
-    background-image: url("assets/background3.jpg");
+    /*background-image: url("assets/background3.jpg");*/
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: 100% 100%;
+    margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
+    background-color: rgb(42, 47, 52);
 
 }

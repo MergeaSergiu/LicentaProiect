@@ -63,6 +63,9 @@
     border-radius: 40px;
     outline: none;
 }
+.mat-icon {
+    font-size: 20px; /* Adjust the size as needed */
+  }
 
 .container form .form-group input::placeholder{
     color: #bbb;
@@ -74,7 +77,7 @@
     font-weight: bold;
 }
 
-.container form .form-group-check .check{
+.container form .form-group .check{
     margin-right: 20px; /* Adjust margin as needed */
   }
 

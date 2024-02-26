@@ -2,12 +2,10 @@ package com.spring.project.controller;
 
 
 import com.spring.project.Exception.ConfirmAccountException;
-import com.spring.project.Exception.EmailNotAvailableException;
 import com.spring.project.Exception.ResetPasswordException;
 import com.spring.project.dto.AuthenticationResponse;
 import com.spring.project.dto.*;
 import com.spring.project.service.RegistrationService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +18,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path ="project/auth")
 @AllArgsConstructor
 @Validated
-@CrossOrigin(origins = "http://localhost:4200")
 public class ClientRegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping("/registration")
-    public ResponseEntity<RegistrationResponse> registration(@Valid @RequestBody RegistrationRequest request) {
+    public ResponseEntity<RegistrationResponse> registration(@RequestBody RegistrationRequest request) {
         RegistrationResponse registrationResponse = registrationService.register(request);
         return ResponseEntity.ok(registrationResponse);
     }
@@ -48,9 +45,9 @@ public class ClientRegistrationController {
             return ResponseEntity.ok(authenticationResponse);
     }
 
-    @PostMapping("/refresh-token")
-    public ResponseEntity<AuthenticationResponse> refreshToken(HttpServletRequest request)  {
-        return ResponseEntity.ok(registrationService.refreshToken(request));
+    @PostMapping("/refreshToken")
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody JwtRefreshToken jwtRefreshToken)  {
+        return ResponseEntity.ok(registrationService.refreshToken(jwtRefreshToken));
     }
 
     @PostMapping("/resetPass")
@@ -77,4 +74,3 @@ public class ClientRegistrationController {
         return ResponseEntity.ok(passwordResetResponse);
     }
 }
-

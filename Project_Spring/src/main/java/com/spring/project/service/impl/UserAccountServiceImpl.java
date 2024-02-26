@@ -30,23 +30,26 @@ public class UserAccountServiceImpl implements UserAccountService {
     private final TrainingClassService trainingClassService;
 
     @Override
-    public List<ReservationResponse> getAllClientReservation() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            List<CourtReservation> courtReservations = reservationService.getAllClientReservation(authentication.getName());
-            if(courtReservations != null) {
-                return courtReservations.stream()
-                        .map(courtReservation -> ReservationResponse.builder()
-                                .startTime(courtReservation.getHourSchedule().split("-")[0])
-                                .endTime(courtReservation.getHourSchedule().split("-")[1])
-                                .localDate(courtReservation.getLocalDate())
-                                .court(courtReservation.getCourt())
-                                .clientEmail(null)
-                                .build())
-                        .collect(Collectors.toList());
-            }else {
-                throw new EntityNotFoundException("You do not have any reservation yet");
+    public List<ReservationResponse> getAllClientReservations() {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if(authentication!= null) {
+                List<CourtReservation> courtReservations = reservationService.getAllClientReservation(authentication.getName());
+                if (courtReservations != null) {
+                    return courtReservations.stream()
+                            .map(courtReservation -> ReservationResponse.builder()
+                                    .id(courtReservation.getId())
+                                    .localDate(courtReservation.getLocalDate().toString())
+                                    .hourSchedule(courtReservation.getHourSchedule())
+                                    .court(courtReservation.getCourt())
+                                    .clientEmail(authentication.getName())
+                                    .build())
+                            .collect(Collectors.toList());
+                } else {
+                    throw new EntityNotFoundException("You do not have any reservation yet");
+                }
             }
-        }
+        return null;
+    }
 
     @Override
     public List<TrainingClassResponse> getEnrollClasses() {

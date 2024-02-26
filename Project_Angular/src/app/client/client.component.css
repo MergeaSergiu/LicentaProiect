@@ -1,18 +1,17 @@
 .card {
-    width: 250px; /* Set the width of the card */
-    height: 280px; /* Set the height of the card */
-    border: 2px solid black; /* Set the border to black */
-    border-radius: 40px; /* Adjust the border-radius if needed */
+    width: 250px; 
+    height: 280px; 
+    border: 2px solid black; 
+    border-radius: 40px; 
     outline: none;
     box-shadow: 2px 15px 20px rgba(0,0,0,1);
     background: linear-gradient(100deg , rgb(215, 216, 212), rgb(94, 94, 94));
 }
 
 .card:hover {
-    transform: scale(1.08); /* Increase size on hover */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+    transform: scale(1.08);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); 
   }
-
 .card .card-title{
     color: black;
     font-weight: bold;
@@ -21,5 +20,14 @@
     text-align: center;
     line-height: 40px;
     font-family: 'Poppings', sans-serif;
+} 
+
+.card-class{
+    margin: 3%;
+    width: 20%;
+    text-align: left;
 }
 
+.spacer{
+    flex: 1 1 auto
+}

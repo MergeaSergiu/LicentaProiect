@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { RegistrationService } from "../services/registration.service";
-import { RegistrationRequest } from "./models/registration-request.model";
+import { RegistrationRequest } from "../models/registration-request.model";
 
 @Component({
     selector: 'app-auth',
@@ -9,9 +9,11 @@ import { RegistrationRequest } from "./models/registration-request.model";
     styleUrls: ['./auth.component.css']
 })
 export class AuthenticationComponent {
-    isAdmin: boolean = false;
+    isAdmin: boolean;
     alertMessage: string;
     succesfullMessage: string;
+    password: string = '';
+    hide: boolean = true;
 
     ngOnInit():void{
         this.registrationService.clear();
@@ -21,7 +23,9 @@ export class AuthenticationComponent {
         
     }
 
-
+    togglePasswordVisibility(): void {
+        this.hide = !this.hide;
+      }
 
     onSubmitSignUp(form: NgForm){
         const signUpData: RegistrationRequest = {

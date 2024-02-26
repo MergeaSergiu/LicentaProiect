@@ -19,10 +19,10 @@ public class ClientAccountController {
 
     @Autowired
     private final UserAccountService userAccountService;
-    @GetMapping("/accountReservations")
+    @GetMapping("/clientReservations")
     public ResponseEntity<List<ReservationResponse>> getReservationHistory(){
-        List<ReservationResponse> reservations = userAccountService.getAllClientReservation();
-            return ResponseEntity.ok(reservations);
+        List<ReservationResponse> reservations = userAccountService.getAllClientReservations();
+        return ResponseEntity.ok(reservations);
     }
 
     @GetMapping("/getEnrollClasses")

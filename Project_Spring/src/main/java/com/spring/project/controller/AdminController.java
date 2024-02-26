@@ -31,8 +31,13 @@ public class AdminController {
         return ResponseEntity.ok("Ai accesat pagina adminului");
     }
 
+    @GetMapping("/allReservations")
+    public ResponseEntity<List<ReservationResponse>> getAllReservations(){
+        return ResponseEntity.ok(adminService.getAllReservations());
+    }
+
     @PostMapping("/createTrainer")
-    public ResponseEntity<TrainerResponse> createTrainer(@Valid @RequestBody TrainerRequest trainerRequest) {
+    public ResponseEntity<TrainerResponse> createTrainer(@RequestBody TrainerRequest trainerRequest) {
         return ResponseEntity.ok(adminService.createTrainer(trainerRequest));
     }
 

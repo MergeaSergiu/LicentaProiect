@@ -13,9 +13,11 @@ public interface ReservationService {
 
     void sendEmails();
 
+    List<CourtReservation> getAllReservations();
+
     List<CourtReservation> getAllClientReservation(String clientEmail);
 
-    void deleteReservation(String startTime, String endTime, LocalDate localDate, String court);
+    void deleteReservation(Integer id);
 
     List<ReservationResponse> getReservationsByCourt(String court);
 }

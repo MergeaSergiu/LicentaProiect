@@ -5,6 +5,7 @@ import com.spring.project.dto.ReservationResponse;
 import com.spring.project.service.ReservationService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +23,14 @@ public class ClientReservationController {
     @Autowired
     private final ReservationService reservationService;
     @PostMapping("/createReservation")
-    public ResponseEntity<Void> createReservation(@Valid @RequestBody ReservationRequest reservationRequest){
+    public ResponseEntity<Void> createReservation(@RequestBody ReservationRequest reservationRequest){
             reservationService.saveReservation(reservationRequest);
             return ResponseEntity.status(HttpStatus.OK).build();
     }
     @DeleteMapping("/deleteReservation")
-    public ResponseEntity<String> deleteReservation(@RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime, @RequestParam("localDate") LocalDate localDate, @RequestParam("court") String court){
-        reservationService.deleteReservation(startTime,endTime, localDate, court);
-        return ResponseEntity.ok("Reservation was Deleted");
+    public ResponseEntity<Void> deleteReservation(@RequestParam("id") Integer id){
+        reservationService.deleteReservation(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/getReservationsByCourt")

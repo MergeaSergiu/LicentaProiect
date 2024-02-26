@@ -18,7 +18,7 @@ public class CourtReservation {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Integer id;
 
-    private LocalDate localDate;
+    private String localDate;
 
     private String hourSchedule;
 
@@ -26,7 +26,7 @@ public class CourtReservation {
 
     private String email;
 
-    public CourtReservation(LocalDate localDate, String hourSchedule, String court, String email) {
+    public CourtReservation(String localDate, String hourSchedule, String court, String email) {
         this.localDate = localDate;
         this.hourSchedule = hourSchedule;
         this.court = court;

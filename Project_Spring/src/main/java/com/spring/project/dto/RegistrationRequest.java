@@ -6,8 +6,10 @@ import lombok.*;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class RegistrationRequest {
 
     @NotBlank(message = "The first name can not be blank")
@@ -22,7 +24,5 @@ public class RegistrationRequest {
     @NotBlank(message = "The password can not be blank")
     private String password;
 
-    @NotNull
-    private boolean isAdmin;
-
+    private Boolean isAdmin;
 }

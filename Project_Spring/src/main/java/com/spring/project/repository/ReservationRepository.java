@@ -22,11 +22,6 @@ public interface ReservationRepository extends JpaRepository<CourtReservation, I
     @Query("SELECT e from CourtReservation e WHERE e.email = :email")
     List<CourtReservation> findReservationsByUser(@Param("email") String email);
 
-    @Transactional
-    @Modifying
-    @Query("DELETE from CourtReservation e WHERE e.email = :email AND e.hourSchedule = :hourSchedule AND e.localDate = :localDate AND e.court = :court")
-    void deleteReservation(@Param("email") String email, @Param("hourSchedule") String hourSchedule, @Param("localDate") LocalDate localDate, @Param("court") String court);
-
     @Query("SELECT e from CourtReservation e WHERE e.court = :court")
     List<CourtReservation> findByCourt(@Param("court") String court);
 }

@@ -12,7 +12,7 @@ public interface FotballReservationService {
 
     List<CourtReservation> getReservationWithCurrentDay();
 
-    void deleteReservation(String email, String hourSchedule, LocalDate localDate, String court);
+    void deleteReservation(Integer id);
 
     List<CourtReservation> getReservationsByCourt(String court);
 

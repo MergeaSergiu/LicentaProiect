@@ -18,6 +18,25 @@ import { AccountComponent } from './client/account/account.component';
 import { GymComponent } from './client/gym/gym.component';
 import { ReservationComponent } from './client/reservation/reservation.component';
 import { provideHttpClient, withFetch } from '@angular/common/http';
+import { ClientService } from './services/client.service';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MAT_DATE_LOCALE, MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
+import { MatCardModule } from '@angular/material/card';
+import { ReservationdetailsComponent } from './admin/reservationdetails/reservationdetails.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { AdminService } from './services/admin.service';
+import { MatButtonModule, MatIconButton } from '@angular/material/button';
+import { NavbarComponent } from './navbar/navbar.component';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import { TrainersComponent } from './client/trainer/trainer.component';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
+import { DatePipe } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -26,11 +45,13 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
     LoginComponent,
     RecoverPasswordComponent,
     ClientComponent,
-    TrainerComponent,
+    TrainersComponent,
     AdminComponent,
     AccountComponent,
     GymComponent,
-    ReservationComponent
+    ReservationComponent,
+    ReservationdetailsComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
@@ -38,7 +59,21 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
     RouterModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatCardModule,
+    MatTableModule,
+    MatPaginator,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCardModule,
+    MatDatepickerModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatCheckboxModule,
+    MatIconModule,
+    MatTooltipModule
   ],
   providers: [
     {
@@ -46,9 +81,15 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
       useClass: AuthInterceptor,
       multi: true
     },
+    [{provide: MAT_DATE_LOCALE, useValue: 'en-GB'}],
     RegistrationService,
+    ClientService,
+    AdminService,
     provideClientHydration(),
-    provideHttpClient(withFetch())
+    provideHttpClient(withFetch()),
+    provideAnimationsAsync(),
+    provideNativeDateAdapter(),
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

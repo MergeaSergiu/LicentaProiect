@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { NgForm } from "@angular/forms";
-import { LoginRequest } from "./models/login-request.model";
+import { LoginRequest } from "../models/login-request.model";
 import { RegistrationService } from "../services/registration.service";
 import { Router } from "@angular/router";
 

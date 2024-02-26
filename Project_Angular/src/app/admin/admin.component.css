@@ -1,0 +1,30 @@
+
+
+  .card {
+    width: 250px; /* Set the width of the card */
+    height: 280px; /* Set the height of the card */
+    border: 2px solid black; /* Set the border to black */
+    border-radius: 40px; /* Adjust the border-radius if needed */
+    outline: none;
+    box-shadow: 2px 15px 20px rgba(0,0,0,1);
+    background: linear-gradient(100deg , rgb(215, 216, 212), rgb(94, 94, 94));
+}
+
+.card:hover {
+    transform: scale(1.08); /* Increase size on hover */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+  }
+
+.card .card-title{
+    color: black;
+    font-weight: bold;
+    font-size: 22px;
+    width: 250px;
+    text-align: center;
+    line-height: 40px;
+    font-family: 'Poppings', sans-serif;
+}
+
+.spacer{
+  flex: 1 1 auto
+}

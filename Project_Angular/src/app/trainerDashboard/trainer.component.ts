@@ -8,8 +8,7 @@ import { Router } from '@angular/router';
   styleUrl: './trainer.component.css'
 })
 export class TrainerComponent {
-  constructor(private registrationService: RegistrationService, private router: Router ) {
+  
 
-  }
 }
 

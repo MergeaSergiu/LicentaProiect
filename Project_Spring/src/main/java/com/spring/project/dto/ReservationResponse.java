@@ -11,9 +11,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReservationResponse {
-    LocalDate localDate;
-    String startTime;
-    String endTime;
+    Integer id;
+    String localDate;
+    String hourSchedule;
     String clientEmail;
     String court;
 }
