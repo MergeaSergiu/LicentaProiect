@@ -1,5 +1,6 @@
 package com.spring.project.service.impl;
 
+import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.Exception.EmailNotAvailableException;
 import com.spring.project.dto.*;
 import com.spring.project.email.EmailSender;
@@ -99,44 +100,80 @@ public class AdminServiceImpl implements AdminService {
 
     }
 
+    @Override
+    public List<SubscriptionResponse> getAllSubscriptions() {
+        List<Subscription> subscriptions = subscriptionService.getAllSubscriptionPlans();
+        return subscriptions.stream()
+                .map(subscription -> SubscriptionResponse.builder()
+                        .id(subscription.getId())
+                        .subscriptionName(subscription.getSubscriptionName())
+                        .subscriptionPrice(subscription.getSubscriptionPrice())
+                        .subscriptionTime(subscription.getSubscriptionTime())
+                        .subscriptionDescription(subscription.getSubscriptionDescription())
+                        .build())
+                .collect(Collectors.toList());
+    }
 
     public void createSubscription(CreateSubscriptionRequest createSubscriptionRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated()) {
-            Subscription subscription = new Subscription(
-                    createSubscriptionRequest.getSubscriptionName(),
-                    createSubscriptionRequest.getSubscriptionPrice(),
-                    createSubscriptionRequest.getSubscriptionTime(),
-                    createSubscriptionRequest.getSubscriptionDescription()
-            );
-            subscriptionService.saveSubscription(subscription);
+            Subscription foundsubscription = subscriptionService.findBySubscriptionName(createSubscriptionRequest.getSubscriptionName());
+            if (foundsubscription == null) {
+                Subscription subscription = new Subscription(
+                        createSubscriptionRequest.getSubscriptionName(),
+                        createSubscriptionRequest.getSubscriptionPrice(),
+                        createSubscriptionRequest.getSubscriptionTime(),
+                        createSubscriptionRequest.getSubscriptionDescription()
+                );
+                subscriptionService.saveSubscription(subscription);
+            }else{
+                throw new EntityExistsException("There is already a subscription with this name");
+            }
         }
     }
 
-    public void updateSubscription(Integer id, Map<String, Object> fields) {
+    @Override
+    public void updateSubscription(Integer id, CreateSubscriptionRequest subscriptionRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getName() != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+        if (authentication.isAuthenticated()) {
             Subscription subscription = subscriptionService.findById(id).orElse(null);
-            if(subscription != null) {
-                fields.forEach((key, value) -> {
-                    switch (key) {
-                        case "subscriptionName" -> subscription.setSubscriptionName((String) value);
-                        case "subscriptionPrice" -> subscription.setSubscriptionPrice((Double) value);
-                        case "subscriptionTime" -> subscription.setSubscriptionTime((Integer) value);
-                        case "subscriptionDescription" -> subscription.setSubscriptionDescription((String) value);
-                        default -> throw new IllegalArgumentException("Invalid field:" + key);
-                    }
-                });
-                subscriptionService.saveSubscription(subscription);
-            }else {
+            if (subscription != null) {
+                if (subscriptionRequest.getSubscriptionName().equals(subscriptionService.findById(id).get().getSubscriptionName()) || (subscriptionService.findBySubscriptionName(subscriptionRequest.getSubscriptionName()) == null)) {
+                    subscription.setSubscriptionName(subscriptionRequest.getSubscriptionName());
+                    subscription.setSubscriptionPrice(subscriptionRequest.getSubscriptionPrice());
+                    subscription.setSubscriptionTime(subscriptionRequest.getSubscriptionTime());
+                    subscription.setSubscriptionDescription(subscriptionRequest.getSubscriptionDescription());
+                    subscriptionService.saveSubscription(subscription);
+                } else {
+                    throw new EntityExistsException("There is already a subscription with this name");
+                }
+            } else {
                 throw new EntityNotFoundException("There is no subscription with this name");
             }
         }
     }
 
+    @Override
+    public SubscriptionResponse getSubscriptionById(Integer id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            Subscription subscription = subscriptionService.findById(id).orElse(null);
+            if(subscription != null){
+                return SubscriptionResponse.builder()
+                        .id(subscription.getId())
+                        .subscriptionName(subscription.getSubscriptionName())
+                        .subscriptionPrice(subscription.getSubscriptionPrice())
+                        .subscriptionTime(subscription.getSubscriptionTime())
+                        .subscriptionDescription(subscription.getSubscriptionDescription())
+                        .build();
+                }
+            }
+        throw new CustomExpiredJwtException("Session expired");
+    }
+
     public void deleteSubscription(Integer id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getName() != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+        if (authentication.isAuthenticated()) {
             subscriptionService.deleteSubscription(id);
         }
     }

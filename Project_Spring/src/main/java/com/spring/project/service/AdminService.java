@@ -12,9 +12,13 @@ public interface AdminService {
 
      List<ReservationResponse> getAllReservations();
 
+     List<SubscriptionResponse> getAllSubscriptions();
+
      void createSubscription(CreateSubscriptionRequest createSubscriptionRequest);
 
-     void updateSubscription(Integer id, Map<String, Object> fields);
+     void updateSubscription(Integer id, CreateSubscriptionRequest subscriptionRequest);
+
+     SubscriptionResponse getSubscriptionById(Integer id);
 
      void deleteSubscription(Integer id);
 

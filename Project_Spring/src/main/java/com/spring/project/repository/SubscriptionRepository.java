@@ -10,9 +10,7 @@ import java.util.List;
 @Repository
 public interface SubscriptionRepository extends JpaRepository<Subscription, Integer> {
 
-    @Query("SELECT s from Subscription s")
-    List<Subscription> findAllSubscriptions();
-
     @Query("SELECT s From Subscription s WHERE s.subscriptionName = :subscriptionName")
     Subscription findBySubscriptionName(String subscriptionName);
+
 }

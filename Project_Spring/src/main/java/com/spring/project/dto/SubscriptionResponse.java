@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class SubscriptionResponse {
+    private Integer id;
     private String subscriptionName;
     private Double subscriptionPrice;
     private Integer subscriptionTime;

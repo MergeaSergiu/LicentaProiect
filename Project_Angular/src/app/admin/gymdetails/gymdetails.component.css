@@ -1,0 +1,49 @@
+mat-card{
+    background-color: orange;
+    width: 500px; /* Set the width as desired */
+    height: 200px;
+    font-weight: bold; 
+}
+
+mat-card-title{
+    font-size: 15px;
+    font-weight: bold; 
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+  }
+
+  .price{
+    margin-left: auto;
+  }
+  .subscriptions{
+    position: absolute;
+    margin-left: -60px;
+    top: 10px;
+  }
+
+
+  mat-card-subtitle {
+    color: #575757; /* Change the color as needed */
+    font-size: 15px; /* Change the font size as needed */
+    margin-left: 400px;
+  }
+
+  .subscription-card {
+    margin-top: 20px; /* Adjust the margin as needed to create space between cards */
+  }
+
+  .container {
+    position: relative;
+  }
+  
+  .createSub {
+    position: absolute;
+    margin-top: 35px;
+    top: 10px; /* Adjust top position as needed */
+    right: 10px; /* Adjust right position as needed */
+  }
+
+

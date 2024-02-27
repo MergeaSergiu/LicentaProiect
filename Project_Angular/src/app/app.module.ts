@@ -29,14 +29,17 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AdminService } from './services/admin.service';
-import { MatButtonModule, MatIconButton } from '@angular/material/button';
-import { NavbarComponent } from './navbar/navbar.component';
-import {MatToolbarModule} from '@angular/material/toolbar';
+import { MatButtonModule} from '@angular/material/button';
+import { NavbarComponent } from './navbarClient/navbar.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { TrainersComponent } from './client/trainer/trainer.component';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatCheckboxModule} from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
-import { DatePipe } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { GymdetailsComponent } from './admin/gymdetails/gymdetails.component';
+import { NavbarAdminComponent } from './navbar-admin/navbar-admin.component';
+import { PopupSubscriptionComponent } from './popup-subscription/popup-subscription.component';
+import { PopupUpdateSubscriptionComponent } from './popup-update-subscription/popup-update-subscription.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +55,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ReservationComponent,
     ReservationdetailsComponent,
     NavbarComponent,
+    GymdetailsComponent,
+    NavbarAdminComponent,
+    PopupSubscriptionComponent,
+    PopupUpdateSubscriptionComponent,
   ],
   imports: [
     BrowserModule,
@@ -73,7 +80,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatToolbarModule,
     MatCheckboxModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatIconModule
   ],
   providers: [
     {
@@ -81,7 +89,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       useClass: AuthInterceptor,
       multi: true
     },
-    [{provide: MAT_DATE_LOCALE, useValue: 'en-GB'}],
     RegistrationService,
     ClientService,
     AdminService,
@@ -89,7 +96,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     provideHttpClient(withFetch()),
     provideAnimationsAsync(),
     provideNativeDateAdapter(),
-    DatePipe
   ],
   bootstrap: [AppComponent]
 })

@@ -16,15 +16,13 @@ public class CreateSubscriptionRequest {
     @NotBlank(message = "Subscription Title can not be blank")
     private String subscriptionName;
 
-    @NotNull
+    @NotNull(message = "You need to add a price")
     private Double subscriptionPrice;
 
-    @NotNull
+    @NotNull(message = "You need to add a time")
     private Integer subscriptionTime;
 
     @NotNull
-    @NotBlank
+    @NotBlank(message = "Subscription Description can not be blank")
     private String subscriptionDescription;
-
-
 }

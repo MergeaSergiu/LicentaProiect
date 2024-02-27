@@ -1,0 +1,22 @@
+<app-navbar-admin></app-navbar-admin>
+<div class="container">
+    <br>
+    <div class="createSub">
+        <button mat-raised-button matTooltip="Create a new subscription" color="primary" (click)="OpenCreatePopUp()">Create Subscription (+)</button>
+    </div>
+        <div class="subscriptions">
+            <mat-card *ngFor="let subscription of subscriptions" class="subscription-card">
+                <mat-card-header>
+                    <mat-card-title>{{ subscription.subscriptionName }}</mat-card-title>
+                        <div class="price">{{ subscription.subscriptionPrice }} RON/month</div>
+                        </mat-card-header>
+                <mat-card-subtitle>{{subscription.subscriptionTime}} days</mat-card-subtitle>
+                <mat-card-content>{{subscription.subscriptionDescription}}</mat-card-content>
+                <mat-card-actions>
+                <button mat-raised-button matTooltip="Update the subscription data" color="primary" (click)="OpenEditPopUp(subscription.id)">Edit</button>
+                <button mat-raised-button matTooltip="Delete the subscription" color="warn" aria-label="Delete" (click)="deleteSubscription(subscription.id)">Delete</button>
+                </mat-card-actions>
+            </mat-card>
+        <br>
+    </div>
+</div>

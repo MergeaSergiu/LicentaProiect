@@ -12,6 +12,8 @@ import { AccountComponent } from "./client/account/account.component";
 import { TrainersComponent } from "./client/trainer/trainer.component";
 import { authGuard} from "./auth/auth-guard/auth.guard";
 import { ReservationdetailsComponent } from "./admin/reservationdetails/reservationdetails.component";
+import { GymdetailsComponent } from "./admin/gymdetails/gymdetails.component";
+
 const appRoutes : Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full'},
     { path: 'authentication', component: AuthenticationComponent},
@@ -32,7 +34,8 @@ const appRoutes : Routes = [
     data: {roles: 'ADMIN'},
     children: [
     {path: 'adminDashboard', component: AdminComponent},
-    {path: 'reservations', component: ReservationdetailsComponent}
+    {path: 'reservations', component: ReservationdetailsComponent},
+    {path: 'gym',component: GymdetailsComponent}
     ]},
     { path: 'trainer',
     canActivate: [authGuard],
