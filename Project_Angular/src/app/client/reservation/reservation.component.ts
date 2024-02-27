@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RegistrationService } from '../../services/registration.service';
 import { ClientService } from '../../services/client.service';
 import { Router } from '@angular/router';
@@ -6,6 +6,8 @@ import { ReservationResponse } from '../../models/reservation-response.model';
 import { DateAdapter } from '@angular/material/core';
 import { ReservationRequest } from '../../models/reservation-request.model';
 import { DatePipe } from '@angular/common';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 
 interface HourSchedule {
@@ -18,7 +20,7 @@ interface HourSchedule {
   templateUrl: './reservation.component.html',
   styleUrl: './reservation.component.css',
 })
-export class ReservationComponent {
+export class ReservationComponent implements OnInit{
 
   reservationsTenis: ReservationResponse[] = [];
   reservationsBasketball: ReservationResponse[] = [];
@@ -56,13 +58,50 @@ export class ReservationComponent {
   maxDate: Date;
   successfullMessage: string;
 
-  constructor(private registrationService: RegistrationService, private clientService: ClientService, private router: Router,private dateAdapter: DateAdapter<Date> ) {
+  reservations = [];
+  displayedColumns: string[] = ['Date', 'HourSchedule', 'Court', 'Delete'];
+  deleteMessage: string;
+  dataSource: MatTableDataSource<any>;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  constructor(private registrationService: RegistrationService, private clientService: ClientService, private router: Router ) {
     const today = new Date();
     this.minDate = new Date(today.getFullYear(), today.getMonth(), 0); // Start of current month
     this.maxDate = new Date(today.getFullYear(), today.getMonth() + 2, 0); // End of next month
+    this.fetchReservationsForClient();
   }
 
-  ngOnInit(): void{}
+  Filterchange(data:Event){
+    const value=(data.target as HTMLInputElement).value;
+    this.dataSource.filter=value;
+  }
+
+  ngOnInit(): void{
+    this.fetchReservationsForClient();
+  }
+
+  public fetchReservationsForClient(){
+    this.clientService.getAllReservationsForClient().subscribe({
+      next: (response) => {
+        this.reservations = response;
+        this.dataSource = new MatTableDataSource<any>(this.reservations);
+        this.dataSource.paginator = this.paginator;
+        }
+      });
+  }
+
+  public deleteReservation(id: number){
+      this.clientService.deleteReservation(id).subscribe({
+        next:(response:any) =>{
+          this.deleteMessage = "Reservation was deleted";
+          this.fetchReservationsForClient();
+          setTimeout(() => {
+              this.deleteMessage = '';
+          }, 2000)
+
+        }
+      })
+  }
 
     fetchFootballReservations():void{
       this.clientService.getReservations('Fotball').subscribe(
