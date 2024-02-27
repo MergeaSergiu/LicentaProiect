@@ -9,19 +9,17 @@ import { Router } from '@angular/router';
 })
 export class AdminComponent {
 
-  constructor(private registrationService: RegistrationService, private router: Router ) {
+  constructor(private registrationService: RegistrationService, private router: Router ) {}
 
-  }
-
-  
-
-  ngOnInit(): void{
-    
-  }
+  ngOnInit(): void{}
 
     redirectToReservationsHistory() {
     this.router.navigate(['/admin/reservations']);
-  }
+    }
+
+  redirectToGymInformation(){
+    this.router.navigate(['/admin/gym']);
+    }
   
     public logout(){
       this.registrationService.clear();

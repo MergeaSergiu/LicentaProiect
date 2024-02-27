@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RegistrationService } from '../../services/registration.service';
 import { ClientService } from '../../services/client.service';
 import { Router } from '@angular/router';
-import { ReservationResponse } from './reservation-response.model';
+import { ReservationResponse } from '../../models/reservation-response.model';
 import { DateAdapter } from '@angular/material/core';
 import { ReservationRequest } from '../../models/reservation-request.model';
 import { DatePipe } from '@angular/common';

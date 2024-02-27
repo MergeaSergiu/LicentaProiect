@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, catchError, throwError } from "rxjs";
-import { ReservationResponse } from "../client/reservation/reservation-response.model";
+import { ReservationResponse } from "../models/reservation-response.model";
 import { ReservationRequest } from "../models/reservation-request.model";
 
 

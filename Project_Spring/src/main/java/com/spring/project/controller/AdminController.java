@@ -2,6 +2,7 @@ package com.spring.project.controller;
 
 import com.spring.project.dto.*;
 import com.spring.project.service.AdminService;
+import com.spring.project.service.RegistrationService;
 import com.spring.project.service.impl.ClientService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -47,20 +48,33 @@ public class AdminController {
             return ResponseEntity.ok(clientResponses);
     }
 
+    @GetMapping("/getSubscriptions")
+    public ResponseEntity<List<SubscriptionResponse>> getAllSubscriptions(){
+        List<SubscriptionResponse> subscriptionResponse = adminService.getAllSubscriptions();
+        return ResponseEntity.ok(subscriptionResponse);
+    }
+
     @PostMapping("/createSubscription")
-    public ResponseEntity<String> createSubscription(@RequestBody @Valid CreateSubscriptionRequest createSubscriptionRequest){
+    public ResponseEntity<Void> createSubscription(@RequestBody CreateSubscriptionRequest createSubscriptionRequest){
         adminService.createSubscription(createSubscriptionRequest);
-        return new ResponseEntity<>("Subscription created successfully", HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PatchMapping("/updateSubscription/{id}")
-    public ResponseEntity<String> updateSubscription(@PathVariable("id") Integer id, @RequestBody Map<String, Object> fields){
-        adminService.updateSubscription(id, fields);
-        return ResponseEntity.ok("Subscription data was update");
+    @GetMapping("/getSubscription")
+    public ResponseEntity<SubscriptionResponse> getSubscriptionById(@RequestParam("id") Integer id){
+        SubscriptionResponse subscriptionResponse = adminService.getSubscriptionById(id);
+        return ResponseEntity.ok(subscriptionResponse);
     }
 
-    @DeleteMapping("/deleteSubscription/{id}")
-    public ResponseEntity<String> deleteSubscription(@PathVariable("id") Integer id){
+
+    @PutMapping("/updateSubscription")
+    public ResponseEntity<Void> updateSubscription(@RequestParam("id") Integer id, @RequestBody CreateSubscriptionRequest subscriptionRequest){
+        adminService.updateSubscription(id, subscriptionRequest);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/deleteSubscription")
+    public ResponseEntity<Void> deleteSubscription(@RequestParam("id") Integer id){
         adminService.deleteSubscription(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

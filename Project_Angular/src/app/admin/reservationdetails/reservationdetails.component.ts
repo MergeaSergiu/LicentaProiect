@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { RegistrationService } from '../../services/registration.service';
 import { Router } from '@angular/router';
-import { ClientService } from '../../services/client.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { AdminService } from '../../services/admin.service';
@@ -32,13 +31,9 @@ export class ReservationdetailsComponent implements AfterViewInit{
     this.dataSource.filter=value;
   }
 
-  ngAfterViewInit(){
-    
-  }
+  ngAfterViewInit(){}
 
-  ngOnInit():void{
-
-  }
+  ngOnInit():void{}
   
   public logout(){
     this.registrationService.clear();

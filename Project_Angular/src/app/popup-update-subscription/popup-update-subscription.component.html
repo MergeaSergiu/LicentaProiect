@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>Update subscription Data</h1>
+<form #authForm="ngForm" (ngSubmit)="onSubmitUpdateSubscription(authForm)">
+<div mat-dialog-content>
+    <mat-form-field>
+        <mat-label>Subscription Name</mat-label>
+        <input matInput name="subscriptionName" ngModel required>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Subscription Price</mat-label>
+        <input matInput name="subscriptionPrice" ngModel required>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Subscription Time</mat-label>
+        <input matInput name="subscriptionTime" ngModel required>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Subscription Description</mat-label>
+        <input matInput name="subscriptionDescription" ngModel required>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button type="submit" mat-raised-button color="primary" [disabled]="!authForm.valid">Update</button> <!-- Disable button if form is not valid -->
+    <button type="button"mat-raised-button color="warn" (click)="closePopUp()">Close</button>
+</div>
+</form>
+
+
+

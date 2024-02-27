@@ -21,12 +21,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     public List<Subscription> getAllSubscriptionPlans(){
-        return subscriptionRepository.findAllSubscriptions();
+        return subscriptionRepository.findAll();
     }
 
     public Optional<Subscription> findById(Integer id){
         return subscriptionRepository.findById(id);
-
     }
 
     public Subscription findBySubscriptionName(String subscriptionName){
