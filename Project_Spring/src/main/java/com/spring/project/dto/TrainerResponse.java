@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TrainerResponse {
+    public Integer id;
     public String firstName;
     public String lastName;
-    public String email;
 }

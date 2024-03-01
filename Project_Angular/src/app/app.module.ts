@@ -40,6 +40,9 @@ import { GymdetailsComponent } from './admin/gymdetails/gymdetails.component';
 import { NavbarAdminComponent } from './navbar-admin/navbar-admin.component';
 import { PopupSubscriptionComponent } from './popup-subscription/popup-subscription.component';
 import { PopupUpdateSubscriptionComponent } from './popup-update-subscription/popup-update-subscription.component';
+import { MatSelectModule } from '@angular/material/select';
+import { PopupCreateTrClassComponent } from './popup-create-tr-class/popup-create-tr-class.component';
+import { PopupEditTrClassComponent } from './popup-edit-tr-class/popup-edit-tr-class.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +62,8 @@ import { PopupUpdateSubscriptionComponent } from './popup-update-subscription/po
     NavbarAdminComponent,
     PopupSubscriptionComponent,
     PopupUpdateSubscriptionComponent,
+    PopupCreateTrClassComponent,
+    PopupEditTrClassComponent,
   ],
   imports: [
     BrowserModule,
@@ -81,7 +86,8 @@ import { PopupUpdateSubscriptionComponent } from './popup-update-subscription/po
     MatCheckboxModule,
     MatIconModule,
     MatTooltipModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule
   ],
   providers: [
     {

@@ -27,8 +27,8 @@ public class TrainingClassServiceImpl implements TrainingClassService {
         return trainingClassRepository.findById(id).orElse(null);
     }
 
-    public void deleteTrainingClass(String className) {
-        trainingClassRepository.deleteByClassName(className);
+    public void deleteTrainingClass(Integer id) {
+        trainingClassRepository.deleteById(id);
     }
 
     public List<TrainingClass> getTrainingClasses() {

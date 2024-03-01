@@ -1,7 +1,7 @@
 mat-card{
-    background-color: orange;
+    background-color: rgb(243, 222, 182);
     width: 500px; /* Set the width as desired */
-    height: 200px;
+    height: 170px;
     font-weight: bold; 
 }
 
@@ -9,6 +9,8 @@ mat-card-title{
     font-size: 15px;
     font-weight: bold; 
 }
+
+
 
 .header-content {
     display: flex;
@@ -18,10 +20,22 @@ mat-card-title{
   .price{
     margin-left: auto;
   }
+
+  .intensity{
+    margin-top: 40px;
+    margin-left: auto;
+  }
   .subscriptions{
     position: absolute;
     margin-left: -60px;
     top: 10px;
+  }
+  
+  .trainingCard{
+    background-color: rgb(192, 190, 240);
+    width: 500px; /* Set the width as desired */
+    height: 270px;
+    font-weight: bold; 
   }
 
 
@@ -32,18 +46,59 @@ mat-card-title{
   }
 
   .subscription-card {
-    margin-top: 20px; /* Adjust the margin as needed to create space between cards */
+    margin-top: 15px; /* Adjust the margin as needed to create space between cards */
   }
 
   .container {
     position: relative;
   }
+
+  /* .container2 {
+    position: absolute;
+    margin-top: 40px;
+    top: 40px; 
+    right: 10px;
+  } */
+  .selector{
+    position: absolute;
+    margin-top: 60px;
+    top: 60px; /* Adjust top position as needed */
+    right: 10px;
+  }
+
+  .training-data{
+    position: absolute;
+    margin-top: 90px;
+    top: 100px; /* Adjust top position as needed */
+    right: 5px;
+  }
+
   
   .createSub {
     position: absolute;
-    margin-top: 35px;
+    margin-top: 20px;
     top: 10px; /* Adjust top position as needed */
-    right: 10px; /* Adjust right position as needed */
+    right: 420px; /* Adjust right position as needed */
+  }
+
+  .createTrainingClass{
+    position: absolute;
+    margin-top: 20px;
+    top: 10px; /* Adjust top position as needed */
+    right: 10px; 
+}
+
+  .mat-form-field {
+    flex: 1; /* Take up remaining space */
+    max-width: 200px; /* Limit the maximum width */
+    margin-right: 20px; /* Add some spacing between the elements */
+  }
+
+  .deletebutton{
+    position: absolute;
+    margin-top: 0px;
+    top: 5px; /* Adjust top position as needed */
+    right: 5px;
   }
 
 

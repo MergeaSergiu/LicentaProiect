@@ -5,6 +5,18 @@ import { PopupSubscriptionComponent } from '../../popup-subscription/popup-subsc
 import { MatDialog } from '@angular/material/dialog';
 import { response } from 'express';
 import { PopupUpdateSubscriptionComponent } from '../../popup-update-subscription/popup-update-subscription.component';
+import { PopupCreateTrClassComponent } from '../../popup-create-tr-class/popup-create-tr-class.component';
+import { PopupEditTrClassComponent } from '../../popup-edit-tr-class/popup-edit-tr-class.component';
+
+interface TrainingClass {
+  id: number;
+  className: string;
+  duration: number;
+  intensity: string;
+  localDate: string;
+  trainerId: number;
+  // Add more properties as needed
+}
 
 @Component({
   selector: 'app-gymdetails',
@@ -14,12 +26,27 @@ import { PopupUpdateSubscriptionComponent } from '../../popup-update-subscriptio
 export class GymdetailsComponent {
 
   subscriptions = [];
+  selectedTrainingClassId: number;
+  selectedTrainingClass: TrainingClass;
+  trainingClassesData: TrainingClass[] = [];
+  trainingClassId: number;
   constructor(private router: Router, private adminService: AdminService, private dialog: MatDialog) {
 }
 
   ngOnInit(): void {
     this.fetchSubscriptions();
+    this.fetchAllTrainingClassData();
   }
+
+  selectionChangeHandler(event: any) {
+    this.selectedTrainingClassId = event.value;
+    this.fetchTrainingClassData(this.selectedTrainingClassId);
+  }
+
+  closeCard() {
+    this.selectedTrainingClassId = null;
+    this.selectedTrainingClass = null;
+}
 
   public fetchSubscriptions() {
     return this.adminService.getAllSubscriptions().subscribe({
@@ -42,6 +69,34 @@ export class GymdetailsComponent {
     })
   }
 
+  public fetchTrainingClassData(id: number){
+    this.adminService.getTrainingClassData(id).subscribe(
+      response => {
+        this.selectedTrainingClass = response;
+      }
+    )
+  }
+
+  public fetchAllTrainingClassData(){
+    this.adminService.getTrainingClassesData().subscribe(
+      response => {
+        console.log(response);
+        this.trainingClassesData = response;
+      }
+    )
+  }
+
+  public deleteTrainingClass(id: number){
+    this.adminService.deleteTrainingClass(id).subscribe(
+      response => {
+        this.fetchAllTrainingClassData();
+        alert("TrainingClass was deleted");
+        this.selectedTrainingClassId = null;
+        this.selectedTrainingClass = null;
+      }
+    )
+  }
+
   OpenCreatePopUp() {
     var _popUp = this.dialog.open(PopupSubscriptionComponent, {
       width: '50%',
@@ -54,11 +109,40 @@ export class GymdetailsComponent {
     })
   }
 
+  OpenCreateTrainingClassPopUp(){
+      var _popUpTrainingClass = this.dialog.open(PopupCreateTrClassComponent, {
+        width: '50%',
+        enterAnimationDuration: '400ms',
+        exitAnimationDuration: '400ms'
+      });
+
+      _popUpTrainingClass.afterClosed().subscribe(response => {
+        this.fetchAllTrainingClassData();
+      })
+  }
+
+  OpenEditTrainingClassPopUp(id: number){
+    var _popUpEditTrainingClass = this.dialog.open(PopupEditTrClassComponent, {
+      width: '50%',
+      enterAnimationDuration: '500ms',
+      exitAnimationDuration: '500ms',
+      data: {
+          id: id
+      }
+    });
+
+    _popUpEditTrainingClass.afterClosed().subscribe(response =>{
+      this.fetchTrainingClassData(id);
+      this.fetchAllTrainingClassData();
+      this.closeCard();
+    })
+  }
+
   OpenEditPopUp(id:number) {
     var _popUp = this.dialog.open(PopupUpdateSubscriptionComponent, {
       width: '50%',
-      enterAnimationDuration: '700ms',
-      exitAnimationDuration: '700ms',
+      enterAnimationDuration: '500ms',
+      exitAnimationDuration: '500ms',
       data: {
           id: id
       }

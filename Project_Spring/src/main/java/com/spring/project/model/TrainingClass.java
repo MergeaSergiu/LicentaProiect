@@ -27,14 +27,14 @@ public class TrainingClass {
 
     private String intensity;
 
-    private LocalDate localDate;
+    private String localDate;
 
     @ManyToOne
     @JoinColumn(name = "trainer_id")
     @NotNull
     private Client trainer;
 
-    public TrainingClass(String className, int duration, String intensity, LocalDate localDate, Client trainer) {
+    public TrainingClass(String className, int duration, String intensity, String localDate, Client trainer) {
         this.className = className;
         this.duration = duration;
         this.intensity = intensity;

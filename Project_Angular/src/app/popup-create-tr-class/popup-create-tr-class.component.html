@@ -1,0 +1,34 @@
+<h1 mat-dialog-title>Create Training Class</h1>
+<form #authForm="ngForm" (ngSubmit)="onSubmitCreateTrainingClass(authForm)">
+<div mat-dialog-content>
+    <mat-form-field>
+        <mat-label>Training Class</mat-label>
+        <input matInput name="className" ngModel required>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Duration(mins)</mat-label>
+        <input matInput name="duration" ngModel required>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Add a date</mat-label>
+        <input matInput name="localDate" ngModel required>
+        <mat-hint>YYYY-MM-DD</mat-hint>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Intensity</mat-label>
+        <input matInput name="intensity" ngModel required>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Select a Trainer</mat-label>
+        <mat-select [(ngModel)]="selectedTrainerId" name="trainerId" ngModel required>
+            <mat-option *ngFor="let trainer of trainersData" [value]="trainer.id">
+                {{trainer.firstName}} {{trainer.lastName}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button type="submit" mat-raised-button color="primary" [disabled]="!authForm.valid">Save</button> <!-- Disable button if form is not valid -->
+    <button type="button" mat-raised-button color="warn" (click)="closePopUp()">Close</button>
+</div>
+</form>

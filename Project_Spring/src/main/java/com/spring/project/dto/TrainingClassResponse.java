@@ -13,10 +13,13 @@ import java.time.LocalDate;
 @Setter
 public class TrainingClassResponse {
 
+    private Integer id;
     private String className;
     private Integer duration;
     private String intensity;
-    private LocalDate localDate;
-    private String trainerEmail;
+    private String localDate;
+    private Integer trainerId;
+    private String lastName;
+    private String firstName;
 
 }

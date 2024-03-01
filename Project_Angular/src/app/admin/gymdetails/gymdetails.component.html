@@ -1,8 +1,12 @@
+
 <app-navbar-admin></app-navbar-admin>
 <div class="container">
     <br>
     <div class="createSub">
         <button mat-raised-button matTooltip="Create a new subscription" color="primary" (click)="OpenCreatePopUp()">Create Subscription (+)</button>
+    </div>
+    <div class="createTrainingClass">
+    <button mat-raised-button matTooltip="Create a new trainingClass" color="primary" (click)="OpenCreateTrainingClassPopUp()">Create TrainingClass (+)</button>
     </div>
         <div class="subscriptions">
             <mat-card *ngFor="let subscription of subscriptions" class="subscription-card">
@@ -19,4 +23,41 @@
             </mat-card>
         <br>
     </div>
+    <div class="container2">
+        <div class="selector">
+            <mat-form-field>
+                <mat-label>Select a Training Class</mat-label>
+                <mat-select [(ngModel)]="selectedTrainingClassId" name="trainingClass" (selectionChange)="selectionChangeHandler($event)">
+                    <mat-option *ngFor="let trainingClass of trainingClassesData" [value]="trainingClass.id">
+                        {{ trainingClass.className }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+            <div class="training-data">
+            <mat-card *ngIf="selectedTrainingClass" class="trainingCard">
+                <div class="deletebutton">
+                    <button mat-icon-button class="close-button" (click)="closeCard()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+                <mat-card-header>
+                    <mat-card-title>{{ selectedTrainingClass.className }}</mat-card-title>
+                    <div class="intensity">Intensity: {{ selectedTrainingClass.intensity }}</div>
+                </mat-card-header>
+                <mat-card-content>
+                    <p><strong>Duration:</strong> {{ selectedTrainingClass.duration }}</p>
+                    <p><strong>LocalDate:</strong> {{ selectedTrainingClass.localDate }}</p>
+                    <p><strong>Trainer:</strong> {{ selectedTrainingClass.lastName}} {{selectedTrainingClass.firstName}}</p>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-raised-button matTooltip="Update the subscription data" color="primary" (click)="OpenEditTrainingClassPopUp(selectedTrainingClass.id)">Edit</button> 
+                    <button mat-raised-button matTooltip="Delete the trainingClass" color="warn" aria-label="Delete" (click)="deleteTrainingClass(selectedTrainingClass.id)">Delete</button>
+                    </mat-card-actions>
+            </mat-card>
+            </div>
+    </div>
 </div>
+
+
+

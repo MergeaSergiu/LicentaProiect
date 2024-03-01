@@ -36,7 +36,7 @@ public class TrainerServiceImpl implements TrainerService {
                                 .localDate(trainingClass.getLocalDate())
                                 .duration(trainingClass.getDuration())
                                 .intensity(trainingClass.getIntensity())
-                                .trainerEmail(authentication.getName())
+                                .trainerId(trainer.getId())
                                 .build())
                         .collect(Collectors.toList());
             } else {

@@ -10,6 +10,8 @@ public interface AdminService {
 
      List<ClientResponse> getAllClients();
 
+     List<TrainerResponse> getAllTrainers();
+
      List<ReservationResponse> getAllReservations();
 
      List<SubscriptionResponse> getAllSubscriptions();
@@ -22,9 +24,13 @@ public interface AdminService {
 
      void deleteSubscription(Integer id);
 
-     void createTrainingClass(CreateClassRequest classRequest);
+     List<TrainingClassResponse> getAllTrainingClasses();
 
-    void updateTrainingClass(Integer id, Map<String, Object> fields);
+     TrainingClassResponse getTrainingClass(Integer id);
 
-    void deleteTrainingClass(String className);
+     void createTrainingClass(TrainingClassRequest classRequest);
+
+    void updateTrainingClass(Integer id, TrainingClassRequest trainingClassRequest);
+
+    void deleteTrainingClass(Integer id);
 }
