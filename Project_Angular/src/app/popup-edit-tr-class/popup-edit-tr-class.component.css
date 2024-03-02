@@ -16,3 +16,17 @@ mat-card{
 button{
     margin: 2px;
 }
+
+.input-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .input-container label {
+    margin-right: 10px;
+    width: 70px;
+  }
+  
+  .input-container input {
+    width: 800px; /* Set the width of the inputs */
+  }

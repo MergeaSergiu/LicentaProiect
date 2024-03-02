@@ -4,7 +4,6 @@ import { AdminService } from '../services/admin.service';
 import { NgForm } from '@angular/forms';
 import { TrainingClassRequest } from '../models/trainingclass-request.model';
 import { TrainerDataResponse } from '../models/trainers-response.model';
-import { response } from 'express';
 
 @Component({
   selector: 'app-popup-create-tr-class',
@@ -38,6 +37,7 @@ export class PopupCreateTrClassComponent {
     const trainingClass: TrainingClassRequest = {
           className: form.value.className,
           duration: form.value.duration,
+          startTime: form.value.startTime,
           intensity: form.value.intensity,
           localDate: form.value.localDate,
           trainerId: form.value.trainerId

@@ -200,6 +200,7 @@ public class AdminServiceImpl implements AdminService {
                             .id(trainingClass.getId())
                             .className(trainingClass.getClassName())
                             .duration(trainingClass.getDuration())
+                            .startTime(trainingClass.getStartTime())
                             .intensity(trainingClass.getIntensity())
                             .localDate(trainingClass.getLocalDate())
                             .trainerId(trainingClass.getTrainer().getId())
@@ -222,6 +223,7 @@ public class AdminServiceImpl implements AdminService {
                     .id(trainingClass.getId())
                     .className(trainingClass.getClassName())
                     .duration(trainingClass.getDuration())
+                    .startTime(trainingClass.getStartTime())
                     .intensity(trainingClass.getIntensity())
                     .localDate(trainingClass.getLocalDate())
                     .trainerId(trainingClass.getTrainer().getId())
@@ -238,12 +240,14 @@ public class AdminServiceImpl implements AdminService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated()) {
             if (trainingClassService.getTrainingClassByName(classRequest.getClassName()) == null && clientService.findClientById(classRequest.getTrainerId()) != null) {
-                Client trainer = clientService.findClientById(classRequest.getTrainerId());
+                   Client trainer = clientService.findClientById(classRequest.getTrainerId());
                     TrainingClass trainingClass = new TrainingClass(
                             classRequest.getClassName(),
                             classRequest.getDuration(),
+                            classRequest.getStartTime(),
                             classRequest.getIntensity(),
                             classRequest.getLocalDate(),
+
                             trainer
                     );
                     trainingClassService.createTrainingClass(trainingClass);
@@ -267,6 +271,7 @@ public class AdminServiceImpl implements AdminService {
                 if(trainingClassService.getTrainingClassByName(trainingClassRequest.getClassName()) == null || trainingClassRequest.getClassName().equals(trainingClassService.findById(trainingClass.getId()).getClassName())){
                     trainingClass.setClassName(trainingClassRequest.getClassName());
                     trainingClass.setIntensity(trainingClassRequest.getIntensity());
+                    trainingClass.setStartTime(trainingClass.getStartTime());
                     trainingClass.setDuration(trainingClassRequest.getDuration());
                     trainingClass.setLocalDate(trainingClassRequest.getLocalDate());
                     trainingClass.setTrainer(clientService.findClientById(trainingClassRequest.getTrainerId()));

@@ -7,16 +7,8 @@ import { response } from 'express';
 import { PopupUpdateSubscriptionComponent } from '../../popup-update-subscription/popup-update-subscription.component';
 import { PopupCreateTrClassComponent } from '../../popup-create-tr-class/popup-create-tr-class.component';
 import { PopupEditTrClassComponent } from '../../popup-edit-tr-class/popup-edit-tr-class.component';
+import { TrainingClassResponse } from '../../models/trainingclass-response.model';
 
-interface TrainingClass {
-  id: number;
-  className: string;
-  duration: number;
-  intensity: string;
-  localDate: string;
-  trainerId: number;
-  // Add more properties as needed
-}
 
 @Component({
   selector: 'app-gymdetails',
@@ -27,8 +19,8 @@ export class GymdetailsComponent {
 
   subscriptions = [];
   selectedTrainingClassId: number;
-  selectedTrainingClass: TrainingClass;
-  trainingClassesData: TrainingClass[] = [];
+  selectedTrainingClass: TrainingClassResponse;
+  trainingClassesData: TrainingClassResponse[] = [];
   trainingClassId: number;
   constructor(private router: Router, private adminService: AdminService, private dialog: MatDialog) {
 }

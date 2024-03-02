@@ -18,6 +18,7 @@ public class TrainingClassResponse {
     private Integer duration;
     private String intensity;
     private String localDate;
+    private String startTime;
     private Integer trainerId;
     private String lastName;
     private String firstName;

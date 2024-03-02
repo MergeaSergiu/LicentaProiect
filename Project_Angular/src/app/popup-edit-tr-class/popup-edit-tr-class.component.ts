@@ -5,7 +5,6 @@ import { NgForm } from '@angular/forms';
 import { TrainerDataResponse } from '../models/trainers-response.model';
 import { TrainingClassResponse } from '../models/trainingclass-response.model';
 import { TrainingClassRequest } from '../models/trainingclass-request.model';
-import { response } from 'express';
 
 @Component({
   selector: 'app-popup-edit-tr-class',
@@ -50,6 +49,7 @@ export class PopupEditTrClassComponent {
           duration: this.editData.duration,
           intensity: this.editData.intensity,
           localDate: this.editData.localDate,
+          startTime: this.editData.startTime,
           trainerId: this.editData.trainerId
         });
       }
@@ -61,6 +61,7 @@ export class PopupEditTrClassComponent {
     const trainingClass: TrainingClassRequest = {
         className: form.value.className,
         duration: form.value.duration,
+        startTime: form.value.startTime,
         intensity: form.value.intensity,
         localDate: form.value.localDate,
         trainerId: form.value.trainerId

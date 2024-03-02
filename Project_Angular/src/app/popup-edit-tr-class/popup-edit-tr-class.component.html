@@ -5,10 +5,16 @@
         <mat-label>Training Class</mat-label>
         <input matInput name="className" ngModel required>
     </mat-form-field>
-    <mat-form-field>
-        <mat-label>Duration(mins)</mat-label>
-        <input matInput name="duration" ngModel required>
-    </mat-form-field>
+    <div class="input-container">
+        <mat-form-field>
+            <mat-label>Duration(mins)</mat-label>
+            <input matInput name="duration" ngModel required>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Start Time</mat-label>
+            <input matInput name="startTime" ngModel required>
+        </mat-form-field>
+    </div>
     <mat-form-field>
         <mat-label>Add a date</mat-label>
         <input matInput name="localDate" ngModel required>
