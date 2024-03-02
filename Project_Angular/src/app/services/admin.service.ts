@@ -3,6 +3,8 @@ import { Injectable } from "@angular/core";
 import { Observable, catchError, throwError } from "rxjs";
 import { ReservationResponse } from "../models/reservation-response.model";
 import { SubscriptionRequest } from "../models/subscription-request.model";
+import { TrainerDataResponse } from "../models/trainers-response.model";
+import { TrainingClassRequest } from "../models/trainingclass-request.model";
 
 
 @Injectable({
@@ -64,6 +66,51 @@ export class AdminService{
     .pipe(
       catchError(this.handleError)
     ) 
+  }
+
+  public getTrainingClassesData(){
+    return this.httpClient.get<any>(this.API_PATH + "/api/admin/getTrainingClasses")
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  public getTrainingClassData(id:number): Observable<any>{
+    const params = new HttpParams().set('id', id.toString());
+    return this.httpClient.get<any>(this.API_PATH + "/api/admin/getTrainingClassById", {params})
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  public deleteTrainingClass(id:number): Observable<any>{
+    const params = new HttpParams().set('id', id.toString());
+    return this.httpClient.delete<any>(this.API_PATH +"/api/admin/deleteClass", {params})
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  public getAllTrainers(): Observable<TrainerDataResponse[]>{
+    return this.httpClient.get<TrainerDataResponse[]>(this.API_PATH + "/api/admin/getTrainers")
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  public createTrainingClass(trainingClassRequest : TrainingClassRequest){
+    return this.httpClient.post(this.API_PATH + "/api/admin/createTrainingClass", trainingClassRequest)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  public updateTrainingClass(id: number, trainingClassRequest : TrainingClassRequest){
+    const params = new HttpParams().set('id', id.toString());
+    return this.httpClient.put(this.API_PATH + "/api/admin/updateClass", trainingClassRequest, {params})
+    .pipe(
+      catchError(this.handleError)
+    )
   }
 
 }

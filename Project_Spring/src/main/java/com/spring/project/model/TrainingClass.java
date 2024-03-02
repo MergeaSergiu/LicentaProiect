@@ -20,25 +20,23 @@ public class TrainingClass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private String className;
-
     private int duration;
-
     private String intensity;
-
-    private LocalDate localDate;
+    private String startTime;
+    private String localDate;
 
     @ManyToOne
     @JoinColumn(name = "trainer_id")
     @NotNull
     private Client trainer;
 
-    public TrainingClass(String className, int duration, String intensity, LocalDate localDate, Client trainer) {
+    public TrainingClass(String className, int duration, String startTime, String intensity, String localDate, Client trainer) {
         this.className = className;
         this.duration = duration;
         this.intensity = intensity;
         this.localDate = localDate;
+        this.startTime = startTime;
         this.trainer = trainer;
     }
 }

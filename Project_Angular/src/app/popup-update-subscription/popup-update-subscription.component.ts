@@ -31,7 +31,6 @@ export class PopupUpdateSubscriptionComponent {
       response => {
         
         this.editData= response;
-        console.log(this.editData);
       if (this.authForm) {
         this.authForm.form.patchValue({
           subscriptionName: this.editData.subscriptionName,

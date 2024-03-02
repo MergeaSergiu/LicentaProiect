@@ -14,50 +14,12 @@ import { response } from 'express';
 })
 export class AccountComponent {
   
-  reservations = [];
-  displayedColumns: string[] = ['Date', 'HourSchedule', 'Court', 'Delete'];
-  deleteMessage: string;
-  dataSource: MatTableDataSource<any>;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor(private registrationService: RegistrationService, private router: Router, private clientService: ClientService ) {
     
   }
 
-  Filterchange(data:Event){
-    const value=(data.target as HTMLInputElement).value;
-    this.dataSource.filter=value;
-  }
+  ngOnInit():void{}
 
-  ngAfterViewInit(){
-    
-  }
-
-  ngOnInit():void{
-    this.fetchReservationsForClient();
-  }
-
-  public fetchReservationsForClient(){
-    this.clientService.getAllReservationsForClient().subscribe({
-      next: (response) => {
-        this.reservations = response;
-        this.dataSource = new MatTableDataSource<any>(this.reservations);
-        this.dataSource.paginator = this.paginator;
-        }
-      });
-  }
-
-  public deleteReservation(id: number){
-      this.clientService.deleteReservation(id).subscribe({
-        next:(response:any) =>{
-          this.deleteMessage = "Reservation was deleted";
-          this.fetchReservationsForClient();
-          setTimeout(() => {
-              this.deleteMessage = '';
-          }, 2000)
-
-        }
-      })
-  }
   
   public logout(){
     this.registrationService.clear();

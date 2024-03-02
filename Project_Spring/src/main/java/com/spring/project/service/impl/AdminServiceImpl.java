@@ -20,7 +20,6 @@ import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -71,7 +70,7 @@ public class AdminServiceImpl implements AdminService {
                 emailTemplate = emailTemplate.replace("${resetEmail}", request.getEmail());
                 emailSender.send(request.getEmail(), emailTemplate, "Trainer account was created.Please activate your account.");
                 return TrainerResponse.builder()
-                         .email(request.getEmail())
+                         .id(10)
                          .lastName(request.getLastName())
                          .firstName(request.getFirstName())
                          .build();
@@ -85,6 +84,18 @@ public class AdminServiceImpl implements AdminService {
                                 .lastName(client.getLastName())
                                 .email(client.getEmail()).build())
                     .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TrainerResponse> getAllTrainers() {
+        List<Client> trainers = clientRepository.getAllTrainers();
+        return trainers.stream()
+                .map(trainer -> TrainerResponse.builder()
+                        .id(trainer.getId())
+                                .firstName(trainer.getFirstName())
+                                .lastName(trainer.getLastName()).build()
+                        )
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -138,7 +149,7 @@ public class AdminServiceImpl implements AdminService {
         if (authentication.isAuthenticated()) {
             Subscription subscription = subscriptionService.findById(id).orElse(null);
             if (subscription != null) {
-                if (subscriptionRequest.getSubscriptionName().equals(subscriptionService.findById(id).get().getSubscriptionName()) || (subscriptionService.findBySubscriptionName(subscriptionRequest.getSubscriptionName()) == null)) {
+                if (subscriptionRequest.getSubscriptionName().equals(subscriptionService.findById(id).get().getSubscriptionName()) || subscriptionService.findBySubscriptionName(subscriptionRequest.getSubscriptionName()) == null) {
                     subscription.setSubscriptionName(subscriptionRequest.getSubscriptionName());
                     subscription.setSubscriptionPrice(subscriptionRequest.getSubscriptionPrice());
                     subscription.setSubscriptionTime(subscriptionRequest.getSubscriptionTime());
@@ -171,6 +182,7 @@ public class AdminServiceImpl implements AdminService {
         throw new CustomExpiredJwtException("Session expired");
     }
 
+    @Override
     public void deleteSubscription(Integer id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated()) {
@@ -178,68 +190,107 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
-    public void createTrainingClass(CreateClassRequest classRequest) {
+    @Override
+    public List<TrainingClassResponse> getAllTrainingClasses(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getName() != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            if (trainingClassService.getTrainingClassByName(classRequest.getClassName()) == null) {
-                Client client = clientService.findClientByEmail(classRequest.getTrainerEmail());
-                TrainingClass trainingClass = new TrainingClass(
-                        classRequest.getClassName(),
-                        classRequest.getDuration(),
-                        classRequest.getIntensity(),
-                        classRequest.getLocalDate(),
-                        client
-                );
-                trainingClassService.createTrainingClass(trainingClass);
-                String emailTemplate = loadEmailTemplateFromResource("trainingClassCreated.html");
-                emailTemplate = emailTemplate.replace("${email}", authentication.getName());
-                emailTemplate = emailTemplate.replace("${trainingClass}", classRequest.getClassName());
-                emailSender.send(authentication.getName(), emailTemplate,"Training class was created");
-            } else {
+        if(authentication.isAuthenticated()){
+            List<TrainingClass> trainingClasses = trainingClassService.getTrainingClasses();
+            return trainingClasses.stream()
+                    .map(trainingClass -> TrainingClassResponse.builder()
+                            .id(trainingClass.getId())
+                            .className(trainingClass.getClassName())
+                            .duration(trainingClass.getDuration())
+                            .startTime(trainingClass.getStartTime())
+                            .intensity(trainingClass.getIntensity())
+                            .localDate(trainingClass.getLocalDate())
+                            .trainerId(trainingClass.getTrainer().getId())
+                            .lastName(trainingClass.getTrainer().getLastName())
+                            .firstName(trainingClass.getTrainer().getFirstName())
+                            .build())
+                            .collect(Collectors.toList());
+
+        }else {
+            throw new CustomExpiredJwtException("Session expired");
+        }
+    }
+
+    @Override
+    public TrainingClassResponse getTrainingClass(Integer id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            TrainingClass trainingClass = trainingClassService.findById(id);
+            return TrainingClassResponse.builder()
+                    .id(trainingClass.getId())
+                    .className(trainingClass.getClassName())
+                    .duration(trainingClass.getDuration())
+                    .startTime(trainingClass.getStartTime())
+                    .intensity(trainingClass.getIntensity())
+                    .localDate(trainingClass.getLocalDate())
+                    .trainerId(trainingClass.getTrainer().getId())
+                    .lastName(trainingClass.getTrainer().getLastName())
+                    .firstName(trainingClass.getTrainer().getFirstName())
+                    .build();
+        }else {
+            throw new CustomExpiredJwtException("Session expired");
+        }
+    }
+
+    @Override
+    public void createTrainingClass(TrainingClassRequest classRequest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.isAuthenticated()) {
+            if (trainingClassService.getTrainingClassByName(classRequest.getClassName()) == null && clientService.findClientById(classRequest.getTrainerId()) != null) {
+                   Client trainer = clientService.findClientById(classRequest.getTrainerId());
+                    TrainingClass trainingClass = new TrainingClass(
+                            classRequest.getClassName(),
+                            classRequest.getDuration(),
+                            classRequest.getStartTime(),
+                            classRequest.getIntensity(),
+                            classRequest.getLocalDate(),
+
+                            trainer
+                    );
+                    trainingClassService.createTrainingClass(trainingClass);
+                    String emailTemplate = loadEmailTemplateFromResource("trainingClassCreated.html");
+                    emailTemplate = emailTemplate.replace("${email}", authentication.getName());
+                    emailTemplate = emailTemplate.replace("${trainingClass}", classRequest.getClassName());
+                    emailSender.send(authentication.getName(), emailTemplate, "Training class was created");
+                }
+            else {
                 throw new EntityExistsException("There is already a class with this name");
             }
         }
     }
 
-    public void updateTrainingClass(Integer id, Map<String, Object> fields) {
+    @Override
+    public void updateTrainingClass(Integer id, TrainingClassRequest trainingClassRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getName() != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+        if (authentication.isAuthenticated()) {
             TrainingClass trainingClass = trainingClassService.findById(id);
-
-            fields.forEach((key, value) -> {
-                switch (key) {
-                    case "className" -> {
-                        TrainingClass foundTrainingClass = trainingClassService.getTrainingClassByName((String) value);
-                        if(foundTrainingClass == null){
-                            trainingClass.setClassName((String) value);
-                        }
-                    }
-                    case "duration" -> trainingClass.setDuration((Integer) value);
-                    case "intensity" -> trainingClass.setIntensity((String) value);
-                    case "localDate" -> {
-                        LocalDate localDate = LocalDate.parse((String) value);
-                        trainingClass.setLocalDate(localDate);
-                    }
-                    case "trainerEmail" -> {
-                        if (clientService.findClientByEmail((String) value) != null && clientService.findClientByEmail((String) value).getClientRole().toString().equals("TRAINER")) {
-                            Client trainer = clientService.findClientByEmail((String) value);
-                            trainingClass.setTrainer(trainer);
-                        }
-                    }
-                    default -> throw new IllegalArgumentException("Invalid field:" + key);
+            if(trainingClass != null){
+                if(trainingClassService.getTrainingClassByName(trainingClassRequest.getClassName()) == null || trainingClassRequest.getClassName().equals(trainingClassService.findById(trainingClass.getId()).getClassName())){
+                    trainingClass.setClassName(trainingClassRequest.getClassName());
+                    trainingClass.setIntensity(trainingClassRequest.getIntensity());
+                    trainingClass.setStartTime(trainingClass.getStartTime());
+                    trainingClass.setDuration(trainingClassRequest.getDuration());
+                    trainingClass.setLocalDate(trainingClassRequest.getLocalDate());
+                    trainingClass.setTrainer(clientService.findClientById(trainingClassRequest.getTrainerId()));
+                    trainingClassService.createTrainingClass(trainingClass);
+                }else {
+                    throw new EntityExistsException("There is a trainingClas with this name");
                 }
-            });
-            trainingClassService.createTrainingClass(trainingClass);
+            }else{
+                throw new EntityNotFoundException("Training class could not be updated");
+            }
         }
     }
 
     @Override
-    public void deleteTrainingClass(String className) {
+    public void deleteTrainingClass(Integer id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getName() != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            Integer trainingClassId = trainingClassService.getTrainingClassByName(className).getId();
-            enrollmentTrainingClassService.deleteAllEnrollsForTrainingClass(trainingClassId);
-            trainingClassService.deleteTrainingClass(className);
-        }
+        if (authentication.isAuthenticated()) {
+            enrollmentTrainingClassService.deleteAllEnrollsForTrainingClass(id);
+            trainingClassService.deleteTrainingClass(id);
+         }
     }
 }

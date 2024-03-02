@@ -1,7 +1,6 @@
 package com.spring.project.service.impl;
 
 import com.spring.project.Exception.ClientNotFoundException;
-import com.spring.project.Exception.InvalidCredentialsException;
 import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.model.Client;
 import com.spring.project.model.EnrollmentTrainingClass;
@@ -32,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -74,6 +74,10 @@ public class ClientService implements UserDetailsService {
             e.printStackTrace();
             return "";
         }
+    }
+
+    public Client findClientById(Integer id){
+        return clientRepository.findById(id).orElse(null);
     }
 
     public String signUpClient(Client client) {
@@ -135,7 +139,7 @@ public class ClientService implements UserDetailsService {
                             .duration(trainingClass.getDuration())
                             .intensity(trainingClass.getIntensity())
                             .localDate(trainingClass.getLocalDate())
-                            .trainerEmail(trainingClass.getTrainer().getEmail())
+                            .trainerId(trainingClass.getTrainer().getId())
                             .build())
                     .collect(Collectors.toList());
     }
@@ -164,7 +168,7 @@ public class ClientService implements UserDetailsService {
     public void unEnrollUserFromTrainingClass(String className) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         TrainingClass trainingClass = trainingClassService.getTrainingClassByName(className);
-        if(trainingClass != null && LocalDate.now().isBefore(trainingClass.getLocalDate())){
+        if(trainingClass != null){
             Integer trainingClassId = trainingClass.getId();
             Integer clientId = findClientByEmail(authentication.getName()).getId();
             enrollmentTrainingClassService.deleteEnrollmentForUser(trainingClassId, clientId);

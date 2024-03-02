@@ -12,7 +12,7 @@ public interface TrainingClassService {
 
     TrainingClass findById(Integer id);
 
-    void deleteTrainingClass(String className);
+    void deleteTrainingClass(Integer id);
 
     List<TrainingClass> getTrainingClasses();
     List<TrainingClass> getTrainingClassesForTrainer(Integer id);
