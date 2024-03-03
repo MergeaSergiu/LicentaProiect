@@ -26,7 +26,13 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
                 passwordResetToken, LocalDateTime.now());
     }
 
+    @Override
     public Optional<PasswordResetToken> getToken(String resetToken) {
         return passwordResetTokenRepository.findByToken(resetToken);
+    }
+
+    @Override
+    public void deleteByclient_Id(Integer id) {
+        passwordResetTokenRepository.deleteByclient_Id(id);
     }
 }

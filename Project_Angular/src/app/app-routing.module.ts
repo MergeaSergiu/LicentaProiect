@@ -13,6 +13,7 @@ import { TrainersComponent } from "./client/trainer/trainer.component";
 import { authGuard} from "./auth/auth-guard/auth.guard";
 import { ReservationdetailsComponent } from "./admin/reservationdetails/reservationdetails.component";
 import { GymdetailsComponent } from "./admin/gymdetails/gymdetails.component";
+import { UserdetailsComponent } from "./admin/userdetails/userdetails.component";
 
 const appRoutes : Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -35,7 +36,8 @@ const appRoutes : Routes = [
     children: [
     {path: 'adminDashboard', component: AdminComponent},
     {path: 'reservations', component: ReservationdetailsComponent},
-    {path: 'gym',component: GymdetailsComponent}
+    {path: 'gym',component: GymdetailsComponent},
+    {path: 'users', component: UserdetailsComponent}
     ]},
     { path: 'trainer',
     canActivate: [authGuard],

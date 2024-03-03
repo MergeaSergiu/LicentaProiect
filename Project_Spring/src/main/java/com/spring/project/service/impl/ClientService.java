@@ -176,4 +176,5 @@ public class ClientService implements UserDetailsService {
             throw new EntityNotFoundException("The training Class does not exist");
         }
     }
+
 }

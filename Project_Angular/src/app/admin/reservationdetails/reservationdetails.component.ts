@@ -1,6 +1,4 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { RegistrationService } from '../../services/registration.service';
-import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { AdminService } from '../../services/admin.service';
@@ -16,7 +14,7 @@ export class ReservationdetailsComponent implements AfterViewInit{
   displayedColumns: string[] = ['Date', 'HourSchedule', 'Email', 'Court'];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  constructor(private registrationService: RegistrationService, private router: Router, private adminService: AdminService ) {
+  constructor(private adminService: AdminService ) {
     this.adminService.getAllReservations().subscribe({
       next: (response) => {
         this.reservations = response;
@@ -34,11 +32,5 @@ export class ReservationdetailsComponent implements AfterViewInit{
   ngAfterViewInit(){}
 
   ngOnInit():void{}
-  
-  public logout(){
-    this.registrationService.clear();
-    this.router.navigate(['/login']);
-  }
-
   
 }

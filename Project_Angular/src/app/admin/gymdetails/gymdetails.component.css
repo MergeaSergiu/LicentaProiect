@@ -5,12 +5,14 @@ mat-card{
     font-weight: bold; 
 }
 
+.container{
+  margin-top: 25px;
+}
+
 mat-card-title{
     font-size: 15px;
     font-weight: bold; 
 }
-
-
 
 .header-content {
     display: flex;

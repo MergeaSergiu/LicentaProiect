@@ -5,6 +5,7 @@ import { ReservationResponse } from "../models/reservation-response.model";
 import { SubscriptionRequest } from "../models/subscription-request.model";
 import { TrainerDataResponse } from "../models/trainers-response.model";
 import { TrainingClassRequest } from "../models/trainingclass-request.model";
+import { UserDataResponse } from "../models/user-response.model";
 
 
 @Injectable({
@@ -108,6 +109,21 @@ export class AdminService{
   public updateTrainingClass(id: number, trainingClassRequest : TrainingClassRequest){
     const params = new HttpParams().set('id', id.toString());
     return this.httpClient.put(this.API_PATH + "/api/admin/updateClass", trainingClassRequest, {params})
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  public getAllUsers(){
+    return this.httpClient.get<UserDataResponse[]>(this.API_PATH + "/api/admin/users")
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  public deleteUser(id: number): Observable<any>{
+    const params = new HttpParams().set('id', id.toString());
+    return this.httpClient.delete<any>(this.API_PATH + "/api/admin/deleteUser" ,{params})
     .pipe(
       catchError(this.handleError)
     )

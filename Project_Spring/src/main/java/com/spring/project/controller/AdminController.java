@@ -2,7 +2,6 @@ package com.spring.project.controller;
 
 import com.spring.project.dto.*;
 import com.spring.project.service.AdminService;
-import com.spring.project.service.impl.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,28 +19,25 @@ public class AdminController {
     @Autowired
     private final AdminService adminService;
 
-    @Autowired
-    private final ClientService clientService;
-
     @GetMapping("/secured")
     public ResponseEntity<String> getAdmin(){
         return ResponseEntity.ok("Ai accesat pagina adminului");
     }
 
+    @GetMapping("/users")
+    public ResponseEntity<List<UserDataResponse>> getAllUsers(){
+        List<UserDataResponse> userDataResponse = adminService.getAllClients();
+        return ResponseEntity.ok(userDataResponse);
+    }
+
+    @DeleteMapping("/deleteUser")
+    public ResponseEntity<Void> deleteUser(@RequestParam("id") Integer id){
+        adminService.deleteUser(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
     @GetMapping("/allReservations")
     public ResponseEntity<List<ReservationResponse>> getAllReservations(){
         return ResponseEntity.ok(adminService.getAllReservations());
-    }
-
-    @PostMapping("/createTrainer")
-    public ResponseEntity<TrainerResponse> createTrainer(@RequestBody TrainerRequest trainerRequest) {
-        return ResponseEntity.ok(adminService.createTrainer(trainerRequest));
-    }
-
-    @GetMapping("/users")
-    public ResponseEntity<List<ClientResponse>> getAllUsers(){
-        List<ClientResponse> clientResponses = adminService.getAllClients();
-            return ResponseEntity.ok(clientResponses);
     }
 
     @GetMapping("/getSubscriptions")

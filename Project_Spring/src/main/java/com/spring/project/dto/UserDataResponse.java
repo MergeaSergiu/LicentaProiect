@@ -8,9 +8,11 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientResponse {
+public class UserDataResponse {
 
+    Integer id;
     String firstName;
     String lastName;
     String email;
+    String clientRole;
 }

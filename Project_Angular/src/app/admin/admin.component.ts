@@ -20,6 +20,10 @@ export class AdminComponent {
   redirectToGymInformation(){
     this.router.navigate(['/admin/gym']);
     }
+
+    redirectToUsersInformation(){
+      this.router.navigate(['/admin/users'])
+    }
   
     public logout(){
       this.registrationService.clear();

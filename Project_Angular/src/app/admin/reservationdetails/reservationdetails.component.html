@@ -1,6 +1,5 @@
 <app-navbar-admin></app-navbar-admin>
 <div class="continer-table">
-    <mat-card>
       <mat-form-field>
         <input matInput (keyup)="Filterchange($event)" placeholder="Enter text">
       </mat-form-field>
@@ -27,5 +26,4 @@
     </table>
     
     <mat-paginator #paginator1 [pageSizeOptions]="[5,8]" showFirstLastButtons></mat-paginator>
-</mat-card>
 </div>

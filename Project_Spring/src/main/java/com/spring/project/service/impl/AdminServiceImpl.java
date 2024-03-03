@@ -1,11 +1,11 @@
 package com.spring.project.service.impl;
 
 import com.spring.project.Exception.CustomExpiredJwtException;
-import com.spring.project.Exception.EmailNotAvailableException;
 import com.spring.project.dto.*;
 import com.spring.project.email.EmailSender;
 import com.spring.project.model.*;
 import com.spring.project.repository.ClientRepository;
+import com.spring.project.repository.PasswordResetTokenRepository;
 import com.spring.project.service.*;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,7 +13,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
@@ -21,15 +20,12 @@ import org.springframework.util.StreamUtils;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class AdminServiceImpl implements AdminService {
 
-    private EmailValidator emailValidator;
-    private PasswordValidator passwordValidator;
     private final ClientService clientService;
     private final EmailSender emailSender;
     private final ReservationService reservationService;
@@ -37,6 +33,8 @@ public class AdminServiceImpl implements AdminService {
     private final TrainingClassService trainingClassService;
     private final ClientRepository clientRepository;
     private final EnrollmentTrainingClassService enrollmentTrainingClassService;
+    private final ConfirmationTokenService confirmationTokenService;
+    private final PasswordResetTokenService passwordResetTokenService;
 
     private String loadEmailTemplateFromResource(String fileName) {
         try {
@@ -47,43 +45,39 @@ public class AdminServiceImpl implements AdminService {
             return "";
         }
     }
-    public TrainerResponse createTrainer(TrainerRequest request) {
-                boolean isValidEmail = emailValidator.test(request.getEmail());
-                if (!isValidEmail) {
-                    throw new EmailNotAvailableException("Email is not valid");
-                }
-                boolean isValidPassword = passwordValidator.test(request.getPassword());
-                if (!isValidPassword) {
-                    throw new EmailNotAvailableException("Password do not respect the criteria");
-                }
-                Client trainer = new Client(
-                        request.getFirstName(),
-                        request.getLastName(),
-                        request.getEmail(),
-                        request.getPassword(),
-                        ClientRole.TRAINER
-                );
-                String receivedToken = clientService.signUpClient(trainer);
-                String link = "http://localhost:8080/project/auth/confirm?token=" + receivedToken;
-                String emailTemplate = loadEmailTemplateFromResource("confirmAccountEmail.hmtl");
-                emailTemplate = emailTemplate.replace("${link}", link);
-                emailTemplate = emailTemplate.replace("${resetEmail}", request.getEmail());
-                emailSender.send(request.getEmail(), emailTemplate, "Trainer account was created.Please activate your account.");
-                return TrainerResponse.builder()
-                         .id(10)
-                         .lastName(request.getLastName())
-                         .firstName(request.getFirstName())
-                         .build();
-    }
 
-    public List<ClientResponse> getAllClients() {
+    @Override
+    public List<UserDataResponse> getAllClients() {
             List<Client> clients = clientRepository.findAll();
               return clients.stream()
-                    .map(client -> ClientResponse.builder()
+                    .map(client -> UserDataResponse.builder()
+                                .id(client.getId())
                                 .firstName(client.getFirstName())
                                 .lastName(client.getLastName())
-                                .email(client.getEmail()).build())
-                    .collect(Collectors.toList());
+                                .email(client.getEmail())
+                                .clientRole(client.getClientRole().toString())
+                                .build())
+                                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteUser(Integer id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            Client client = clientService.findClientById(id);
+            if(client.getClientRole().toString().equals("TRAINER")){
+                List<TrainingClass> trainingClasses = trainingClassService.getTrainingClassesForTrainer(id);
+                if(trainingClasses != null){
+                    for(TrainingClass trainingClass : trainingClasses){
+                            deleteTrainingClass(trainingClass.getId());
+                    }
+                }
+            }
+            confirmationTokenService.deleteByclient_Id(id);
+            passwordResetTokenService.deleteByclient_Id(id);
+            reservationService.deleteReservationByUserEmail(client.getEmail());
+            clientRepository.deleteById(id);
+        }
     }
 
     @Override

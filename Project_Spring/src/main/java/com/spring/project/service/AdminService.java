@@ -3,12 +3,12 @@ package com.spring.project.service;
 import com.spring.project.dto.*;
 
 import java.util.List;
-import java.util.Map;
 
 public interface AdminService {
-     TrainerResponse createTrainer(TrainerRequest trainerRequest);
 
-     List<ClientResponse> getAllClients();
+     List<UserDataResponse> getAllClients();
+
+     void deleteUser(Integer id);
 
      List<TrainerResponse> getAllTrainers();
 

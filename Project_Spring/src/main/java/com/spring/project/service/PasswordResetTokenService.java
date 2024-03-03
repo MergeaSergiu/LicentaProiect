@@ -11,4 +11,6 @@ public interface PasswordResetTokenService {
     void setConfirmedAt(String passwordResetToken);
 
     Optional<PasswordResetToken> getToken(String resetToken);
+
+    void deleteByclient_Id(Integer id);
 }

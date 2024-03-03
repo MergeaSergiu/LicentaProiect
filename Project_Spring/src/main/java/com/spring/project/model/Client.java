@@ -61,17 +61,17 @@ public class Client implements UserDetails {
     }
 
     public ClientRole getClientRole(){
-        return clientRole;
+        return this.clientRole;
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return this.email;
     }
 
     @Override

@@ -22,4 +22,5 @@ public interface TrainingClassRepository extends JpaRepository<TrainingClass, In
     @Modifying
     @Query("DELETE TrainingClass e WHERE e.className = :className")
     void deleteByClassName(@Param("className") String className);
+
 }

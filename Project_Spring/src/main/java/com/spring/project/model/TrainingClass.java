@@ -28,7 +28,6 @@ public class TrainingClass {
 
     @ManyToOne
     @JoinColumn(name = "trainer_id")
-    @NotNull
     private Client trainer;
 
     public TrainingClass(String className, int duration, String startTime, String intensity, String localDate, Client trainer) {
