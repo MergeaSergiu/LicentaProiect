@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Edit User Role</h1>
+<form #authForm="ngForm" (ngSubmit)="OnSubmitEditUserRole(authForm)">
+<div mat-dialog-content>
+    <mat-form-field>
+        <mat-label>Select a Role</mat-label>
+        <mat-select [(ngModel)]="selectedRoleId" name="roleId" ngModel required>
+            <mat-option *ngFor="let role of roles" [value]="role.id">
+                {{role.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button type="submit" mat-raised-button color="primary" [disabled]="!authForm.valid">Update</button> <!-- Disable button if form is not valid -->
+    <button type="button" mat-raised-button color="warn" (click)="closePopUp()">Close</button>
+</div>
+</form>

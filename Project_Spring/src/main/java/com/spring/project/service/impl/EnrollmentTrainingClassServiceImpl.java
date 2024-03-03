@@ -27,6 +27,8 @@ public class EnrollmentTrainingClassServiceImpl implements EnrollmentTrainingCla
         return enrollmentTrainingClassRepository.findAllByUser_Id(id);
     }
 
+
+
     @Override
     public void deleteEnrollmentForUser(Integer userId, Integer trainingClassId) {
         enrollmentTrainingClassRepository.deleteByTrainingClassIdAndUserId(userId, trainingClassId);

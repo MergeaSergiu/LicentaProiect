@@ -15,6 +15,10 @@ export class NavbarAdminComponent {
     this.router.navigate(['/admin/reservations']);
   }
 
+  public goToUsersDetails(){
+    this.router.navigate(['admin/users'])
+  }
+
   public goToGymDetails(){
     this.router.navigate(['/admin/gym']);
   }

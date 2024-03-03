@@ -15,12 +15,19 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
     private final ConfirmationTokenRepository confirmationTokenRepository;
 
+    @Override
     public void saveConfirmationToken(ConfirmationToken confirmationToken){
         confirmationTokenRepository.save(confirmationToken);
     }
 
+    @Override
     public Optional<ConfirmationToken> getToken(String token) {
         return confirmationTokenRepository.findByToken(token);
+    }
+
+    @Override
+    public void deleteByclient_Id(Integer id) {
+        confirmationTokenRepository.deleteByclient_Id(id);
     }
 
     public void setConfirmedAt(String token) {

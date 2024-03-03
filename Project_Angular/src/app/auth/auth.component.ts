@@ -19,13 +19,11 @@ export class AuthenticationComponent {
         this.registrationService.clear();
     }
 
-    constructor(private registrationService: RegistrationService ) {
-        
-    }
+    constructor(private registrationService: RegistrationService ) {}
 
     togglePasswordVisibility(): void {
         this.hide = !this.hide;
-      }
+    }
 
     onSubmitSignUp(form: NgForm){
         const signUpData: RegistrationRequest = {
@@ -33,7 +31,6 @@ export class AuthenticationComponent {
             lastName: form.value.lastName,
             email: form.value.email,
             password: form.value.password,
-            isAdmin: form.value.isAdmin
         };
         this.registrationService.singUp(signUpData).subscribe({
             next: (response) =>{

@@ -12,6 +12,9 @@ th{
   color: white;
 }
 
-.continer-table mat-card {
-  margin: 5%; /* Apply margin only to mat-card elements within .continer-table */
+.continer-table  {
+  margin-top: 65px;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
 }

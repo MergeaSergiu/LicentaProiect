@@ -10,6 +10,8 @@ public interface ConfirmationTokenService {
 
     Optional<ConfirmationToken> getToken(String token);
 
+    void deleteByclient_Id(Integer id);
+
     void setConfirmedAt(String token);
 
     ConfirmationToken findTokenByUserId(int id);

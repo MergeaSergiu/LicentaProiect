@@ -19,5 +19,7 @@ public interface ReservationService {
 
     void deleteReservation(Integer id);
 
+    void deleteReservationByUserEmail(String email);
+
     List<ReservationResponse> getReservationsByCourt(String court);
 }

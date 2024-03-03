@@ -3,12 +3,16 @@ package com.spring.project.service;
 import com.spring.project.dto.*;
 
 import java.util.List;
-import java.util.Map;
 
 public interface AdminService {
-     TrainerResponse createTrainer(TrainerRequest trainerRequest);
 
-     List<ClientResponse> getAllClients();
+     List<UserDataResponse> getAllClients();
+
+     UserDataResponse getUserData(Integer id);
+
+     void deleteUser(Integer id);
+
+     void updateUserRole(Integer id, RoleRequest roleRequest);
 
      List<TrainerResponse> getAllTrainers();
 

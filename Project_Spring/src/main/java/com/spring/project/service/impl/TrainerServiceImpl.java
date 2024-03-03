@@ -1,6 +1,5 @@
 package com.spring.project.service.impl;
 
-import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.model.Client;
 import com.spring.project.model.TrainingClass;

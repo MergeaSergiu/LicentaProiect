@@ -4,18 +4,16 @@ import com.spring.project.Exception.*;
 import com.spring.project.dto.*;
 import com.spring.project.email.EmailSender;
 import com.spring.project.model.Client;
-import com.spring.project.model.ClientRole;
+import com.spring.project.model.Role;
 import com.spring.project.repository.ClientRepository;
+import com.spring.project.repository.RoleRepsitory;
 import com.spring.project.service.PasswordResetTokenService;
 import com.spring.project.service.RegistrationService;
 import com.spring.project.token.ConfirmationToken;
 import com.spring.project.token.PasswordResetToken;
-import io.jsonwebtoken.ExpiredJwtException;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -25,6 +23,7 @@ import org.springframework.util.StreamUtils;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -41,6 +40,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final PasswordResetTokenServiceImpl passwordResetTokenServiceImpl;
     private final EmailSender emailSender;
     private final PasswordResetTokenService passwordResetTokenService;
+    private final RoleRepsitory roleRepsitory;
 
     private String loadEmailTemplateFromResource(String fileName) {
         try {
@@ -60,19 +60,15 @@ public class RegistrationServiceImpl implements RegistrationService {
         if(!isValidPassword){
             throw new InvalidCredentialsException("Password do not respect the criteria");
         }
-        ClientRole clientRole;
-        if(request.getIsAdmin()){
-            clientRole = ClientRole.ADMIN;
-        }else{
-            clientRole = ClientRole.CLIENT;
-        }
+
+        Role role = roleRepsitory.findByName("USER");
 
         Client client = new Client(
                 request.getFirstName(),
                 request.getLastName(),
                 request.getEmail(),
                 request.getPassword(),
-                clientRole
+                role
         );
         String receivedToken = clientService.signUpClient(client);
 
@@ -126,8 +122,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         );
         var client = clientRepository.findByEmail(authenticationRequest.getEmail())
                     .orElseThrow();
-        String jwt = jwtService.generateToken(client.getEmail(), String.valueOf(client.getClientRole()));
-        String refreshJwt = jwtService.generateRefreshToken(client.getEmail(), String.valueOf(client.getClientRole()));
+        String jwt = jwtService.generateToken(client.getEmail(), client.getRole().getName());
+        String refreshJwt = jwtService.generateRefreshToken(client.getEmail(), client.getRole().getName());
         String userRole = jwtService.extractClientRole(jwt);
         return AuthenticationResponse.builder()
                 .accessToken(jwt)
@@ -213,7 +209,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (clientEmail != null){
             var clientDetails = this.clientRepository.findByEmail(clientEmail).orElseThrow();
             if(jwtService.isTokenValid(refreshJwt, clientDetails)){
-                var accessToken = jwtService.generateToken(clientDetails.getEmail(), String.valueOf(clientDetails.getClientRole()));
+                var accessToken = jwtService.generateToken(clientDetails.getEmail(), clientDetails.getRole().getName());
                 String userRole = jwtService.extractClientRole(accessToken);
                 return AuthenticationResponse.builder()
                         .accessToken(accessToken)

@@ -30,7 +30,7 @@ export class LoginComponent{
                 this.registrationService.setToken(response.access_token);
                 this.registrationService.setRefreshToken(response.refresh_token);
                 const role = response.user_Role;
-                if(role === 'CLIENT'){
+                if(role === 'USER'){
                     this.router.navigate(['client/clientDashboard'])
                 }else if(role == 'ADMIN'){
                     this.router.navigate(['admin/adminDashboard'])

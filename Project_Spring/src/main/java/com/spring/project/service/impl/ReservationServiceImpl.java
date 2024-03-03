@@ -91,6 +91,11 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public void deleteReservationByUserEmail(String email) {
+        reservationRepository.deleteByEmail(email);
+    }
+
+    @Override
     public List<ReservationResponse> getReservationsByCourt(String court) {
             List<CourtReservation> courtReservations = fotballReservationServiceImpl.getReservationsByCourt(court);
             if(courtReservations != null) {

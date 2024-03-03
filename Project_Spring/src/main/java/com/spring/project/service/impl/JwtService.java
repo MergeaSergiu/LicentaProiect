@@ -40,7 +40,7 @@ public class JwtService {
         Map<String,Object> extraClaims = new HashMap<>();
         extraClaims.put("sub", email);
         extraClaims.put("role", role);
-        return generateToken(extraClaims, email,jwtExpiration);
+        return generateToken(extraClaims, email, jwtExpiration);
     }
     public String generateToken(Map<String, Object> extraClaims,
                                 String email,

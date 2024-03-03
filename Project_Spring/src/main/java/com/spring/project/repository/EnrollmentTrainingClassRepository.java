@@ -26,4 +26,5 @@ public interface EnrollmentTrainingClassRepository extends JpaRepository<Enrollm
     @Modifying
     @Transactional
     void deleteAllByTrainingClass_Id(@Param("trainingClassId") Integer trainingClassId);
+
 }
