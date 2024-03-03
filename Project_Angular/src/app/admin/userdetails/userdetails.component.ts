@@ -4,6 +4,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { UserDataResponse} from '../../models/user-response.model';
 import { MatSelect } from '@angular/material/select';
+import { Role } from '../../models/role.model';
+import { MatDialog } from '@angular/material/dialog';
+import { PopupEditUserDataComponent } from '../../popup-edit-user-data/popup-edit-user-data.component';
+
 
 @Component({
   selector: 'app-userdetails',
@@ -13,14 +17,19 @@ import { MatSelect } from '@angular/material/select';
 export class UserdetailsComponent implements OnInit{
 
   users: UserDataResponse[] = [];
-  displayedColumns: string[] = ['First Name', 'Last Name', 'Email', 'Role' ,'Delete'];
+  displayedColumns: string[] = ['First Name', 'Last Name', 'Email', 'Role','Edit Role','Delete'];
   dataSource: MatTableDataSource<any>;
-  selectedClientRole: string;
+  selectedUserId: number;
+  selectedUser: number;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('roleSelect') roleSelect: MatSelect;
-  roles: string[] = ["CLIENT", "ADMIN", "TRAINER"];
+  roles: Role[] = [
+    {id: 1 , name: "USER"},
+    {id: 2, name: "ADMIN"},
+    {id: 3, name: "TRAINER"}
+  ]
 
-  constructor(private adminService: AdminService) {
+  constructor(private adminService: AdminService, private dialog: MatDialog) {
     this.fetchUsersData();
   }
   ngOnInit(): void {}
@@ -29,6 +38,11 @@ export class UserdetailsComponent implements OnInit{
     const value=(data.target as HTMLInputElement).value;
     this.dataSource.filter=value;
   }
+
+  closeCard() {
+    this.selectedUserId = null;
+    this.selectedUser = null;
+}
 
   fetchUsersData(){
     this.adminService.getAllUsers().subscribe({
@@ -39,6 +53,21 @@ export class UserdetailsComponent implements OnInit{
       }
     })
   }
+
+  OpenEditUserRolePopUp(id: number){
+    var _editRolePopUp = this.dialog.open(PopupEditUserDataComponent, {
+      width: '50%',
+      data: {
+        id: id
+      }
+    });
+
+    _editRolePopUp.afterClosed().subscribe(response =>{
+      this.fetchUsersData();
+
+    })
+  }
+
 
   public deleteUserData(id: number){
     this.adminService.deleteUser(id).subscribe({

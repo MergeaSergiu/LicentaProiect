@@ -1,5 +1,6 @@
 package com.spring.project.dto;
 
+import com.spring.project.model.Role;
 import lombok.*;
 
 @Data
@@ -14,5 +15,5 @@ public class UserDataResponse {
     String firstName;
     String lastName;
     String email;
-    String clientRole;
+    Role role;
 }

@@ -23,6 +23,4 @@ public class RegistrationRequest {
 
     @NotBlank(message = "The password can not be blank")
     private String password;
-
-    private Boolean isAdmin;
 }

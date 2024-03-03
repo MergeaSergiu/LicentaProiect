@@ -6,6 +6,7 @@ import { SubscriptionRequest } from "../models/subscription-request.model";
 import { TrainerDataResponse } from "../models/trainers-response.model";
 import { TrainingClassRequest } from "../models/trainingclass-request.model";
 import { UserDataResponse } from "../models/user-response.model";
+import { RoleRequest } from "../models/role-request.model";
 
 
 @Injectable({
@@ -121,9 +122,25 @@ export class AdminService{
     );
   }
 
+  public getUser(id: number): Observable<UserDataResponse>{
+    const params = new HttpParams().set('id', id.toString());
+    return this.httpClient.get<UserDataResponse>(this.API_PATH + "/api/admin/getUserData", {params})
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
   public deleteUser(id: number): Observable<any>{
     const params = new HttpParams().set('id', id.toString());
     return this.httpClient.delete<any>(this.API_PATH + "/api/admin/deleteUser" ,{params})
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  public updateUserRole(id: number, roleRequest: RoleRequest): Observable<any>{
+    const params = new HttpParams().set('id', id.toString());
+    return this.httpClient.put(this.API_PATH + "/api/admin/updateUserRole", roleRequest, {params})
     .pipe(
       catchError(this.handleError)
     )

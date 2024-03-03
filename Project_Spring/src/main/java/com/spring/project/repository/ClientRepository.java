@@ -23,7 +23,7 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
             "SET a.enabled = TRUE WHERE a.email = ?1")
     int enableClient(String email);
 
-    @Query("SELECT c FROM Client c WHERE c.clientRole = 'TRAINER'")
+    @Query("SELECT c FROM Client c WHERE c.role.name = 'TRAINER'")
     List<Client> getAllTrainers();
 
 }

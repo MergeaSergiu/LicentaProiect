@@ -8,7 +8,11 @@ public interface AdminService {
 
      List<UserDataResponse> getAllClients();
 
+     UserDataResponse getUserData(Integer id);
+
      void deleteUser(Integer id);
+
+     void updateUserRole(Integer id, RoleRequest roleRequest);
 
      List<TrainerResponse> getAllTrainers();
 

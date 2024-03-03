@@ -30,11 +30,24 @@ public class AdminController {
         return ResponseEntity.ok(userDataResponse);
     }
 
+    @GetMapping("/getUserData")
+    public ResponseEntity<UserDataResponse> getUserData(@RequestParam("id") Integer id){
+        UserDataResponse userDataResponse = adminService.getUserData(id);
+        return ResponseEntity.ok(userDataResponse);
+    }
+
     @DeleteMapping("/deleteUser")
     public ResponseEntity<Void> deleteUser(@RequestParam("id") Integer id){
         adminService.deleteUser(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @PutMapping("/updateUserRole")
+    public ResponseEntity<Void> updateUserRole(@RequestParam("id") Integer id, @RequestBody RoleRequest roleRequest){
+        adminService.updateUserRole(id, roleRequest);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @GetMapping("/allReservations")
     public ResponseEntity<List<ReservationResponse>> getAllReservations(){
         return ResponseEntity.ok(adminService.getAllReservations());
@@ -106,6 +119,7 @@ public class AdminController {
         adminService.updateTrainingClass(id,trainingClassRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
 
 
 }

@@ -6,6 +6,7 @@ import com.spring.project.email.EmailSender;
 import com.spring.project.model.*;
 import com.spring.project.repository.ClientRepository;
 import com.spring.project.repository.PasswordResetTokenRepository;
+import com.spring.project.repository.RoleRepsitory;
 import com.spring.project.service.*;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -35,6 +36,7 @@ public class AdminServiceImpl implements AdminService {
     private final EnrollmentTrainingClassService enrollmentTrainingClassService;
     private final ConfirmationTokenService confirmationTokenService;
     private final PasswordResetTokenService passwordResetTokenService;
+    private final RoleRepsitory roleRepsitory;
 
     private String loadEmailTemplateFromResource(String fileName) {
         try {
@@ -55,9 +57,21 @@ public class AdminServiceImpl implements AdminService {
                                 .firstName(client.getFirstName())
                                 .lastName(client.getLastName())
                                 .email(client.getEmail())
-                                .clientRole(client.getClientRole().toString())
+                                .role(client.getRole())
                                 .build())
                                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDataResponse getUserData(Integer id) {
+        Client client = clientService.findClientById(id);
+        return UserDataResponse.builder()
+                .id(client.getId())
+                .firstName(client.getFirstName())
+                .lastName(client.getLastName())
+                .email(client.getEmail())
+                .role(client.getRole())
+                .build();
     }
 
     @Override
@@ -65,7 +79,7 @@ public class AdminServiceImpl implements AdminService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
             Client client = clientService.findClientById(id);
-            if(client.getClientRole().toString().equals("TRAINER")){
+            if(client.getRole().getName().equals("TRAINER")){
                 List<TrainingClass> trainingClasses = trainingClassService.getTrainingClassesForTrainer(id);
                 if(trainingClasses != null){
                     for(TrainingClass trainingClass : trainingClasses){
@@ -77,6 +91,27 @@ public class AdminServiceImpl implements AdminService {
             passwordResetTokenService.deleteByclient_Id(id);
             reservationService.deleteReservationByUserEmail(client.getEmail());
             clientRepository.deleteById(id);
+        }
+    }
+
+    @Override
+    public void updateUserRole(Integer id, RoleRequest roleRequest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            Role role = roleRepsitory.findById(roleRequest.getId()).orElse(null);
+            Client client = clientService.findClientById(id);
+            if(role.getName().equals("USER") && !clientRepository.findById(id).get().getRole().getName().equals("USER")){
+                reservationService.deleteReservationByUserEmail(client.getEmail());
+            }else if(role.getName().equals("TRAINER") && !clientRepository.findById(id).get().getRole().getName().equals("TRAINER")){
+                List<TrainingClass> trainingClasses = trainingClassService.getTrainingClassesForTrainer(id);
+                if(trainingClasses != null){
+                    for(TrainingClass trainingClass : trainingClasses){
+                        deleteTrainingClass(trainingClass.getId());
+                    }
+                }
+            }
+            client.setRole(role);
+            clientRepository.save(client);
         }
     }
 

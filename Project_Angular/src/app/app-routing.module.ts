@@ -22,7 +22,7 @@ const appRoutes : Routes = [
     { path: 'recoverPass', component: RecoverPasswordComponent  },
     { path: 'client',
     canActivate: [authGuard],
-    data: {roles: 'CLIENT'},
+    data: {roles: 'USER'},
     children: [
     {path: 'clientDashboard', component: ClientComponent},
     { path: 'reservations', component: ReservationComponent},

@@ -36,33 +36,31 @@ public class Client implements UserDetails {
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private ClientRole clientRole;
-
     private Boolean enabled = false;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 
 
     public Client(String firstName,
                   String lastName,
                   String email,
                   String password,
-                  ClientRole clientRole) {
+                  Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.clientRole = clientRole;
+        this.role = role;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + clientRole.name());
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.getName());
         return Arrays.asList(authority);
     }
 
-    public ClientRole getClientRole(){
-        return this.clientRole;
-    }
 
     @Override
     public String getPassword() {

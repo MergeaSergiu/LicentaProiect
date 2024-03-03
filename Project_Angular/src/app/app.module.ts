@@ -44,6 +44,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { PopupCreateTrClassComponent } from './popup-create-tr-class/popup-create-tr-class.component';
 import { PopupEditTrClassComponent } from './popup-edit-tr-class/popup-edit-tr-class.component';
 import { UserdetailsComponent } from './admin/userdetails/userdetails.component';
+import { PopupEditUserDataComponent } from './popup-edit-user-data/popup-edit-user-data.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { UserdetailsComponent } from './admin/userdetails/userdetails.component'
     PopupCreateTrClassComponent,
     PopupEditTrClassComponent,
     UserdetailsComponent,
+    PopupEditUserDataComponent,
   ],
   imports: [
     BrowserModule,
