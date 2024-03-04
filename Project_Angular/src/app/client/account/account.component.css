@@ -1,12 +1,132 @@
-mat-card{
-    margin: 2%;
+.user-profile{
+    border: 2px solid;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 530px;
+    height: 420px;
+    transform: translate(-50%, -50%);
+    background: grey;
+    border-radius: 15px;
+    font-family: 'Poppings', sans-serif;
+    box-sizing: border-box;
+    box-shadow: 2px 15px 20px rgba(0,0,0,1);
 }
 
-button{
-    margin: 2px;
+.user-profile .title{
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
 }
 
-th{
-    background-color: black !important;
+.user-profile label{
+    margin-top: 20px;
     color: white;
 }
+
+.input-container1{
+    position: absolute;
+    margin-top: 5px; /* Adjust top position as needed */
+    left: 40px;
+    
+}
+.input-container2{
+    position: absolute;
+    margin-top: 5px;
+ /* Adjust top position as needed */
+    left: 300px; 
+}
+
+.input-container3{
+    position: absolute;
+    margin-top: 40px;
+    top:140px; /* Adjust top position as needed */
+    left: 40px;
+}
+
+.input-container4{
+    position: absolute;
+    margin-top: 40px; /* Adjust top position as needed */
+    top:140px;
+    left: 300px;
+}
+
+
+.user-profile input{
+    background-color: rgb(200, 150, 0);
+    color: black;
+    border: 2px solid black;
+    border-radius: 10px;
+    outline: none;
+    width: 35%;
+}
+
+.edit-mode-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 5px; /* Adjust as needed */
+}
+
+.buttons {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-top: 250px;
+}
+
+.user-profile .button-profile{
+    color: White;
+    margin-bottom: 10px;
+    background: black;
+    margin-top: 10px;
+    display: flex;
+    left: 50%;
+    font-size: 18px;
+    width: 150px;
+    font-weight: 400;
+    border-radius: 10px 10px 10px 10px;
+    border: none;
+    padding-left: none;
+    cursor: pointer;
+}
+
+.mat-expansion-panel {
+    /* Set width */
+    width: 25%;
+    margin-top:40px; /* Set the desired width, for example, 100% of the parent container */
+    margin-left: 10px;
+  
+    /* Set background color */
+    background-color: grey;
+    color: White;
+     /* Set the desired background color */
+  
+    /* Set size */
+    /* You can control the size using padding, margin, or other CSS properties */
+     /* Set padding around the panel content */
+  }
+
+
+  .title{
+    color: White;
+  }
+
+  .inputdata{
+    background-color: rgb(200, 150, 0);
+    color: black;
+    border: 2px solid black;
+    border-radius: 10px;
+    outline: none;
+    width: 80%;
+    font-weight: bold;
+    text-align: center;
+  }
+

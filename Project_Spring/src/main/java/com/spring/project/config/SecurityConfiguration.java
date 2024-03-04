@@ -36,12 +36,16 @@ public class SecurityConfiguration {
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/project/auth/**").permitAll()
+                        .requestMatchers("/project/api/user/getUserProfileData").hasAnyRole("USER", "ADMIN", "TRAINER")
+                        .requestMatchers("/project/api/user/updateUserProfile").hasAnyRole("USER", "ADMIN", "TRAINER")
+                        .requestMatchers("/project/api/user/getTrainerClasses").hasAnyRole("TRAINER")
                         .requestMatchers("/project/api/user/classes").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/project/api/user/subscriptions").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/project/api/user/getReservationsByCourt").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("project/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("project/api/trainer/**").hasRole("TRAINER")
                         .requestMatchers("/project/api/user/**").hasRole("USER")
+
 
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
