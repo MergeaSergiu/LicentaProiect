@@ -23,6 +23,10 @@ export class NavbarAdminComponent {
     this.router.navigate(['/admin/gym']);
   }
 
+  public goToProfile(){
+    this.router.navigate(['/admin/account'])
+  }
+
   public logOut(){
     this.registrationService.clear();
     this.router.navigate(['/login']);

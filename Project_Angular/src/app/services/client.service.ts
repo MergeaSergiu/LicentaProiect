@@ -3,6 +3,9 @@ import { Injectable } from "@angular/core";
 import { Observable, catchError, throwError } from "rxjs";
 import { ReservationResponse } from "../models/reservation-response.model";
 import { ReservationRequest } from "../models/reservation-request.model";
+import { UserDataResponse } from "../models/user-response.model";
+import { UpdateUserRequest } from "../models/userdata-request.model";
+import { TrainingClassResponse } from "../models/trainingclass-response.model";
 
 
 @Injectable({
@@ -51,5 +54,27 @@ export class ClientService{
       catchError(this.handleError)
     );
   }
+
+  public getUserProfileData(): Observable<UserDataResponse>{
+    return this.httpClient.get<UserDataResponse>(this.API_PATH + "/api/user/getUserProfileData")
+    .pipe(
+      catchError(this.handleError)
+    );
+}
+
+
+public updateUserData(updateUserRequest:UpdateUserRequest): Observable<any>{
+  return this.httpClient.put<UpdateUserRequest>(this.API_PATH + "/api/user/updateUserProfile", updateUserRequest)
+  .pipe(
+    catchError(this.handleError)
+  );
+}
+
+public getTrainerClasses(): Observable<TrainingClassResponse[]>{
+  return this.httpClient.get<TrainingClassResponse[]>(this.API_PATH + "/api/user/getTrainerClasses")
+  .pipe(
+    catchError(this.handleError)
+  );
+}
 
 }

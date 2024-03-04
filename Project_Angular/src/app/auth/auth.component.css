@@ -77,25 +77,6 @@
     font-weight: bold;
 }
 
-.container form .form-group .check{
-    margin-right: 20px; /* Adjust margin as needed */
-  }
-
-.container form .form-group-check{
-    color: black;
-    margin-top: 10px;
-    font-weight: bold;
-}
-
-.container form .form-group-check label{
-    margin-right: 10px;
-}
-
-.container form .form-group-check input{
-    margin-top: 5px;
-    width: 20px;
-    height: 20px;
-}
 
 .container form .buttons .login-btn{
     color: white;

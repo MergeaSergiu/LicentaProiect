@@ -1,10 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RegistrationService } from '../../services/registration.service';
-import { AdminService } from '../../services/admin.service';
 import { Router } from '@angular/router';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
 import { ClientService } from '../../services/client.service';
+import { UserDataResponse } from '../../models/user-response.model';
+import { UpdateUserRequest } from '../../models/userdata-request.model';
+import { TrainingClassResponse } from '../../models/trainingclass-response.model';
 import { response } from 'express';
 
 @Component({
@@ -12,13 +12,68 @@ import { response } from 'express';
   templateUrl: './account.component.html',
   styleUrl: './account.component.css'
 })
-export class AccountComponent {
+export class AccountComponent implements OnInit {
+  
+  role: string;
+  currentUser: UserDataResponse;
+  inEditMode = false;
+  traininClassReponse: TrainingClassResponse[];
   
   constructor(private registrationService: RegistrationService, private router: Router, private clientService: ClientService ) {
+  }
+
+  toggleEditMode(): void {
+    this.inEditMode = true;
+  }
+
+  ngOnInit():void{
+    this.fetchUserData();
+    this.role = this.registrationService.getRole();
+    if(this.role === 'TRAINER'){
+    this.fetchTrainerClassesData();
+    }
+    this.inEditMode = false;
     
   }
 
-  ngOnInit():void{}
+  fetchUserData(){
+    this.clientService.getUserProfileData().subscribe({
+      next: (response) => {
+        this.currentUser = response;
+      }
+    })
+  }
+
+  fetchTrainerClassesData(){
+    this.clientService.getTrainerClasses().subscribe({
+      next: (response) =>{
+        this.traininClassReponse = response;
+      }
+    })
+  }
+
+
+  saveProfile(currentUser: UserDataResponse): void{
+    console.log("A mers");
+      const userDataRequest: UpdateUserRequest = {
+          firstName: currentUser.firstName,
+          lastName: currentUser.lastName
+      };
+      console.log(userDataRequest);
+      this.clientService.updateUserData(userDataRequest).subscribe({
+        next: (response) =>{
+          this.inEditMode = false;
+          this.fetchUserData();
+        }
+      })
+  }
+
+  cancelEdit(): void {
+    // Reset editedUser to the original currentUser
+    this.inEditMode = false;
+    this.fetchUserData();
+    
+  }
 
   
   public logout(){

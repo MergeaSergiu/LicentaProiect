@@ -25,7 +25,7 @@ export class NavbarComponent {
     this.router.navigate(['/client/trainers']);
   }
 
-  goToAccount(){
+  goToProfile(){
     this.router.navigate(['/client/account']);
   }
 

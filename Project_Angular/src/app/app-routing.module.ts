@@ -9,7 +9,6 @@ import { TrainerComponent } from "./trainerDashboard/trainer.component";
 import { ReservationComponent } from "./client/reservation/reservation.component";
 import { GymComponent } from "./client/gym/gym.component";
 import { AccountComponent } from "./client/account/account.component";
-import { TrainersComponent } from "./client/trainer/trainer.component";
 import { authGuard} from "./auth/auth-guard/auth.guard";
 import { ReservationdetailsComponent } from "./admin/reservationdetails/reservationdetails.component";
 import { GymdetailsComponent } from "./admin/gymdetails/gymdetails.component";
@@ -27,8 +26,7 @@ const appRoutes : Routes = [
     {path: 'clientDashboard', component: ClientComponent},
     { path: 'reservations', component: ReservationComponent},
     { path: 'gym', component: GymComponent},
-    { path: 'account', component: AccountComponent},
-    { path: 'trainers', component: TrainersComponent}
+    { path: 'account', component: AccountComponent}
     ]},
     { path: 'admin',
     canActivate: [authGuard],
@@ -37,13 +35,15 @@ const appRoutes : Routes = [
     {path: 'adminDashboard', component: AdminComponent},
     {path: 'reservations', component: ReservationdetailsComponent},
     {path: 'gym',component: GymdetailsComponent},
-    {path: 'users', component: UserdetailsComponent}
+    {path: 'users', component: UserdetailsComponent},
+    { path: 'account', component: AccountComponent}
     ]},
     { path: 'trainer',
     canActivate: [authGuard],
     data: {roles: 'TRAINER'},
     children: [
-    {path: 'trainerDashboard', component: TrainerComponent}
+    {path: 'trainerDashboard', component: TrainerComponent},
+    { path: 'account', component: AccountComponent},
     ]}
 ]
 

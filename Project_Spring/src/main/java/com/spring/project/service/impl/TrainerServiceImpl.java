@@ -25,7 +25,7 @@ public class TrainerServiceImpl implements TrainerService {
     private final ClientService clientService;
 
     public List<TrainingClassResponse> getTrainingClassesForTrainer() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Client trainer = clientService.findClientByEmail(authentication.getName());
             List<TrainingClass> trainingClasses = trainingClassServiceImpl.getTrainingClassesForTrainer(trainer.getId());
             if (trainingClasses != null) {
@@ -34,6 +34,7 @@ public class TrainerServiceImpl implements TrainerService {
                                 .className(trainingClass.getClassName())
                                 .localDate(trainingClass.getLocalDate())
                                 .duration(trainingClass.getDuration())
+                                .startTime(trainingClass.getStartTime())
                                 .intensity(trainingClass.getIntensity())
                                 .trainerId(trainer.getId())
                                 .build())
