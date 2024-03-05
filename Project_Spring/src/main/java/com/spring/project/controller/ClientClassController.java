@@ -1,5 +1,6 @@
 package com.spring.project.controller;
 
+import com.spring.project.dto.StatusEnrollResponse;
 import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.service.impl.ClientService;
 import lombok.AllArgsConstructor;
@@ -26,14 +27,20 @@ public class ClientClassController {
     }
 
     @PostMapping("/enrollUser")
-    public ResponseEntity<?> enrollUserToTrainingClass(@RequestParam("className") String className){
-        clientService.enrollUserToTrainingClass(className);
+    public ResponseEntity<Void> enrollUserToTrainingClass(@RequestParam("id") Integer id){
+        clientService.enrollUserToTrainingClass(id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping("/unenroll")
-    public ResponseEntity<String> UnenrollUserFromTrainingClass(@RequestParam("className") String className){
-        clientService.unEnrollUserFromTrainingClass(className);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Enrollment was deleted");
+    @GetMapping("/checkEnrollmentStatus")
+    public ResponseEntity<StatusEnrollResponse> checkEnrollmentStatus(@RequestParam ("trainingClassId") Integer trainingClassId){
+        StatusEnrollResponse isEnrolled = clientService.checkEnrollmentStatus(trainingClassId);
+        return ResponseEntity.ok(isEnrolled);
+    }
+
+    @DeleteMapping("/unEnroll")
+    public ResponseEntity<Void> UnenrollUserFromTrainingClass(@RequestParam("classId") Integer classId){
+        clientService.unEnrollUserFromTrainingClass(classId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

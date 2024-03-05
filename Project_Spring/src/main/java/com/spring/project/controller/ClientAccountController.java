@@ -45,7 +45,6 @@ public class ClientAccountController {
         return ResponseEntity.ok(trainingClassesForTrainer);
     }
 
-
     @PutMapping("/updateUserProfile")
     public ResponseEntity<Void> updateUserProfile(@RequestBody UpdateUserRequest updateUserRequest){
         userAccountService.updateUserProfile(updateUserRequest);

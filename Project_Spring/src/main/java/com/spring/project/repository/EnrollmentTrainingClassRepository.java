@@ -16,7 +16,7 @@ import java.util.List;
 @Repository
 public interface EnrollmentTrainingClassRepository extends JpaRepository<EnrollmentTrainingClass, Integer> {
 
-    List<EnrollmentTrainingClass> findAllByUser_Id(Integer id);
+    List<EnrollmentTrainingClass> findAllByuser_Id(Integer id);
 
     @Modifying
     @Transactional

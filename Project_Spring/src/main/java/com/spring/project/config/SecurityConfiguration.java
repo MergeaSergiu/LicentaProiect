@@ -39,6 +39,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/project/api/user/getUserProfileData").hasAnyRole("USER", "ADMIN", "TRAINER")
                         .requestMatchers("/project/api/user/updateUserProfile").hasAnyRole("USER", "ADMIN", "TRAINER")
                         .requestMatchers("/project/api/user/getTrainerClasses").hasAnyRole("TRAINER")
+                        .requestMatchers("/project/api/admin/getTrainingClasses").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/project/api/admin/getTrainingClassById").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/project/api/user/classes").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/project/api/user/subscriptions").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/project/api/user/getReservationsByCourt").hasAnyRole("USER", "ADMIN")
