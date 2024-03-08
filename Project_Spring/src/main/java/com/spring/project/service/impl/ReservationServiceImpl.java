@@ -1,6 +1,5 @@
 package com.spring.project.service.impl;
 
-import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.dto.ReservationRequest;
 import com.spring.project.dto.ReservationResponse;
 import com.spring.project.email.EmailSender;
@@ -18,7 +17,6 @@ import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,7 +42,7 @@ public class ReservationServiceImpl implements ReservationService {
         String emailTemplate = loadEmailTemplateFromResource("reservationResponseEmail.html");
         emailTemplate = emailTemplate.replace("${email}", authentication.getName());
         emailTemplate = emailTemplate.replace("${hourSchedule}", reservationRequest.getHourSchedule());
-        emailTemplate = emailTemplate.replace("${dateTime}",reservationRequest.getLocalDate().toString());
+        emailTemplate = emailTemplate.replace("${dateTime}",reservationRequest.getLocalDate());
         emailSender.send(authentication.getName(), emailTemplate, "Thank you for your reservation");
 
     }
@@ -65,8 +63,7 @@ public class ReservationServiceImpl implements ReservationService {
         for(String email : reservations.stream()
                 .map(CourtReservation::getEmail)
                 .distinct()
-                .collect(Collectors.toList())
-        )
+                .collect(Collectors.toList()))
         {
             String emailTemplate = loadEmailTemplateFromResource("remainderEmail.html");
             emailTemplate = emailTemplate.replace("${email}", email);

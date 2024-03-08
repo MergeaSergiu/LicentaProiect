@@ -6,6 +6,7 @@ import com.spring.project.dto.UpdateUserRequest;
 import com.spring.project.dto.UserDataResponse;
 import com.spring.project.mapper.ReservationMapper;
 import com.spring.project.mapper.TrainingClassMapper;
+import com.spring.project.mapper.UserDataMapper;
 import com.spring.project.model.Client;
 import com.spring.project.model.EnrollmentTrainingClass;
 import com.spring.project.model.CourtReservation;
@@ -36,6 +37,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     private final ClientRepository clientRepository;
     private final ReservationMapper reservationMapper;
     private final TrainingClassMapper trainingClassMapper;
+    private final UserDataMapper userDataMapper;
 
     @Override
     public List<ReservationResponse> getAllClientReservations() {
@@ -85,13 +87,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
             Client user = clientService.findClientByEmail(authentication.getName());
-            return UserDataResponse.builder()
-                    .id(user.getId())
-                    .firstName(user.getFirstName())
-                    .lastName(user.getLastName())
-                    .email(user.getEmail())
-                    .role(user.getRole())
-                    .build();
+            return userDataMapper.convertToDto(user);
         }
         throw new EntityNotFoundException("User does not exist");
     }
