@@ -5,6 +5,7 @@ import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.dto.AuthenticationResponse;
 import com.spring.project.dto.StatusEnrollResponse;
 import com.spring.project.dto.TrainingClassResponse;
+import com.spring.project.mapper.TrainingClassMapper;
 import com.spring.project.model.Client;
 import com.spring.project.model.EnrollmentTrainingClass;
 import com.spring.project.model.TrainingClass;
@@ -43,16 +44,12 @@ import java.util.stream.Collectors;
 public class ClientService implements UserDetailsService {
 
     private final static String CLIENT_NOT_FOUND_ERROR = "Client with email %s not found";
-
     private final ClientRepository clientRepository;
-
     private final ConfirmationTokenService confirmationTokenService;
-
     private final TrainingClassService trainingClassService;
-
     private final EnrollmentTrainingClassService enrollmentTrainingClassService;
-
     private final EmailServiceImpl emailService;
+    private final TrainingClassMapper trainingClassMapper;
 
 
     @Override
@@ -137,14 +134,7 @@ public class ClientService implements UserDetailsService {
     public List<TrainingClassResponse> getTrainingClasses() {
             List<TrainingClass> trainingClasses = trainingClassService.getTrainingClasses();
             return trainingClasses.stream()
-                    .map(trainingClass -> TrainingClassResponse.builder()
-                            .className(trainingClass.getClassName())
-                            .duration(trainingClass.getDuration())
-                            .intensity(trainingClass.getIntensity())
-                            .localDate(trainingClass.getLocalDate())
-                            .trainerId(trainingClass.getTrainer().getId())
-                            .build())
-                    .collect(Collectors.toList());
+                    .map(trainingClass -> trainingClassMapper.convertToDto(trainingClass)).collect(Collectors.toList());
     }
 
 

@@ -3,6 +3,7 @@ package com.spring.project.service.impl;
 import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.dto.*;
 import com.spring.project.email.EmailSender;
+import com.spring.project.mapper.*;
 import com.spring.project.model.*;
 import com.spring.project.repository.ClientRepository;
 import com.spring.project.repository.PasswordResetTokenRepository;
@@ -37,6 +38,11 @@ public class AdminServiceImpl implements AdminService {
     private final ConfirmationTokenService confirmationTokenService;
     private final PasswordResetTokenService passwordResetTokenService;
     private final RoleRepsitory roleRepsitory;
+    private final UserDataMapper userDataMapper;
+    private final TrainerDataMapper trainerDataMapper;
+    private final ReservationMapper reservationMapper;
+    private final SubscriptionMapper subscriptionMapper;
+    private final TrainingClassMapper trainingClassMapper;
 
     private String loadEmailTemplateFromResource(String fileName) {
         try {
@@ -52,26 +58,13 @@ public class AdminServiceImpl implements AdminService {
     public List<UserDataResponse> getAllClients() {
             List<Client> clients = clientRepository.findAll();
               return clients.stream()
-                    .map(client -> UserDataResponse.builder()
-                                .id(client.getId())
-                                .firstName(client.getFirstName())
-                                .lastName(client.getLastName())
-                                .email(client.getEmail())
-                                .role(client.getRole())
-                                .build())
-                                .collect(Collectors.toList());
+                    .map(client -> userDataMapper.convertToDto(client)).collect(Collectors.toList());
     }
 
     @Override
     public UserDataResponse getUserData(Integer id) {
-        Client client = clientService.findClientById(id);
-        return UserDataResponse.builder()
-                .id(client.getId())
-                .firstName(client.getFirstName())
-                .lastName(client.getLastName())
-                .email(client.getEmail())
-                .role(client.getRole())
-                .build();
+        Client user = clientService.findClientById(id);
+        return userDataMapper.convertToDto(user);
     }
 
     @Override
@@ -119,24 +112,14 @@ public class AdminServiceImpl implements AdminService {
     public List<TrainerResponse> getAllTrainers() {
         List<Client> trainers = clientRepository.getAllTrainers();
         return trainers.stream()
-                .map(trainer -> TrainerResponse.builder()
-                        .id(trainer.getId())
-                                .firstName(trainer.getFirstName())
-                                .lastName(trainer.getLastName()).build()
-                        )
-                .collect(Collectors.toList());
+                .map(trainer -> trainerDataMapper.convertToDto(trainer)).collect(Collectors.toList());
     }
 
     @Override
     public List<ReservationResponse> getAllReservations() {
             List<CourtReservation> reservations = reservationService.getAllReservations();
             return reservations.stream()
-                    .map(reservation -> ReservationResponse.builder()
-                            .localDate(reservation.getLocalDate().toString())
-                            .hourSchedule(reservation.getHourSchedule())
-                            .clientEmail(reservation.getEmail())
-                            .court(reservation.getCourt()).build())
-                    .collect(Collectors.toList());
+                    .map(reservation -> reservationMapper.convertToDto(reservation)).collect(Collectors.toList());
 
     }
 
@@ -144,14 +127,7 @@ public class AdminServiceImpl implements AdminService {
     public List<SubscriptionResponse> getAllSubscriptions() {
         List<Subscription> subscriptions = subscriptionService.getAllSubscriptionPlans();
         return subscriptions.stream()
-                .map(subscription -> SubscriptionResponse.builder()
-                        .id(subscription.getId())
-                        .subscriptionName(subscription.getSubscriptionName())
-                        .subscriptionPrice(subscription.getSubscriptionPrice())
-                        .subscriptionTime(subscription.getSubscriptionTime())
-                        .subscriptionDescription(subscription.getSubscriptionDescription())
-                        .build())
-                .collect(Collectors.toList());
+                .map(subscription -> subscriptionMapper.convertToDto(subscription)).collect(Collectors.toList());
     }
 
     public void createSubscription(CreateSubscriptionRequest createSubscriptionRequest) {
@@ -199,13 +175,7 @@ public class AdminServiceImpl implements AdminService {
         if(authentication.isAuthenticated()){
             Subscription subscription = subscriptionService.findById(id).orElse(null);
             if(subscription != null){
-                return SubscriptionResponse.builder()
-                        .id(subscription.getId())
-                        .subscriptionName(subscription.getSubscriptionName())
-                        .subscriptionPrice(subscription.getSubscriptionPrice())
-                        .subscriptionTime(subscription.getSubscriptionTime())
-                        .subscriptionDescription(subscription.getSubscriptionDescription())
-                        .build();
+                return subscriptionMapper.convertToDto(subscription);
                 }
             }
         throw new CustomExpiredJwtException("Session expired");
@@ -225,17 +195,7 @@ public class AdminServiceImpl implements AdminService {
         if(authentication.isAuthenticated()){
             List<TrainingClass> trainingClasses = trainingClassService.getTrainingClasses();
             return trainingClasses.stream()
-                    .map(trainingClass -> TrainingClassResponse.builder()
-                            .id(trainingClass.getId())
-                            .className(trainingClass.getClassName())
-                            .duration(trainingClass.getDuration())
-                            .startTime(trainingClass.getStartTime())
-                            .intensity(trainingClass.getIntensity())
-                            .localDate(trainingClass.getLocalDate())
-                            .trainerId(trainingClass.getTrainer().getId())
-                            .lastName(trainingClass.getTrainer().getLastName())
-                            .firstName(trainingClass.getTrainer().getFirstName())
-                            .build())
+                    .map(trainingClass -> trainingClassMapper.convertToDto(trainingClass))
                             .collect(Collectors.toList());
 
         }else {
@@ -248,17 +208,7 @@ public class AdminServiceImpl implements AdminService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
             TrainingClass trainingClass = trainingClassService.findById(id);
-            return TrainingClassResponse.builder()
-                    .id(trainingClass.getId())
-                    .className(trainingClass.getClassName())
-                    .duration(trainingClass.getDuration())
-                    .startTime(trainingClass.getStartTime())
-                    .intensity(trainingClass.getIntensity())
-                    .localDate(trainingClass.getLocalDate())
-                    .trainerId(trainingClass.getTrainer().getId())
-                    .lastName(trainingClass.getTrainer().getLastName())
-                    .firstName(trainingClass.getTrainer().getFirstName())
-                    .build();
+            return trainingClassMapper.convertToDto(trainingClass);
         }else {
             throw new CustomExpiredJwtException("Session expired");
         }

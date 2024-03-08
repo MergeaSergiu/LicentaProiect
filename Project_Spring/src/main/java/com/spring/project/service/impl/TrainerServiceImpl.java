@@ -1,6 +1,7 @@
 package com.spring.project.service.impl;
 
 import com.spring.project.dto.TrainingClassResponse;
+import com.spring.project.mapper.TrainingClassMapper;
 import com.spring.project.model.Client;
 import com.spring.project.model.TrainingClass;
 import com.spring.project.service.TrainerService;
@@ -24,21 +25,15 @@ public class TrainerServiceImpl implements TrainerService {
     @Autowired
     private final ClientService clientService;
 
+    private final TrainingClassMapper trainingClassMapper;
+
     public List<TrainingClassResponse> getTrainingClassesForTrainer() {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Client trainer = clientService.findClientByEmail(authentication.getName());
             List<TrainingClass> trainingClasses = trainingClassServiceImpl.getTrainingClassesForTrainer(trainer.getId());
             if (trainingClasses != null) {
                 return trainingClasses.stream()
-                        .map(trainingClass -> TrainingClassResponse.builder()
-                                .className(trainingClass.getClassName())
-                                .localDate(trainingClass.getLocalDate())
-                                .duration(trainingClass.getDuration())
-                                .startTime(trainingClass.getStartTime())
-                                .intensity(trainingClass.getIntensity())
-                                .trainerId(trainer.getId())
-                                .build())
-                        .collect(Collectors.toList());
+                        .map(trainingClass -> trainingClassMapper.convertToDto(trainingClass)).collect(Collectors.toList());
             } else {
                 return new ArrayList<>();
             }

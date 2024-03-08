@@ -3,6 +3,8 @@ package com.spring.project.service.impl;
 import com.spring.project.Exception.*;
 import com.spring.project.dto.*;
 import com.spring.project.email.EmailSender;
+import com.spring.project.mapper.AuthenticationMapper;
+import com.spring.project.mapper.PasswordResetMapper;
 import com.spring.project.model.Client;
 import com.spring.project.model.Role;
 import com.spring.project.repository.ClientRepository;
@@ -23,7 +25,6 @@ import org.springframework.util.StreamUtils;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -41,6 +42,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final EmailSender emailSender;
     private final PasswordResetTokenService passwordResetTokenService;
     private final RoleRepsitory roleRepsitory;
+    private final AuthenticationMapper authenticationMapper;
+    private final PasswordResetMapper passwordResetMapper;
 
     private String loadEmailTemplateFromResource(String fileName) {
         try {
@@ -125,11 +128,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         String jwt = jwtService.generateToken(client.getEmail(), client.getRole().getName());
         String refreshJwt = jwtService.generateRefreshToken(client.getEmail(), client.getRole().getName());
         String userRole = jwtService.extractClientRole(jwt);
-        return AuthenticationResponse.builder()
-                .accessToken(jwt)
-                .refreshToken(refreshJwt)
-                .user_Role(userRole)
-                .build();
+        return authenticationMapper.convertToDto(jwt,refreshJwt, userRole);
     }
 
     @Transactional
@@ -148,8 +147,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new ConfirmAccountException("The request expired. Please create a new account");
         }
         confirmationTokenServiceImpl.setConfirmedAt(token);
-        clientService.enableClient(
-                confirmationToken.getClient().getEmail());
+        clientService.enableClient(confirmationToken.getClient().getEmail());
         return "Account was confirmed. Please log in";
     }
 
@@ -194,9 +192,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if(passwordResetToken.getConfirmedAt() != null && client != null && passwordResetToken.getExpiredAt().compareTo(LocalDateTime.now()) > 0 ) {
             passwordResetToken.setAlreadyUsed(true);
             clientService.resetClientPassword(client, passwordResetRequest.getNewPassword());
-            return PasswordResetResponse.builder()
-                    .passwordResetResponse("Password was updated. Please log in")
-                    .build();
+            return passwordResetMapper.convertToDto("Password was updated. Please log in");
         }else {
             throw new ResetPasswordException("Password could not be updated");
         }
@@ -211,11 +207,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             if(jwtService.isTokenValid(refreshJwt, clientDetails)){
                 var accessToken = jwtService.generateToken(clientDetails.getEmail(), clientDetails.getRole().getName());
                 String userRole = jwtService.extractClientRole(accessToken);
-                return AuthenticationResponse.builder()
-                        .accessToken(accessToken)
-                        .refreshToken(refreshJwt)
-                        .user_Role(userRole)
-                        .build();
+                return authenticationMapper.convertToDto(accessToken, refreshJwt, userRole);
             }else{
                 throw new CustomExpiredJwtException("Refresh Token expired");
             }

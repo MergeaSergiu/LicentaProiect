@@ -4,6 +4,9 @@ import com.spring.project.dto.ReservationResponse;
 import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.dto.UpdateUserRequest;
 import com.spring.project.dto.UserDataResponse;
+import com.spring.project.mapper.ReservationMapper;
+import com.spring.project.mapper.TrainingClassMapper;
+import com.spring.project.mapper.UserDataMapper;
 import com.spring.project.model.Client;
 import com.spring.project.model.EnrollmentTrainingClass;
 import com.spring.project.model.CourtReservation;
@@ -32,6 +35,9 @@ public class UserAccountServiceImpl implements UserAccountService {
     private final ClientService clientService;
     private final TrainingClassService trainingClassService;
     private final ClientRepository clientRepository;
+    private final ReservationMapper reservationMapper;
+    private final TrainingClassMapper trainingClassMapper;
+    private final UserDataMapper userDataMapper;
 
     @Override
     public List<ReservationResponse> getAllClientReservations() {
@@ -40,14 +46,7 @@ public class UserAccountServiceImpl implements UserAccountService {
                 List<CourtReservation> courtReservations = reservationService.getAllClientReservation(authentication.getName());
                 if (courtReservations != null) {
                     return courtReservations.stream()
-                            .map(courtReservation -> ReservationResponse.builder()
-                                    .id(courtReservation.getId())
-                                    .localDate(courtReservation.getLocalDate().toString())
-                                    .hourSchedule(courtReservation.getHourSchedule())
-                                    .court(courtReservation.getCourt())
-                                    .clientEmail(authentication.getName())
-                                    .build())
-                            .collect(Collectors.toList());
+                            .map(courtReservation -> reservationMapper.convertToDto(courtReservation)).collect(Collectors.toList());
                 } else {
                     throw new EntityNotFoundException("You do not have any reservation yet");
                 }
@@ -64,14 +63,7 @@ public class UserAccountServiceImpl implements UserAccountService {
                 List<TrainingClassResponse> enrollClassResponses = new ArrayList<>();
                 for(EnrollmentTrainingClass enrollmentTrainingClass : enrollmentTrainingClasses){
                     TrainingClass trainingClass = trainingClassService.findById(enrollmentTrainingClass.getTrainingClass().getId());
-                    enrollClassResponses.add(TrainingClassResponse.builder()
-                                        .className(trainingClass.getClassName())
-                                        .intensity(trainingClass.getIntensity())
-                                        .duration(trainingClass.getDuration())
-                                        .startTime(trainingClass.getStartTime())
-                                        .localDate(trainingClass.getLocalDate())
-                                        .trainerId(trainingClass.getTrainer().getId())
-                                        .build());
+                    enrollClassResponses.add(trainingClassMapper.convertToDto(trainingClass));
                 }
                 return enrollClassResponses;
             }else{
@@ -83,10 +75,10 @@ public class UserAccountServiceImpl implements UserAccountService {
     public void updateUserProfile(UpdateUserRequest updateUserRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
-            Client client = clientService.findClientByEmail(authentication.getName());
-            client.setFirstName(updateUserRequest.getFirstName());
-            client.setLastName(updateUserRequest.getLastName());
-            clientRepository.save(client);
+            Client user = clientService.findClientByEmail(authentication.getName());
+            user.setFirstName(updateUserRequest.getFirstName());
+            user.setLastName(updateUserRequest.getLastName());
+            clientRepository.save(user);
         }
     }
 
@@ -95,13 +87,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
             Client user = clientService.findClientByEmail(authentication.getName());
-            return UserDataResponse.builder()
-                    .id(user.getId())
-                    .firstName(user.getFirstName())
-                    .lastName(user.getLastName())
-                    .email(user.getEmail())
-                    .role(user.getRole())
-                    .build();
+            return userDataMapper.convertToDto(user);
         }
         throw new EntityNotFoundException("User does not exist");
     }
