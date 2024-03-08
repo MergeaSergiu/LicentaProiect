@@ -4,6 +4,7 @@ import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.dto.ReservationRequest;
 import com.spring.project.dto.ReservationResponse;
 import com.spring.project.email.EmailSender;
+import com.spring.project.mapper.ReservationMapper;
 import com.spring.project.model.CourtReservation;
 import com.spring.project.repository.ReservationRepository;
 import com.spring.project.service.ReservationService;
@@ -29,6 +30,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final FotballReservationServiceImpl fotballReservationServiceImpl;
     private final ReservationRepository reservationRepository;
     private final EmailSender emailSender;
+    private final ReservationMapper reservationMapper;
 
     public void saveReservation(ReservationRequest reservationRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -100,14 +102,7 @@ public class ReservationServiceImpl implements ReservationService {
             List<CourtReservation> courtReservations = fotballReservationServiceImpl.getReservationsByCourt(court);
             if(courtReservations != null) {
                 return courtReservations.stream()
-                        .map(courtReservation -> ReservationResponse.builder()
-                                .id(courtReservation.getId())
-                                .localDate(courtReservation.getLocalDate().toString())
-                                .hourSchedule(courtReservation.getHourSchedule())
-                                .clientEmail(courtReservation.getEmail())
-                                .court(null)
-                                .build())
-                        .collect(Collectors.toList());
+                        .map(courtReservation -> reservationMapper.convertToDto(courtReservation)).collect(Collectors.toList());
             }else {
                 return new ArrayList<>();
             }
