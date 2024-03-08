@@ -1,11 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { RegistrationService } from '../../services/registration.service';
 import { Router } from '@angular/router';
 import { ClientService } from '../../services/client.service';
 import { UserDataResponse } from '../../models/user-response.model';
 import { UpdateUserRequest } from '../../models/userdata-request.model';
 import { TrainingClassResponse } from '../../models/trainingclass-response.model';
-import { response } from 'express';
 
 @Component({
   selector: 'app-account',
@@ -18,9 +17,9 @@ export class AccountComponent implements OnInit {
   currentUser: UserDataResponse;
   inEditMode = false;
   traininClassReponse: TrainingClassResponse[];
+  panelOpenState = false;
   
-  constructor(private registrationService: RegistrationService, private router: Router, private clientService: ClientService ) {
-  }
+  constructor(private registrationService: RegistrationService, private router: Router, private clientService: ClientService ) {}
 
   toggleEditMode(): void {
     this.inEditMode = true;

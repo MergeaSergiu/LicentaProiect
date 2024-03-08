@@ -1,6 +1,9 @@
 package com.spring.project.service.impl;
 
 import com.spring.project.Exception.ClientNotFoundException;
+import com.spring.project.Exception.CustomExpiredJwtException;
+import com.spring.project.dto.AuthenticationResponse;
+import com.spring.project.dto.StatusEnrollResponse;
 import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.model.Client;
 import com.spring.project.model.EnrollmentTrainingClass;
@@ -145,35 +148,62 @@ public class ClientService implements UserDetailsService {
     }
 
 
-    public void enrollUserToTrainingClass(String className) {
+    public void enrollUserToTrainingClass(Integer id) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        TrainingClass trainingClass = trainingClassService.getTrainingClassByName(className);
-        if(trainingClass != null){
-            Client client = clientRepository.findByEmail(authentication.getName()).orElse(null);
-            if(client != null){
-                EnrollmentTrainingClass  enrollmentTrainingClass= new EnrollmentTrainingClass(
-                        client,
-                        trainingClass
-                );
-                enrollmentTrainingClassService.saveEnrollmentAction(enrollmentTrainingClass);
-                String emailTemplate = loadEmailTemplateFromResource("enrollClassEmail.html");
-                emailTemplate = emailTemplate.replace("${email}", authentication.getName());
-                emailTemplate = emailTemplate.replace("{enrollClass}", className);
-                emailService.send(authentication.getName(), emailTemplate, "Thanks for joining the class");
+        if(authentication.isAuthenticated()) {
+            TrainingClass trainingClass = trainingClassService.findById(id);
+            if (trainingClass != null) {
+                Client client = clientRepository.findByEmail(authentication.getName()).orElse(null);
+                if (client != null) {
+                    EnrollmentTrainingClass enrollmentTrainingClass = new EnrollmentTrainingClass(
+                            client,
+                            trainingClass
+                    );
+                    enrollmentTrainingClassService.saveEnrollmentAction(enrollmentTrainingClass);
+                    String emailTemplate = loadEmailTemplateFromResource("enrollClassEmail.html");
+                    emailTemplate = emailTemplate.replace("${email}", authentication.getName());
+                    emailTemplate = emailTemplate.replace("{enrollClass}", trainingClass.getClassName());
+                    emailService.send(authentication.getName(), emailTemplate, "Thanks for joining the class");
                 }
             }
+        }else {
+            throw new CustomExpiredJwtException("Session expired");
         }
+    }
 
-    public void unEnrollUserFromTrainingClass(String className) {
+    public StatusEnrollResponse checkEnrollmentStatus(Integer trainingClassId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        TrainingClass trainingClass = trainingClassService.getTrainingClassByName(className);
-        if(trainingClass != null){
-            Integer trainingClassId = trainingClass.getId();
-            Integer clientId = findClientByEmail(authentication.getName()).getId();
-            enrollmentTrainingClassService.deleteEnrollmentForUser(trainingClassId, clientId);
-        }else{
-            throw new EntityNotFoundException("The training Class does not exist");
+        if(authentication.isAuthenticated()){
+                Client client = clientRepository.findByEmail(authentication.getName()).orElse(null);
+                if(client != null) {
+                    List<EnrollmentTrainingClass> listEnrollments = enrollmentTrainingClassService.getClassesByUserId(client.getId());
+                    if (listEnrollments != null) {
+                        for (EnrollmentTrainingClass enrollment : listEnrollments) {
+                            if (enrollment.getTrainingClass().getId() == trainingClassId) {
+                                return StatusEnrollResponse.builder()
+                                        .status("enrolled")
+                                        .build();
+                            }
+                        }
+                    }
+                    return StatusEnrollResponse.builder()
+                            .status("notEnrolled")
+                            .build();
+                }
+        }
+        throw new CustomExpiredJwtException("Session expired");
+    }
+
+    public void unEnrollUserFromTrainingClass(Integer classId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.isAuthenticated()) {
+            TrainingClass trainingClass = trainingClassService.findById(classId);
+            if (trainingClass != null) {
+                enrollmentTrainingClassService.deleteEnrollmentForUser(trainingClass.getId(), clientRepository.findByEmail(authentication.getName()).get().getId());
+            } else {
+                throw new EntityNotFoundException("The training Class does not exist");
+            }
         }
     }
 

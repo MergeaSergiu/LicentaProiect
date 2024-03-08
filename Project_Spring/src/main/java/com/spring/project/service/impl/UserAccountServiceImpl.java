@@ -68,6 +68,7 @@ public class UserAccountServiceImpl implements UserAccountService {
                                         .className(trainingClass.getClassName())
                                         .intensity(trainingClass.getIntensity())
                                         .duration(trainingClass.getDuration())
+                                        .startTime(trainingClass.getStartTime())
                                         .localDate(trainingClass.getLocalDate())
                                         .trainerId(trainingClass.getTrainer().getId())
                                         .build());

@@ -3,6 +3,7 @@ package com.spring.project.controller;
 import com.spring.project.dto.ReservationRequest;
 import com.spring.project.dto.ReservationResponse;
 import com.spring.project.service.ReservationService;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

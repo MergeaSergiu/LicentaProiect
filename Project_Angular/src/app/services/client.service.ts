@@ -6,6 +6,7 @@ import { ReservationRequest } from "../models/reservation-request.model";
 import { UserDataResponse } from "../models/user-response.model";
 import { UpdateUserRequest } from "../models/userdata-request.model";
 import { TrainingClassResponse } from "../models/trainingclass-response.model";
+import { StatusEnrollResponse } from "../models/statusEnroll-response.model";
 
 
 @Injectable({
@@ -76,5 +77,36 @@ public getTrainerClasses(): Observable<TrainingClassResponse[]>{
     catchError(this.handleError)
   );
 }
+
+public enrollUserToTrainingClass(id: number){
+  const params = new HttpParams().set('id', id.toString());
+  return this.httpClient.post<any>(this.API_PATH  + "/api/user/enrollUser", null,{params})
+  .pipe(
+    catchError(this.handleError)
+  );
+}
+
+public checkEnrollmentStatus(trainingClassId: number): Observable<StatusEnrollResponse>{
+    const params = new HttpParams().set('trainingClassId', trainingClassId.toString());
+    return this.httpClient.get<StatusEnrollResponse>(this.API_PATH  + "/api/user/checkEnrollmentStatus", {params})
+    .pipe(
+      catchError(this.handleError)
+      );
+  }
+
+  public getUserTrainingClasses(): Observable<TrainingClassResponse[]>{
+    return this.httpClient.get<TrainingClassResponse[]>(this.API_PATH + "/api/user/getEnrollClasses")
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  public unEnrolleUser(classId: number){
+    const params = new HttpParams().set('classId', classId.toString());
+    return this.httpClient.delete<any>(this.API_PATH + "/api/user/unEnroll", {params})
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
 
 }

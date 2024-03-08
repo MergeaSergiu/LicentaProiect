@@ -24,10 +24,8 @@ public class EnrollmentTrainingClassServiceImpl implements EnrollmentTrainingCla
 
     @Override
     public List<EnrollmentTrainingClass> getClassesByUserId(Integer id) {
-        return enrollmentTrainingClassRepository.findAllByUser_Id(id);
+        return enrollmentTrainingClassRepository.findAllByuser_Id(id);
     }
-
-
 
     @Override
     public void deleteEnrollmentForUser(Integer userId, Integer trainingClassId) {

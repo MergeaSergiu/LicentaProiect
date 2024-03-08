@@ -12,7 +12,6 @@ public interface UserAccountService {
 
     List<TrainingClassResponse> getEnrollClasses();
 
-
     void updateUserProfile(UpdateUserRequest updateUserRequest);
 
     UserDataResponse getUserProfileData();

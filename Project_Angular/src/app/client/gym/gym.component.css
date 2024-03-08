@@ -1,0 +1,79 @@
+
+.title{
+    background-color: transparent;
+    color: white;
+    font-size: 50px;
+    margin-top:20px;
+    margin-left:40px;
+    
+}
+
+mat-card{
+    background-color: rgb(230, 169, 55);
+}
+
+  .buttons {
+    margin-top: auto; /* Push the buttons to the bottom */
+    align-self: flex-end; /* Align buttons to the right */
+  }
+
+  .container {
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 550px; /* Adjust as needed */
+    left: 40%;
+    position: absolute;
+    margin-top: 80px;
+  }
+
+  .selector{
+    position: absolute;
+    margin-top: 10px; /* Adjust top position as needed */
+    left: 40%;
+  }
+  
+  .card {
+    background-color: rgb(202, 198, 190);
+    padding: 10px;
+    margin: 10px;
+    
+  }
+
+  .mat-expansion-panel {
+    /* Set width */
+    width: 24%; /* Set the desired width, for example, 100% of the parent container */
+    margin-left: 10px;
+    position: relative;
+  
+    /* Set background color */
+    background-color: grey;
+    color: White;
+     /* Set the desired background color */
+  
+    /* Set size */
+    /* You can control the size using padding, margin, or other CSS properties */
+     /* Set padding around the panel content */
+  }
+
+  .titlepanel{
+    color: White;
+  }
+
+  .button-drop{
+    position:relative;
+  }
+
+  .inputdata{
+    background-color: rgb(200, 150, 0);
+    color: black;
+    border: 2px solid black;
+    border-radius: 10px;
+    outline: none;
+    width: 80%;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .user-classes{
+    margin-top: 10px;
+  }

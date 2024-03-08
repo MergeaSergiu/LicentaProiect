@@ -78,6 +78,9 @@ export class ReservationComponent implements OnInit{
 
   ngOnInit(): void{
     this.fetchReservationsForClient();
+    this.fetchFootballReservations();
+      this.fetchFootballBasketball();
+      this.fetchFootballTenis();
   }
 
   public fetchReservationsForClient(){
@@ -138,11 +141,6 @@ export class ReservationComponent implements OnInit{
 
     onDateSelected(selectedDate: Date): void {
       //console.log(selectedDate);
-      this.fetchFootballReservations();
-      this.fetchFootballBasketball();
-      this.fetchFootballTenis();
-      //selectedDate =  new Date(this.moment(selectedDate).utcOffset('+0000').format('YYYY-MM-DD HH:MM'))
-      // Update the hour schedules here based on the selected date
       this.updateHourSchedules(selectedDate);
     }
 
