@@ -6,7 +6,6 @@ import com.spring.project.email.EmailSender;
 import com.spring.project.mapper.*;
 import com.spring.project.model.*;
 import com.spring.project.repository.ClientRepository;
-import com.spring.project.repository.PasswordResetTokenRepository;
 import com.spring.project.repository.RoleRepsitory;
 import com.spring.project.service.*;
 import jakarta.persistence.EntityExistsException;
@@ -82,7 +81,7 @@ public class AdminServiceImpl implements AdminService {
             }
             confirmationTokenService.deleteByclient_Id(id);
             passwordResetTokenService.deleteByclient_Id(id);
-            reservationService.deleteReservationByUserEmail(client.getEmail());
+            reservationService.deleteReservationsForUser(id);
             clientRepository.deleteById(id);
         }
     }
@@ -93,8 +92,8 @@ public class AdminServiceImpl implements AdminService {
         if(authentication.isAuthenticated()){
             Role role = roleRepsitory.findById(roleRequest.getId()).orElse(null);
             Client client = clientService.findClientById(id);
-            if(role.getName().equals("USER") && !clientRepository.findById(id).get().getRole().getName().equals("USER")){
-                reservationService.deleteReservationByUserEmail(client.getEmail());
+            if(role.getName().equals("USER") && !clientRepository.findById(client.getId()).get().getRole().getName().equals("USER")){
+                reservationService.deleteReservationsForUser(client.getId());
             }else if(role.getName().equals("TRAINER") && !clientRepository.findById(id).get().getRole().getName().equals("TRAINER")){
                 List<TrainingClass> trainingClasses = trainingClassService.getTrainingClassesForTrainer(id);
                 if(trainingClasses != null){
@@ -117,7 +116,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<ReservationResponse> getAllReservations() {
-            List<CourtReservation> reservations = reservationService.getAllReservations();
+            List<Reservation> reservations = reservationService.getAllReservations();
             return reservations.stream()
                     .map(reservation -> reservationMapper.convertToDto(reservation)).collect(Collectors.toList());
 

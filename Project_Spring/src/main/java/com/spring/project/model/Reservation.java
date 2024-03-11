@@ -1,18 +1,16 @@
 package com.spring.project.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDate;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "_reservation")
 @NoArgsConstructor
-public class CourtReservation {
+public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -24,12 +22,14 @@ public class CourtReservation {
 
     private String court;
 
-    private String email;
+    @ManyToOne
+    @JoinColumn(name= "user_id")
+    private Client user;
 
-    public CourtReservation(String localDate, String hourSchedule, String court, String email) {
+    public Reservation(String localDate, String hourSchedule, String court, Client user) {
         this.localDate = localDate;
         this.hourSchedule = hourSchedule;
         this.court = court;
-        this.email = email;
+        this.user = user;
     }
 }

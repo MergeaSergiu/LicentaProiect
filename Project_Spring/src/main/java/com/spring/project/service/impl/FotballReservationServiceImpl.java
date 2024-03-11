@@ -1,6 +1,6 @@
 package com.spring.project.service.impl;
 
-import com.spring.project.model.CourtReservation;
+import com.spring.project.model.Reservation;
 import com.spring.project.repository.ReservationRepository;
 import com.spring.project.service.FotballReservationService;
 import lombok.AllArgsConstructor;
@@ -15,11 +15,11 @@ public class FotballReservationServiceImpl implements FotballReservationService 
 
     private final ReservationRepository reservationRepository;
 
-    public CourtReservation save(CourtReservation courtReservation){
-        return reservationRepository.save(courtReservation);
+    public Reservation save(Reservation reservation){
+        return reservationRepository.save(reservation);
     }
 
-    public List<CourtReservation> getReservationWithCurrentDay(){
+    public List<Reservation> getReservationWithCurrentDay(){
             LocalDate localDate = LocalDate.now();
             return reservationRepository.findByLocalDateCurrentDate(localDate);
     }
@@ -30,7 +30,7 @@ public class FotballReservationServiceImpl implements FotballReservationService 
         reservationRepository.deleteById(id);
     }
 
-    public List<CourtReservation> getReservationsByCourt(String court) {
+    public List<Reservation> getReservationsByCourt(String court) {
        return reservationRepository.findByCourt(court);
     }
 }

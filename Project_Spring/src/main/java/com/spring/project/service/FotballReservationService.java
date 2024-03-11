@@ -1,19 +1,17 @@
 package com.spring.project.service;
 
-import com.spring.project.dto.ReservationResponse;
-import com.spring.project.model.CourtReservation;
+import com.spring.project.model.Reservation;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface FotballReservationService {
 
-    CourtReservation save(CourtReservation courtReservation);
+    Reservation save(Reservation reservation);
 
-    List<CourtReservation> getReservationWithCurrentDay();
+    List<Reservation> getReservationWithCurrentDay();
 
     void deleteReservation(Integer id);
 
-    List<CourtReservation> getReservationsByCourt(String court);
+    List<Reservation> getReservationsByCourt(String court);
 
 }

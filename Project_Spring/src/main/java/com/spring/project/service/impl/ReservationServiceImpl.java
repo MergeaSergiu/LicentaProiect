@@ -1,10 +1,12 @@
 package com.spring.project.service.impl;
 
+import com.spring.project.Exception.ClientNotFoundException;
 import com.spring.project.dto.ReservationRequest;
 import com.spring.project.dto.ReservationResponse;
 import com.spring.project.email.EmailSender;
 import com.spring.project.mapper.ReservationMapper;
-import com.spring.project.model.CourtReservation;
+import com.spring.project.model.Client;
+import com.spring.project.model.Reservation;
 import com.spring.project.repository.ReservationRepository;
 import com.spring.project.service.ReservationService;
 import lombok.AllArgsConstructor;
@@ -29,21 +31,34 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final EmailSender emailSender;
     private final ReservationMapper reservationMapper;
+    private final ClientService clientService;
 
     public void saveReservation(ReservationRequest reservationRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CourtReservation courtReservation = new CourtReservation(
-                reservationRequest.getLocalDate(),
-                reservationRequest.getHourSchedule(),
-                reservationRequest.getCourt(),
-                authentication.getName()
-        );
-        fotballReservationServiceImpl.save(courtReservation);
-        String emailTemplate = loadEmailTemplateFromResource("reservationResponseEmail.html");
-        emailTemplate = emailTemplate.replace("${email}", authentication.getName());
-        emailTemplate = emailTemplate.replace("${hourSchedule}", reservationRequest.getHourSchedule());
-        emailTemplate = emailTemplate.replace("${dateTime}",reservationRequest.getLocalDate());
-        emailSender.send(authentication.getName(), emailTemplate, "Thank you for your reservation");
+        if(authentication.isAuthenticated()) {
+            Client user = clientService.findClientByEmail(authentication.getName());
+            if (user != null) {
+                Reservation reservation = new Reservation(
+                        reservationRequest.getLocalDate(),
+                        reservationRequest.getHourSchedule(),
+                        reservationRequest.getCourt(),
+                        user
+                );
+                fotballReservationServiceImpl.save(reservation);
+                String emailTemplate = loadEmailTemplateFromResource("reservationResponseEmail.html");
+                emailTemplate = emailTemplate.replace("${email}", authentication.getName());
+                emailTemplate = emailTemplate.replace("${hourSchedule}", reservationRequest.getHourSchedule());
+                emailTemplate = emailTemplate.replace("${dateTime}", reservationRequest.getLocalDate());
+                emailSender.send(authentication.getName(), emailTemplate, "Thank you for your reservation");
+            }else {
+                throw new ClientNotFoundException("User does not exist");
+            }
+        }
+
+    }
+
+    @Override
+    public void sendEmails() {
 
     }
 
@@ -57,27 +72,15 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
-
-    public void sendEmails() {
-        List<CourtReservation> reservations = fotballReservationServiceImpl.getReservationWithCurrentDay();
-        for(String email : reservations.stream()
-                .map(CourtReservation::getEmail)
-                .distinct()
-                .collect(Collectors.toList()))
-        {
-            String emailTemplate = loadEmailTemplateFromResource("remainderEmail.html");
-            emailTemplate = emailTemplate.replace("${email}", email);
-            emailSender.send(email, emailTemplate, "RemainderEmail");
-        }
-    }
-
     @Override
-    public List<CourtReservation> getAllReservations() {
+    public List<Reservation> getAllReservations() {
         return reservationRepository.findAll();
     }
 
-    public List<CourtReservation> getAllClientReservation(String clientEmail) {
-        return reservationRepository.findReservationsByUser(clientEmail);
+
+    @Override
+    public List<Reservation> getAllClientReservations(Integer id) {
+        return reservationRepository.findByuser_Id(id);
     }
 
     @Override
@@ -90,15 +93,15 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public void deleteReservationByUserEmail(String email) {
-        reservationRepository.deleteByEmail(email);
+    public void deleteReservationsForUser(Integer id) {
+        reservationRepository.deleteByuser_Id(id);
     }
 
     @Override
     public List<ReservationResponse> getReservationsByCourt(String court) {
-            List<CourtReservation> courtReservations = fotballReservationServiceImpl.getReservationsByCourt(court);
-            if(courtReservations != null) {
-                return courtReservations.stream()
+            List<Reservation> reservations = fotballReservationServiceImpl.getReservationsByCourt(court);
+            if(reservations != null) {
+                return reservations.stream()
                         .map(courtReservation -> reservationMapper.convertToDto(courtReservation)).collect(Collectors.toList());
             }else {
                 return new ArrayList<>();

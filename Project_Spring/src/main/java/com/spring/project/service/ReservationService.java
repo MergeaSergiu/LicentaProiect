@@ -2,9 +2,8 @@ package com.spring.project.service;
 
 import com.spring.project.dto.ReservationRequest;
 import com.spring.project.dto.ReservationResponse;
-import com.spring.project.model.CourtReservation;
+import com.spring.project.model.Reservation;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface ReservationService {
@@ -13,13 +12,13 @@ public interface ReservationService {
 
     void sendEmails();
 
-    List<CourtReservation> getAllReservations();
+    List<Reservation> getAllReservations();
 
-    List<CourtReservation> getAllClientReservation(String clientEmail);
+    List<Reservation> getAllClientReservations(Integer id);
 
     void deleteReservation(Integer id);
 
-    void deleteReservationByUserEmail(String email);
+    void deleteReservationsForUser(Integer id);
 
     List<ReservationResponse> getReservationsByCourt(String court);
 }
