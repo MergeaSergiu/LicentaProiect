@@ -134,12 +134,7 @@ public class AdminServiceImpl implements AdminService {
         if (authentication.isAuthenticated()) {
             Subscription foundsubscription = subscriptionService.findBySubscriptionName(createSubscriptionRequest.getSubscriptionName());
             if (foundsubscription == null) {
-                Subscription subscription = new Subscription(
-                        createSubscriptionRequest.getSubscriptionName(),
-                        createSubscriptionRequest.getSubscriptionPrice(),
-                        createSubscriptionRequest.getSubscriptionTime(),
-                        createSubscriptionRequest.getSubscriptionDescription()
-                );
+                Subscription subscription = subscriptionMapper.convertFromDto(createSubscriptionRequest);
                 subscriptionService.saveSubscription(subscription);
             }else{
                 throw new EntityExistsException("There is already a subscription with this name");
@@ -219,15 +214,7 @@ public class AdminServiceImpl implements AdminService {
         if (authentication.isAuthenticated()) {
             if (trainingClassService.getTrainingClassByName(classRequest.getClassName()) == null && clientService.findClientById(classRequest.getTrainerId()) != null) {
                    Client trainer = clientService.findClientById(classRequest.getTrainerId());
-                    TrainingClass trainingClass = new TrainingClass(
-                            classRequest.getClassName(),
-                            classRequest.getDuration(),
-                            classRequest.getStartTime(),
-                            classRequest.getIntensity(),
-                            classRequest.getLocalDate(),
-
-                            trainer
-                    );
+                    TrainingClass trainingClass = trainingClassMapper.convertFromDto(classRequest, trainer);
                     trainingClassService.createTrainingClass(trainingClass);
                     String emailTemplate = loadEmailTemplateFromResource("trainingClassCreated.html");
                     emailTemplate = emailTemplate.replace("${email}", authentication.getName());

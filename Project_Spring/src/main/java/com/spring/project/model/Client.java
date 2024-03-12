@@ -13,8 +13,10 @@ import java.util.Collection;
 
 @Getter
 @Setter
+@Builder
 @EqualsAndHashCode
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name="_client")
 public class Client implements UserDetails {

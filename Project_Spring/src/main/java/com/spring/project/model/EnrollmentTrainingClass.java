@@ -1,14 +1,14 @@
 package com.spring.project.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "_enrollmentUser")
 public class EnrollmentTrainingClass {
 
@@ -23,10 +23,5 @@ public class EnrollmentTrainingClass {
     @ManyToOne
     @JoinColumn(name = "training_class_id")
     private TrainingClass trainingClass;
-
-    public EnrollmentTrainingClass(Client user, TrainingClass trainingClass){
-        this.user = user;
-        this.trainingClass = trainingClass;
-    }
 
 }

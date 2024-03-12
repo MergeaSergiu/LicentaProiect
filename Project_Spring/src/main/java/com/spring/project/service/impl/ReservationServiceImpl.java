@@ -38,12 +38,7 @@ public class ReservationServiceImpl implements ReservationService {
         if(authentication.isAuthenticated()) {
             Client user = clientService.findClientByEmail(authentication.getName());
             if (user != null) {
-                Reservation reservation = new Reservation(
-                        reservationRequest.getLocalDate(),
-                        reservationRequest.getHourSchedule(),
-                        reservationRequest.getCourt(),
-                        user
-                );
+                Reservation reservation = reservationMapper.convertFromDto(reservationRequest,user);
                 fotballReservationServiceImpl.save(reservation);
                 String emailTemplate = loadEmailTemplateFromResource("reservationResponseEmail.html");
                 emailTemplate = emailTemplate.replace("${email}", authentication.getName());

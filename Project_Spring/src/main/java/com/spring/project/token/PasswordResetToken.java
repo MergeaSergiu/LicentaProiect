@@ -3,14 +3,14 @@ package com.spring.project.token;
 
 import com.spring.project.model.Client;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Getter
 @Setter
 @Table(name="_resetToken")
