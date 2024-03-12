@@ -44,7 +44,6 @@ export class GymdetailsComponent {
     return this.adminService.getAllSubscriptions().subscribe({
       next: (response) => {
         this.subscriptions = response;
-        console.log(this.subscriptions);
       }
     })
   }

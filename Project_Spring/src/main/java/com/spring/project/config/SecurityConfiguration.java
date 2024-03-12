@@ -41,11 +41,12 @@ public class SecurityConfiguration {
                         .requestMatchers("/project/api/user/getTrainerClasses").hasAnyRole("TRAINER")
                         .requestMatchers("/project/api/admin/getTrainingClasses").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/project/api/admin/getTrainingClassById").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/project/api/admin/getSubscriptions").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/project/api/user/classes").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/project/api/user/subscriptions").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/project/api/user/getReservationsByCourt").hasAnyRole("USER", "ADMIN")
-                                .requestMatchers("project/api/admin/**").hasRole("ADMIN")
-                                .requestMatchers("project/api/trainer/**").hasRole("TRAINER")
+                        .requestMatchers("project/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("project/api/trainer/**").hasRole("TRAINER")
                         .requestMatchers("/project/api/user/**").hasRole("USER")
 
 

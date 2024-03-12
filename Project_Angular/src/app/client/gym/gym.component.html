@@ -54,7 +54,26 @@
         </div>
         </mat-expansion-panel>
     </div>
+    
       
+</div>
+
+<div class="subscription-list">
+    <div class="title-subscription">Discover our Subscriptions</div>
+    <div class="subscriptions">
+        <mat-card *ngFor="let subscription of subscriptions" class="subscription-card">
+            <mat-card-header>
+                <mat-card-title>{{ subscription.subscriptionName }}</mat-card-title>
+                    <div class="price">{{ subscription.subscriptionPrice }} RON/month</div>
+                </mat-card-header>
+            <mat-card-content>{{subscription.subscriptionDescription}}</mat-card-content>
+            <mat-card-actions>
+            <button mat-raised-button matTooltip="Pay with card" color="primary" (click)="(subscription.id)">Pay with card</button>
+            <button mat-raised-button matTooltip="Pay with cash" color="primary" (click)="(subscription.id)">Pay with cash</button>
+            </mat-card-actions>
+        </mat-card>
+        <br>
+    </div>
 </div>
 
 

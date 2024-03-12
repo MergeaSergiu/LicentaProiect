@@ -12,6 +12,7 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 export class GymComponent implements OnInit{
 
   selectedTrainingClass: TrainingClassResponse;
+  subscriptions = [];
   trainingClassesData: TrainingClassResponse[];
   userTrainingClassesData: TrainingClassResponse[];
   selectedTrainingClassId: number;
@@ -23,6 +24,7 @@ export class GymComponent implements OnInit{
   ngOnInit(): void{
     this.fetchTrainingClassesData();
     this.fetchUserTrainingClassesData();
+    this.fetchSubscriptions();
   }
 
   selectionChangeHandler(event: any) {
@@ -96,6 +98,14 @@ export class GymComponent implements OnInit{
         this.isEnrolled = false;
         this.fetchTrainingClassData(classId);
         this.fetchUserTrainingClassesData();
+      }
+    })
+  }
+
+  fetchSubscriptions(){
+    return this.adminService.getAllSubscriptions().subscribe({
+      next: (response) => {
+        this.subscriptions = response;
       }
     })
   }
