@@ -5,6 +5,7 @@ import com.spring.project.dto.*;
 import com.spring.project.email.EmailSender;
 import com.spring.project.mapper.AuthenticationMapper;
 import com.spring.project.mapper.PasswordResetMapper;
+import com.spring.project.mapper.UserMapper;
 import com.spring.project.model.Client;
 import com.spring.project.model.Role;
 import com.spring.project.repository.ClientRepository;
@@ -44,6 +45,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final RoleRepsitory roleRepsitory;
     private final AuthenticationMapper authenticationMapper;
     private final PasswordResetMapper passwordResetMapper;
+    private final UserMapper userMapper;
 
     private String loadEmailTemplateFromResource(String fileName) {
         try {
@@ -66,14 +68,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         Role role = roleRepsitory.findByName("USER");
 
-        Client client = new Client(
-                request.getFirstName(),
-                request.getLastName(),
-                request.getEmail(),
-                request.getPassword(),
-                role
-        );
-        String receivedToken = clientService.signUpClient(client);
+        Client user = userMapper.convertFromDto(request,role);
+        String receivedToken = clientService.signUpClient(user);
 
         String link = "http://localhost:8080/project/auth/confirm?token=" + receivedToken;
         String emailTemplate = loadEmailTemplateFromResource("confirmAccountEmail.html");
@@ -81,8 +77,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         emailTemplate = emailTemplate.replace("${resetLink}",link);
 
         emailSender.send(request.getEmail(), emailTemplate,"activate your account");
-        return RegistrationResponse.builder().
-                registrationResponse("Account was created successfully. You need to activate it.")
+        return RegistrationResponse
+                .builder()
+                .registrationResponse("Account was created successfully. You need to activate it.")
                 .build();
     }
 
@@ -123,8 +120,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                         authenticationRequest.getPassword()
                 )
         );
-        var client = clientRepository.findByEmail(authenticationRequest.getEmail())
-                    .orElseThrow();
+        var client = clientRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow();
         String jwt = jwtService.generateToken(client.getEmail(), client.getRole().getName());
         String refreshJwt = jwtService.generateRefreshToken(client.getEmail(), client.getRole().getName());
         String userRole = jwtService.extractClientRole(jwt);

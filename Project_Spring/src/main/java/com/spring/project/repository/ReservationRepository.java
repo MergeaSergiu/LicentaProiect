@@ -1,6 +1,6 @@
 package com.spring.project.repository;
 
-import com.spring.project.model.CourtReservation;
+import com.spring.project.model.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,21 +12,19 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface ReservationRepository extends JpaRepository<CourtReservation, Integer> {
+public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
 
-    @Query("SELECT e FROM CourtReservation e WHERE function('date', e.localDate) = :currentDate")
-    List<CourtReservation> findByLocalDateCurrentDate(@Param("currentDate") LocalDate currentDate);
+    @Query("SELECT e FROM Reservation e WHERE function('date', e.localDate) = :currentDate")
+    List<Reservation> findByLocalDateCurrentDate(@Param("currentDate") LocalDate currentDate);
 
-    List<CourtReservation> findAll();
+    List<Reservation> findAll();
 
-    @Query("SELECT e from CourtReservation e WHERE e.email = :email")
-    List<CourtReservation> findReservationsByUser(@Param("email") String email);
+    List<Reservation> findByuser_Id(@Param("id") Integer id);
 
-    @Query("SELECT e from CourtReservation e WHERE e.court = :court")
-    List<CourtReservation> findByCourt(@Param("court") String court);
+    @Query("SELECT e from Reservation e WHERE e.court = :court")
+    List<Reservation> findByCourt(@Param("court") String court);
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM CourtReservation e WHERE e.email = :email")
-    void deleteByEmail(@Param("email") String email);
+    void deleteByuser_Id(@Param("id") Integer id);
 }

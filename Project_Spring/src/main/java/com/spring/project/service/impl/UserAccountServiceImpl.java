@@ -9,7 +9,7 @@ import com.spring.project.mapper.TrainingClassMapper;
 import com.spring.project.mapper.UserDataMapper;
 import com.spring.project.model.Client;
 import com.spring.project.model.EnrollmentTrainingClass;
-import com.spring.project.model.CourtReservation;
+import com.spring.project.model.Reservation;
 import com.spring.project.model.TrainingClass;
 import com.spring.project.repository.ClientRepository;
 import com.spring.project.service.EnrollmentTrainingClassService;
@@ -42,10 +42,11 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public List<ReservationResponse> getAllClientReservations() {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if(authentication!= null) {
-                List<CourtReservation> courtReservations = reservationService.getAllClientReservation(authentication.getName());
-                if (courtReservations != null) {
-                    return courtReservations.stream()
+            if(authentication.isAuthenticated()) {
+                Client user = clientService.findClientByEmail(authentication.getName());
+                List<Reservation> reservations = reservationService.getAllClientReservations(user.getId());
+                if (reservations != null) {
+                    return reservations.stream()
                             .map(courtReservation -> reservationMapper.convertToDto(courtReservation)).collect(Collectors.toList());
                 } else {
                     throw new EntityNotFoundException("You do not have any reservation yet");

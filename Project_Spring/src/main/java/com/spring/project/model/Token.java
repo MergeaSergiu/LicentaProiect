@@ -17,6 +17,7 @@ public class Token {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     public Long id;
     public String token;
+
     @Enumerated(EnumType.STRING)
     public TokenType tokenType = TokenType.BEARER;
 

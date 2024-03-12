@@ -5,6 +5,9 @@ import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.dto.AuthenticationResponse;
 import com.spring.project.dto.StatusEnrollResponse;
 import com.spring.project.dto.TrainingClassResponse;
+import com.spring.project.mapper.ConfirmationTokenMapper;
+import com.spring.project.mapper.EnrollmentClassMapper;
+import com.spring.project.mapper.StatusEnrollResponseMapper;
 import com.spring.project.mapper.TrainingClassMapper;
 import com.spring.project.model.Client;
 import com.spring.project.model.EnrollmentTrainingClass;
@@ -50,6 +53,9 @@ public class ClientService implements UserDetailsService {
     private final EnrollmentTrainingClassService enrollmentTrainingClassService;
     private final EmailServiceImpl emailService;
     private final TrainingClassMapper trainingClassMapper;
+    private final StatusEnrollResponseMapper statusEnrollResponseMapper;
+    private final EnrollmentClassMapper enrollmentClassMapper;
+    private final ConfirmationTokenMapper confirmationTokenMapper;
 
 
     @Override
@@ -81,8 +87,7 @@ public class ClientService implements UserDetailsService {
     }
 
     public String signUpClient(Client client) {
-        boolean userExists = clientRepository.findByEmail(client.getEmail())
-                .isPresent();
+        boolean userExists = clientRepository.findByEmail(client.getEmail()).isPresent();
         if (userExists) {
             if (clientRepository.findByEmail(client.getEmail()).orElse(null).getEnabled()) {
                 throw new EntityExistsException("Account already exist");
@@ -107,14 +112,8 @@ public class ClientService implements UserDetailsService {
             }
         } else {
             String token = UUID.randomUUID().toString();
-            ConfirmationToken confirmationToken = new ConfirmationToken(
-                    token,
-                    LocalDateTime.now(),
-                    LocalDateTime.now().plusMinutes(60),
-                    client
-            );
-            String encodedPassword = passwordEncoder()
-                    .encode(client.getPassword());
+            ConfirmationToken confirmationToken = confirmationTokenMapper.createConfirmationToken(token,LocalDateTime.now(), client);
+            String encodedPassword = passwordEncoder().encode(client.getPassword());
             client.setPassword(encodedPassword);
             clientRepository.save(client);
             confirmationTokenService.saveConfirmationToken(confirmationToken);
@@ -144,17 +143,14 @@ public class ClientService implements UserDetailsService {
         if(authentication.isAuthenticated()) {
             TrainingClass trainingClass = trainingClassService.findById(id);
             if (trainingClass != null) {
-                Client client = clientRepository.findByEmail(authentication.getName()).orElse(null);
-                if (client != null) {
-                    EnrollmentTrainingClass enrollmentTrainingClass = new EnrollmentTrainingClass(
-                            client,
-                            trainingClass
-                    );
+                Client user = clientRepository.findByEmail(authentication.getName()).orElse(null);
+                if (user != null) {
+                    EnrollmentTrainingClass enrollmentTrainingClass = enrollmentClassMapper.createEnrollmentForUser(trainingClass,user);
                     enrollmentTrainingClassService.saveEnrollmentAction(enrollmentTrainingClass);
                     String emailTemplate = loadEmailTemplateFromResource("enrollClassEmail.html");
                     emailTemplate = emailTemplate.replace("${email}", authentication.getName());
                     emailTemplate = emailTemplate.replace("{enrollClass}", trainingClass.getClassName());
-                    emailService.send(authentication.getName(), emailTemplate, "Thanks for joining the class");
+                    emailService.send(authentication.getName(), emailTemplate, "Thank you for joining the class");
                 }
             }
         }else {
@@ -171,15 +167,11 @@ public class ClientService implements UserDetailsService {
                     if (listEnrollments != null) {
                         for (EnrollmentTrainingClass enrollment : listEnrollments) {
                             if (enrollment.getTrainingClass().getId() == trainingClassId) {
-                                return StatusEnrollResponse.builder()
-                                        .status("enrolled")
-                                        .build();
+                                return statusEnrollResponseMapper.createStatusEnrollResponse("enrolled");
                             }
                         }
                     }
-                    return StatusEnrollResponse.builder()
-                            .status("notEnrolled")
-                            .build();
+                    return statusEnrollResponseMapper.createStatusEnrollResponse("notEnrolled");
                 }
         }
         throw new CustomExpiredJwtException("Session expired");
