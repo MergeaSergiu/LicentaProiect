@@ -13,6 +13,7 @@ import { authGuard} from "./auth/auth-guard/auth.guard";
 import { ReservationdetailsComponent } from "./admin/reservationdetails/reservationdetails.component";
 import { GymdetailsComponent } from "./admin/gymdetails/gymdetails.component";
 import { UserdetailsComponent } from "./admin/userdetails/userdetails.component";
+import { UserSubscriptionsComponent } from "./admin/user-subscriptions/user-subscriptions.component";
 
 const appRoutes : Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -36,7 +37,8 @@ const appRoutes : Routes = [
     {path: 'reservations', component: ReservationdetailsComponent},
     {path: 'gym',component: GymdetailsComponent},
     {path: 'users', component: UserdetailsComponent},
-    { path: 'account', component: AccountComponent}
+    { path: 'account', component: AccountComponent},
+    {path: 'subscriptionHistory', component: UserSubscriptionsComponent}
     ]},
     { path: 'trainer',
     canActivate: [authGuard],

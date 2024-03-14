@@ -22,8 +22,7 @@ export class GymdetailsComponent {
   selectedTrainingClass: TrainingClassResponse;
   trainingClassesData: TrainingClassResponse[] = [];
   trainingClassId: number;
-  constructor(private adminService: AdminService, private dialog: MatDialog) {
-}
+  constructor(private adminService: AdminService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.fetchSubscriptions();

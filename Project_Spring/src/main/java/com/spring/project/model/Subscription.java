@@ -20,12 +20,6 @@ public class Subscription {
     private Integer subscriptionTime;
     private String subscriptionDescription;
 
-    public Subscription(String subscriptionName, Double subscriptionPrice, Integer subscriptionTime, String subscriptionDescription) {
-        this.subscriptionName = subscriptionName;
-        this.subscriptionPrice = subscriptionPrice;
-        this.subscriptionTime = subscriptionTime;
-        this.subscriptionDescription = subscriptionDescription;
-    }
 
 
 }

@@ -7,10 +7,13 @@ import com.spring.project.mapper.*;
 import com.spring.project.model.*;
 import com.spring.project.repository.ClientRepository;
 import com.spring.project.repository.RoleRepsitory;
+import com.spring.project.repository.SubscriptionHistoryRepository;
+import com.spring.project.repository.SubscriptionRepository;
 import com.spring.project.service.*;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
@@ -20,6 +23,8 @@ import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +32,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AdminServiceImpl implements AdminService {
 
+    private final SubscriptionHistoryRepository subscriptionHistoryRepository;
+    private final SubscriptionRepository subscriptionRepository;
     private final ClientService clientService;
     private final EmailSender emailSender;
     private final ReservationService reservationService;
@@ -57,7 +64,7 @@ public class AdminServiceImpl implements AdminService {
     public List<UserDataResponse> getAllClients() {
             List<Client> clients = clientRepository.findAll();
               return clients.stream()
-                    .map(client -> userDataMapper.convertToDto(client)).collect(Collectors.toList());
+                    .map(userDataMapper::convertToDto).collect(Collectors.toList());
     }
 
     @Override
@@ -111,14 +118,14 @@ public class AdminServiceImpl implements AdminService {
     public List<TrainerResponse> getAllTrainers() {
         List<Client> trainers = clientRepository.getAllTrainers();
         return trainers.stream()
-                .map(trainer -> trainerDataMapper.convertToDto(trainer)).collect(Collectors.toList());
+                .map(trainerDataMapper::convertToDto).collect(Collectors.toList());
     }
 
     @Override
     public List<ReservationResponse> getAllReservations() {
             List<Reservation> reservations = reservationService.getAllReservations();
             return reservations.stream()
-                    .map(reservation -> reservationMapper.convertToDto(reservation)).collect(Collectors.toList());
+                    .map(reservationMapper::convertToDto).collect(Collectors.toList());
 
     }
 
@@ -126,7 +133,7 @@ public class AdminServiceImpl implements AdminService {
     public List<SubscriptionResponse> getAllSubscriptions() {
         List<Subscription> subscriptions = subscriptionService.getAllSubscriptionPlans();
         return subscriptions.stream()
-                .map(subscription -> subscriptionMapper.convertToDto(subscription)).collect(Collectors.toList());
+                .map(subscriptionMapper::convertToDto).collect(Collectors.toList());
     }
 
     public void createSubscription(CreateSubscriptionRequest createSubscriptionRequest) {
@@ -189,7 +196,7 @@ public class AdminServiceImpl implements AdminService {
         if(authentication.isAuthenticated()){
             List<TrainingClass> trainingClasses = trainingClassService.getTrainingClasses();
             return trainingClasses.stream()
-                    .map(trainingClass -> trainingClassMapper.convertToDto(trainingClass))
+                    .map(trainingClassMapper::convertToDto)
                             .collect(Collectors.toList());
 
         }else {
@@ -258,4 +265,58 @@ public class AdminServiceImpl implements AdminService {
             trainingClassService.deleteTrainingClass(id);
          }
     }
+
+    @Override
+    public List<UserSubscriptionsDataResponse> getUserSubscriptionsData(Integer id) {
+        List<UserSubscriptionsDataResponse> responseData = new ArrayList<>();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            Client user = clientRepository.findById(id).orElse(null);
+            if(user != null) {
+                List<SubscriptionsHistory> subscriptionsHistoryListForUser = subscriptionHistoryRepository.findByuser_Id(id);
+                for(SubscriptionsHistory subscriptionsHistory: subscriptionsHistoryListForUser){
+                    Subscription subscription = subscriptionsHistory.getSubscription();
+                    if(subscription != null) {
+                        UserSubscriptionsDataResponse userSubscriptionsDataResponse = UserSubscriptionsDataResponse
+                                .builder()
+                                .subscriptionName(subscription.getSubscriptionName())
+                                .subscriptionPrice(subscription.getSubscriptionPrice())
+                                .firstName(user.getFirstName())
+                                .lastName(user.getLastName())
+                                .startDate(subscriptionsHistory.getSubscriptionStartTime())
+                                .endDate(subscriptionsHistory.getSubscriptionEndTime())
+                                .build();
+                        responseData.add(userSubscriptionsDataResponse);
+                    }
+                }
+            }
+        }
+        return responseData;
+    }
+
+    @Override
+    public void addSubscriptionForUser(UserSubscriptionRequest userSubscriptionRequest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            Client user = clientRepository.findById(userSubscriptionRequest.getUserId()).orElse(null);
+            Subscription subscription = subscriptionRepository.findById(userSubscriptionRequest.getSubscriptionId()).orElse(null);
+
+            SubscriptionsHistory activeSubscription = subscriptionHistoryRepository.findActiveSubscriptionForUser(user.getId(), LocalDate.now());
+            if(activeSubscription == null){
+            if(user != null && subscription != null) {
+                SubscriptionsHistory subscriptionsHistory = SubscriptionsHistory.builder()
+                        .user(user)
+                        .subscription(subscription)
+                        .subscriptionStartTime(LocalDate.now())
+                        .subscriptionEndTime(LocalDate.now().plusDays(30))
+                        .build();
+                subscriptionHistoryRepository.save(subscriptionsHistory);
+                }
+            }else{
+                throw new EntityExistsException("User already has a active subscription");
+            }
+        }
+    }
+
+
 }

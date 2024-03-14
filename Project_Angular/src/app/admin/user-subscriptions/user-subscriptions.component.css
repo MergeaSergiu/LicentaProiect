@@ -1,0 +1,19 @@
+.subs-table{
+    margin-top: 10%;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+}
+
+th{
+    background-color: black !important;
+    color: white;
+  }
+
+ .createSub {
+    position: absolute;
+    top:15%;
+/* Adjust top position as needed */
+    right: 420px; /* Adjust right position as needed */
+  }

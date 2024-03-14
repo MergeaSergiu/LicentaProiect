@@ -37,4 +37,8 @@ public interface AdminService {
     void updateTrainingClass(Integer id, TrainingClassRequest trainingClassRequest);
 
     void deleteTrainingClass(Integer id);
+
+     List<UserSubscriptionsDataResponse> getUserSubscriptionsData(Integer id);
+
+     void addSubscriptionForUser(UserSubscriptionRequest userSubscriptionRequest);
 }

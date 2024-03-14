@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Add a subscription for the user</h1>
+<form #authForm="ngForm" (ngSubmit)="onSubmitAddSubscription(authForm)">
+<div mat-dialog-content>
+    <mat-form-field>
+        <mat-label>Select a Subscription</mat-label>
+        <mat-select [(ngModel)]="selectedSubscriptionId" name="subscriptionId" ngModel required>
+            <mat-option *ngFor="let subscription of subscriptions" [value]="subscription.id">
+                {{subscription.subscriptionName}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button type="submit" mat-raised-button color="primary" [disabled]="!authForm.valid">Save</button> <!-- Disable button if form is not valid -->
+    <button type="button" mat-raised-button color="warn" (click)="closePopUp()">Close</button>
+</div>
+</form>

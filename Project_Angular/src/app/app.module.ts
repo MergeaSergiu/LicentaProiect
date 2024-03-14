@@ -46,6 +46,8 @@ import { PopupEditUserDataComponent } from './popup-edit-user-data/popup-edit-us
 import { NavbarTrainerComponent } from './navbar-trainer/navbar-trainer.component';
 import { TrainerComponent } from './trainerDashboard/trainer.component';
 import {MatExpansionModule} from '@angular/material/expansion';
+import { UserSubscriptionsComponent } from './admin/user-subscriptions/user-subscriptions.component';
+import { PopupAddSubForUserComponent } from './popup-add-sub-for-user/popup-add-sub-for-user.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +71,9 @@ import {MatExpansionModule} from '@angular/material/expansion';
     UserdetailsComponent,
     PopupEditUserDataComponent,
     NavbarTrainerComponent,
-    TrainerComponent
+    TrainerComponent,
+    UserSubscriptionsComponent,
+    PopupAddSubForUserComponent,
   ],
   imports: [
     BrowserModule,
