@@ -40,6 +40,14 @@ export class UserSubscriptionsComponent implements OnInit{
     })
   }
 
+  isSubscriptionActive(endDate: Date): boolean{
+    const today = new Date();
+    const endDateOnly = new Date(endDate);
+    endDateOnly.setHours(0,0,0,0);
+    today.setHours(0,0,0,0);
+    return endDateOnly >= today;
+  }
+
   OpenAddUserSubscriptionPopUp(){
       var _popUpAddSubsForUser = this.dialog.open(PopupAddSubForUserComponent, {
       width: '50%',

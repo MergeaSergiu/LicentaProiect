@@ -273,22 +273,40 @@ public class AdminServiceImpl implements AdminService {
         if(authentication.isAuthenticated()){
             Client user = clientRepository.findById(id).orElse(null);
             if(user != null) {
-                List<SubscriptionsHistory> subscriptionsHistoryListForUser = subscriptionHistoryRepository.findByuser_Id(id);
-                for(SubscriptionsHistory subscriptionsHistory: subscriptionsHistoryListForUser){
-                    Subscription subscription = subscriptionsHistory.getSubscription();
-                    if(subscription != null) {
-                        UserSubscriptionsDataResponse userSubscriptionsDataResponse = UserSubscriptionsDataResponse
-                                .builder()
-                                .subscriptionName(subscription.getSubscriptionName())
-                                .subscriptionPrice(subscription.getSubscriptionPrice())
-                                .firstName(user.getFirstName())
-                                .lastName(user.getLastName())
+                List<SubscriptionsHistory> subscriptionsHistoryListForUser = subscriptionHistoryRepository.findByUser_IdOrderBySubscriptionEndTimeAsc(id);
+                return subscriptionsHistoryListForUser.stream()
+                        .map( subscriptionsHistory -> UserSubscriptionsDataResponse.builder()
+                                .subscriptionName(subscriptionsHistory.getSubscription().getSubscriptionName())
+                                .subscriptionPrice(subscriptionsHistory.getSubscription().getSubscriptionPrice())
+                                .firstName(subscriptionsHistory.getUser().getFirstName())
+                                .lastName(subscriptionsHistory.getUser().getLastName())
                                 .startDate(subscriptionsHistory.getSubscriptionStartTime())
                                 .endDate(subscriptionsHistory.getSubscriptionEndTime())
-                                .build();
-                        responseData.add(userSubscriptionsDataResponse);
-                    }
-                }
+                                .build()).collect(Collectors.toList());
+
+            }
+        }
+        return responseData;
+    }
+
+    @Override
+    public List<UserSubscriptionsDataResponse> getUserSubscriptionsData() {
+        List<UserSubscriptionsDataResponse> responseData = new ArrayList<>();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            Client user = clientRepository.findByEmail(authentication.getName()).orElse(null);
+            if(user != null) {
+                List<SubscriptionsHistory> subscriptionsHistoryListForUser = subscriptionHistoryRepository.findByUser_IdOrderBySubscriptionEndTimeAsc(user.getId());
+                return subscriptionsHistoryListForUser.stream()
+                        .map( subscriptionsHistory -> UserSubscriptionsDataResponse.builder()
+                                .subscriptionName(subscriptionsHistory.getSubscription().getSubscriptionName())
+                                .subscriptionPrice(subscriptionsHistory.getSubscription().getSubscriptionPrice())
+                                .firstName(subscriptionsHistory.getUser().getFirstName())
+                                .lastName(subscriptionsHistory.getUser().getLastName())
+                                .startDate(subscriptionsHistory.getSubscriptionStartTime())
+                                .endDate(subscriptionsHistory.getSubscriptionEndTime())
+                                .build()).collect(Collectors.toList());
+
             }
         }
         return responseData;

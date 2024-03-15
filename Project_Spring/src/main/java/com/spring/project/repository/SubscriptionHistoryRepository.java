@@ -10,7 +10,10 @@ import java.util.List;
 
 public interface SubscriptionHistoryRepository extends JpaRepository<SubscriptionsHistory, Integer> {
     List<SubscriptionsHistory> findAll();
-    List<SubscriptionsHistory> findByuser_Id(@Param("id") Integer id);
+    @Query("SELECT sh FROM SubscriptionsHistory sh " +
+            "WHERE sh.user.id = :userId " +
+            "ORDER BY sh.subscriptionEndTime DESC")
+    List<SubscriptionsHistory> findByUser_IdOrderBySubscriptionEndTimeAsc(@Param("userId") Integer userId);
 
     @Query("SELECT sh FROM SubscriptionsHistory sh " +
             "WHERE sh.user.id = :userId " +

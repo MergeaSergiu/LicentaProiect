@@ -7,6 +7,7 @@ import { UserDataResponse } from "../models/user-response.model";
 import { UpdateUserRequest } from "../models/userdata-request.model";
 import { TrainingClassResponse } from "../models/trainingclass-response.model";
 import { StatusEnrollResponse } from "../models/statusEnroll-response.model";
+import { UserSubscriptionsDataResponse } from "../models/userSubscriptionData-response.model";
 
 
 @Injectable({
@@ -106,7 +107,14 @@ public checkEnrollmentStatus(trainingClassId: number): Observable<StatusEnrollRe
     return this.httpClient.delete<any>(this.API_PATH + "/api/user/unEnroll", {params})
     .pipe(
       catchError(this.handleError)
-    )
+    );
+  }
+
+  public getUserSubscriptionsData(): Observable<UserSubscriptionsDataResponse[]>{
+    return this.httpClient.get<UserSubscriptionsDataResponse[]>(this.API_PATH + "/api/admin/users/subscriptionsData")
+    .pipe(
+      catchError(this.handleError)
+    );
   }
 
 }

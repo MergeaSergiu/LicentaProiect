@@ -40,5 +40,7 @@ public interface AdminService {
 
      List<UserSubscriptionsDataResponse> getUserSubscriptionsData(Integer id);
 
+     List<UserSubscriptionsDataResponse> getUserSubscriptionsData();
+
      void addSubscriptionForUser(UserSubscriptionRequest userSubscriptionRequest);
 }
