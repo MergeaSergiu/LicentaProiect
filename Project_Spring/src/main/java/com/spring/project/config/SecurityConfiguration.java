@@ -45,13 +45,11 @@ public class SecurityConfiguration {
                         .requestMatchers("/project/api/user/updateUserProfile").hasAnyRole("USER", "ADMIN", "TRAINER")
                         .requestMatchers("/project/api/user/classes").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/project/api/admin/users/subscriptions").hasAnyRole( "ADMIN")
-                        .requestMatchers("/project/api/admin/users/subscriptionsData").hasAnyRole("USER")
+                        .requestMatchers("/project/api/admin/users/subscriptionsData").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/project/api/user/getReservationsByCourt").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/project/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/project/api/trainer/**").hasRole("TRAINER")
                         .requestMatchers("/project/api/user/**").hasRole("USER")
-
-
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

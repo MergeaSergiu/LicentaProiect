@@ -24,13 +24,12 @@ public class SubscriptionsHistory {
     @JoinColumn(name = "user_id")
     private Client user;
 
-    @ManyToOne
-    @JoinColumn(name = "subscription_id")
-    private Subscription subscription;
+    private String subscriptionName;
+
+    private Double subscriptionPrice;
 
     private LocalDate subscriptionStartTime;
 
     private LocalDate subscriptionEndTime;
-
 
 }

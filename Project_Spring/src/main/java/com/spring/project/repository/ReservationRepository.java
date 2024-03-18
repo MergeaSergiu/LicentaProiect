@@ -26,5 +26,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 
     @Modifying
     @Transactional
-    void deleteByuser_Id(@Param("id") Integer id);
+    void deleteAllByuser_Id(@Param("id") Integer id);
 }

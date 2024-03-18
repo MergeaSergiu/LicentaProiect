@@ -5,15 +5,11 @@ import com.spring.project.dto.*;
 import com.spring.project.email.EmailSender;
 import com.spring.project.mapper.*;
 import com.spring.project.model.*;
-import com.spring.project.repository.ClientRepository;
-import com.spring.project.repository.RoleRepsitory;
-import com.spring.project.repository.SubscriptionHistoryRepository;
-import com.spring.project.repository.SubscriptionRepository;
+import com.spring.project.repository.*;
 import com.spring.project.service.*;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
@@ -49,6 +45,8 @@ public class AdminServiceImpl implements AdminService {
     private final ReservationMapper reservationMapper;
     private final SubscriptionMapper subscriptionMapper;
     private final TrainingClassMapper trainingClassMapper;
+    private final SubscriptionHistoryMapper subscriptionsHistoryMapper;
+    private final EnrollmentTrainingClassRepository enrollmentTrainingClassRepository;
 
     private String loadEmailTemplateFromResource(String fileName) {
         try {
@@ -89,6 +87,8 @@ public class AdminServiceImpl implements AdminService {
             confirmationTokenService.deleteByclient_Id(id);
             passwordResetTokenService.deleteByclient_Id(id);
             reservationService.deleteReservationsForUser(id);
+            enrollmentTrainingClassRepository.deleteAllByUser_id(id);
+            subscriptionHistoryRepository.deleteAllByUser_Id(id);
             clientRepository.deleteById(id);
         }
     }
@@ -276,8 +276,8 @@ public class AdminServiceImpl implements AdminService {
                 List<SubscriptionsHistory> subscriptionsHistoryListForUser = subscriptionHistoryRepository.findByUser_IdOrderBySubscriptionEndTimeAsc(id);
                 return subscriptionsHistoryListForUser.stream()
                         .map( subscriptionsHistory -> UserSubscriptionsDataResponse.builder()
-                                .subscriptionName(subscriptionsHistory.getSubscription().getSubscriptionName())
-                                .subscriptionPrice(subscriptionsHistory.getSubscription().getSubscriptionPrice())
+                                .subscriptionName(subscriptionsHistory.getSubscriptionName())
+                                .subscriptionPrice(subscriptionsHistory.getSubscriptionPrice())
                                 .firstName(subscriptionsHistory.getUser().getFirstName())
                                 .lastName(subscriptionsHistory.getUser().getLastName())
                                 .startDate(subscriptionsHistory.getSubscriptionStartTime())
@@ -298,15 +298,7 @@ public class AdminServiceImpl implements AdminService {
             if(user != null) {
                 List<SubscriptionsHistory> subscriptionsHistoryListForUser = subscriptionHistoryRepository.findByUser_IdOrderBySubscriptionEndTimeAsc(user.getId());
                 return subscriptionsHistoryListForUser.stream()
-                        .map( subscriptionsHistory -> UserSubscriptionsDataResponse.builder()
-                                .subscriptionName(subscriptionsHistory.getSubscription().getSubscriptionName())
-                                .subscriptionPrice(subscriptionsHistory.getSubscription().getSubscriptionPrice())
-                                .firstName(subscriptionsHistory.getUser().getFirstName())
-                                .lastName(subscriptionsHistory.getUser().getLastName())
-                                .startDate(subscriptionsHistory.getSubscriptionStartTime())
-                                .endDate(subscriptionsHistory.getSubscriptionEndTime())
-                                .build()).collect(Collectors.toList());
-
+                        .map(subscriptionsHistoryMapper::convertToDto).collect(Collectors.toList());
             }
         }
         return responseData;
@@ -318,16 +310,10 @@ public class AdminServiceImpl implements AdminService {
         if(authentication.isAuthenticated()){
             Client user = clientRepository.findById(userSubscriptionRequest.getUserId()).orElse(null);
             Subscription subscription = subscriptionRepository.findById(userSubscriptionRequest.getSubscriptionId()).orElse(null);
-
             SubscriptionsHistory activeSubscription = subscriptionHistoryRepository.findActiveSubscriptionForUser(user.getId(), LocalDate.now());
             if(activeSubscription == null){
-            if(user != null && subscription != null) {
-                SubscriptionsHistory subscriptionsHistory = SubscriptionsHistory.builder()
-                        .user(user)
-                        .subscription(subscription)
-                        .subscriptionStartTime(LocalDate.now())
-                        .subscriptionEndTime(LocalDate.now().plusDays(30))
-                        .build();
+            if(subscription != null) {
+                SubscriptionsHistory subscriptionsHistory = subscriptionsHistoryMapper.convertFromDto(user,subscription);
                 subscriptionHistoryRepository.save(subscriptionsHistory);
                 }
             }else{

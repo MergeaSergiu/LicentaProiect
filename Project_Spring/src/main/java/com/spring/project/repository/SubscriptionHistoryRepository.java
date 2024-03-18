@@ -2,8 +2,10 @@ package com.spring.project.repository;
 
 import com.spring.project.model.SubscriptionsHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,4 +22,8 @@ public interface SubscriptionHistoryRepository extends JpaRepository<Subscriptio
             "AND sh.subscriptionEndTime >= :date " +
             "ORDER BY sh.subscriptionEndTime DESC")
     SubscriptionsHistory findActiveSubscriptionForUser(@Param("userId") Integer userId, @Param("date") LocalDate date);
+
+    @Transactional
+    @Modifying
+    void deleteAllByUser_Id(@Param("userId") Integer userId);
 }
