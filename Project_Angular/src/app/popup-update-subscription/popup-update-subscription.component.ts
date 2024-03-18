@@ -2,7 +2,7 @@ import { Component, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AdminService } from '../services/admin.service';
 import { SubscriptionRequest } from '../models/subscription-request.model';
-import { FormBuilder, NgForm } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-popup-update-subscription',
@@ -22,7 +22,6 @@ export class PopupUpdateSubscriptionComponent {
 
   ngOnInit(): void{
     this.inputData = this.data;
-    console.log(this.data);
     this.setPopUpData(this.inputData.id);
   }
 

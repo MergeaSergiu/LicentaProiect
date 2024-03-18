@@ -5,8 +5,7 @@ import com.spring.project.dto.*;
 import com.spring.project.email.EmailSender;
 import com.spring.project.mapper.*;
 import com.spring.project.model.*;
-import com.spring.project.repository.ClientRepository;
-import com.spring.project.repository.RoleRepsitory;
+import com.spring.project.repository.*;
 import com.spring.project.service.*;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,6 +19,8 @@ import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AdminServiceImpl implements AdminService {
 
+    private final SubscriptionHistoryRepository subscriptionHistoryRepository;
+    private final SubscriptionRepository subscriptionRepository;
     private final ClientService clientService;
     private final EmailSender emailSender;
     private final ReservationService reservationService;
@@ -42,6 +45,8 @@ public class AdminServiceImpl implements AdminService {
     private final ReservationMapper reservationMapper;
     private final SubscriptionMapper subscriptionMapper;
     private final TrainingClassMapper trainingClassMapper;
+    private final SubscriptionHistoryMapper subscriptionsHistoryMapper;
+    private final EnrollmentTrainingClassRepository enrollmentTrainingClassRepository;
 
     private String loadEmailTemplateFromResource(String fileName) {
         try {
@@ -57,7 +62,7 @@ public class AdminServiceImpl implements AdminService {
     public List<UserDataResponse> getAllClients() {
             List<Client> clients = clientRepository.findAll();
               return clients.stream()
-                    .map(client -> userDataMapper.convertToDto(client)).collect(Collectors.toList());
+                    .map(userDataMapper::convertToDto).collect(Collectors.toList());
     }
 
     @Override
@@ -82,6 +87,8 @@ public class AdminServiceImpl implements AdminService {
             confirmationTokenService.deleteByclient_Id(id);
             passwordResetTokenService.deleteByclient_Id(id);
             reservationService.deleteReservationsForUser(id);
+            enrollmentTrainingClassRepository.deleteAllByUser_id(id);
+            subscriptionHistoryRepository.deleteAllByUser_Id(id);
             clientRepository.deleteById(id);
         }
     }
@@ -111,14 +118,14 @@ public class AdminServiceImpl implements AdminService {
     public List<TrainerResponse> getAllTrainers() {
         List<Client> trainers = clientRepository.getAllTrainers();
         return trainers.stream()
-                .map(trainer -> trainerDataMapper.convertToDto(trainer)).collect(Collectors.toList());
+                .map(trainerDataMapper::convertToDto).collect(Collectors.toList());
     }
 
     @Override
     public List<ReservationResponse> getAllReservations() {
             List<Reservation> reservations = reservationService.getAllReservations();
             return reservations.stream()
-                    .map(reservation -> reservationMapper.convertToDto(reservation)).collect(Collectors.toList());
+                    .map(reservationMapper::convertToDto).collect(Collectors.toList());
 
     }
 
@@ -126,7 +133,7 @@ public class AdminServiceImpl implements AdminService {
     public List<SubscriptionResponse> getAllSubscriptions() {
         List<Subscription> subscriptions = subscriptionService.getAllSubscriptionPlans();
         return subscriptions.stream()
-                .map(subscription -> subscriptionMapper.convertToDto(subscription)).collect(Collectors.toList());
+                .map(subscriptionMapper::convertToDto).collect(Collectors.toList());
     }
 
     public void createSubscription(CreateSubscriptionRequest createSubscriptionRequest) {
@@ -189,7 +196,7 @@ public class AdminServiceImpl implements AdminService {
         if(authentication.isAuthenticated()){
             List<TrainingClass> trainingClasses = trainingClassService.getTrainingClasses();
             return trainingClasses.stream()
-                    .map(trainingClass -> trainingClassMapper.convertToDto(trainingClass))
+                    .map(trainingClassMapper::convertToDto)
                             .collect(Collectors.toList());
 
         }else {
@@ -258,4 +265,62 @@ public class AdminServiceImpl implements AdminService {
             trainingClassService.deleteTrainingClass(id);
          }
     }
+
+    @Override
+    public List<UserSubscriptionsDataResponse> getUserSubscriptionsData(Integer id) {
+        List<UserSubscriptionsDataResponse> responseData = new ArrayList<>();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            Client user = clientRepository.findById(id).orElse(null);
+            if(user != null) {
+                List<SubscriptionsHistory> subscriptionsHistoryListForUser = subscriptionHistoryRepository.findByUser_IdOrderBySubscriptionEndTimeAsc(id);
+                return subscriptionsHistoryListForUser.stream()
+                        .map( subscriptionsHistory -> UserSubscriptionsDataResponse.builder()
+                                .subscriptionName(subscriptionsHistory.getSubscriptionName())
+                                .subscriptionPrice(subscriptionsHistory.getSubscriptionPrice())
+                                .firstName(subscriptionsHistory.getUser().getFirstName())
+                                .lastName(subscriptionsHistory.getUser().getLastName())
+                                .startDate(subscriptionsHistory.getSubscriptionStartTime())
+                                .endDate(subscriptionsHistory.getSubscriptionEndTime())
+                                .build()).collect(Collectors.toList());
+
+            }
+        }
+        return responseData;
+    }
+
+    @Override
+    public List<UserSubscriptionsDataResponse> getUserSubscriptionsData() {
+        List<UserSubscriptionsDataResponse> responseData = new ArrayList<>();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            Client user = clientRepository.findByEmail(authentication.getName()).orElse(null);
+            if(user != null) {
+                List<SubscriptionsHistory> subscriptionsHistoryListForUser = subscriptionHistoryRepository.findByUser_IdOrderBySubscriptionEndTimeAsc(user.getId());
+                return subscriptionsHistoryListForUser.stream()
+                        .map(subscriptionsHistoryMapper::convertToDto).collect(Collectors.toList());
+            }
+        }
+        return responseData;
+    }
+
+    @Override
+    public void addSubscriptionForUser(UserSubscriptionRequest userSubscriptionRequest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            Client user = clientRepository.findById(userSubscriptionRequest.getUserId()).orElse(null);
+            Subscription subscription = subscriptionRepository.findById(userSubscriptionRequest.getSubscriptionId()).orElse(null);
+            SubscriptionsHistory activeSubscription = subscriptionHistoryRepository.findActiveSubscriptionForUser(user.getId(), LocalDate.now());
+            if(activeSubscription == null){
+            if(subscription != null) {
+                SubscriptionsHistory subscriptionsHistory = subscriptionsHistoryMapper.convertFromDto(user,subscription);
+                subscriptionHistoryRepository.save(subscriptionsHistory);
+                }
+            }else{
+                throw new EntityExistsException("User already has a active subscription");
+            }
+        }
+    }
+
+
 }

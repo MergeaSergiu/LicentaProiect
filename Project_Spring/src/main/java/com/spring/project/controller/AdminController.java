@@ -120,6 +120,22 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @GetMapping("/users/subscriptions")
+    public ResponseEntity<List<UserSubscriptionsDataResponse>> getUserSubscriptions(@RequestParam("userId") Integer userId){
+        List<UserSubscriptionsDataResponse> userSubscriptionsDataResponses =  adminService.getUserSubscriptionsData(userId);
+        return ResponseEntity.ok(userSubscriptionsDataResponses);
+    }
 
+    @PostMapping("/users/addSubscription")
+    public ResponseEntity<Void> addSubscriptionForUser(@RequestBody UserSubscriptionRequest userSubscriptionRequest){
+        adminService.addSubscriptionForUser(userSubscriptionRequest);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/users/subscriptionsData")
+    public ResponseEntity<List<UserSubscriptionsDataResponse>> getUserSubscription(){
+        List<UserSubscriptionsDataResponse> userSubscriptionsDataResponses = adminService.getUserSubscriptionsData();
+        return ResponseEntity.ok(userSubscriptionsDataResponses);
+    }
 
 }

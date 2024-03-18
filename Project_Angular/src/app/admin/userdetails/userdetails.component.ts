@@ -7,6 +7,7 @@ import { MatSelect } from '@angular/material/select';
 import { Role } from '../../models/role.model';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupEditUserDataComponent } from '../../popup-edit-user-data/popup-edit-user-data.component';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { PopupEditUserDataComponent } from '../../popup-edit-user-data/popup-edi
 export class UserdetailsComponent implements OnInit{
 
   users: UserDataResponse[] = [];
-  displayedColumns: string[] = ['First Name', 'Last Name', 'Email', 'Role','Edit Role','Delete'];
+  displayedColumns: string[] = ['First Name', 'Last Name', 'Email', 'Role','Edit Role','Delete','Subscriptions'];
   dataSource: MatTableDataSource<any>;
   selectedUserId: number;
   selectedUser: number;
@@ -29,7 +30,7 @@ export class UserdetailsComponent implements OnInit{
     {id: 3, name: "TRAINER"}
   ]
 
-  constructor(private adminService: AdminService, private dialog: MatDialog) {
+  constructor(private adminService: AdminService, private dialog: MatDialog, private router: Router) {
     this.fetchUsersData();
   }
   ngOnInit(): void {}
@@ -67,6 +68,10 @@ export class UserdetailsComponent implements OnInit{
 
     })
   }
+
+  checkUserSubscription(id:number){
+      this.router.navigate(['/admin/subscriptionHistory'], { queryParams: { userId: id } });
+  } 
 
 
   public deleteUserData(id: number){

@@ -74,6 +74,50 @@ mat-card{
     text-align: center;
   }
 
-  .user-classes{
-    margin-top: 10px;
+  .trainingClasses{
+    width: 100%;
+    height: 220px;
   }
+
+  .user-classes{
+    margin-left: 8%;
+    position: relative;
+  }
+
+  .subscription-list{
+    position: relative;
+    margin-left: 100px;
+    margin-top: 150px;
+  }
+
+  .subscription-card{
+    max-width: 500px;
+    max-height: 300px;
+    margin-bottom: 20px;
+  }
+
+  .price{
+    margin-left: auto;
+  }
+
+  .title{
+    background-color: transparent;
+    color: white;
+    font-size: 50px;
+    margin-top:20px;
+    margin-left:40px;
+    
+}
+
+.subscrtiptions{
+  margin-left: 10%;
+}
+
+  .title-subscription{
+    background-color: transparent;
+    color: white;
+    font-size: 50px;
+    margin-top:400px;
+    margin-left:40px;  
+    margin-bottom: 30px;
+}

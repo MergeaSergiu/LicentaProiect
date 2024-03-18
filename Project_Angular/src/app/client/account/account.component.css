@@ -130,3 +130,26 @@
     text-align: center;
   }
 
+
+  .user-subs{
+    margin-top: 37%;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+}
+
+
+th{
+    background-color: black !important;
+    color: white;
+  }
+
+  .user-subs .active-subscription {
+    background-color: rgb(127, 188, 127); /* Change to your desired background color for active subscriptions */
+  }
+  
+  .user-subs tr:not(.active-subscription) {
+    background-color: rgb(213, 116, 116); /* Change to your desired background color for inactive subscriptions */
+  }
+

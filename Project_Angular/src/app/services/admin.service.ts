@@ -7,6 +7,8 @@ import { TrainerDataResponse } from "../models/trainers-response.model";
 import { TrainingClassRequest } from "../models/trainingclass-request.model";
 import { UserDataResponse } from "../models/user-response.model";
 import { RoleRequest } from "../models/role-request.model";
+import { UserSubscriptionsDataResponse } from "../models/userSubscriptionData-response.model";
+import { UserSubscriptionRequest } from "../models/userSubscription-request.model";
 
 
 @Injectable({
@@ -143,7 +145,22 @@ export class AdminService{
     return this.httpClient.put(this.API_PATH + "/api/admin/updateUserRole", roleRequest, {params})
     .pipe(
       catchError(this.handleError)
-    )
+    );
+  }
+
+  public getUserSubscriptionsData(userId:number):Observable<UserSubscriptionsDataResponse[]>{
+    const params = new HttpParams().set('userId', userId.toString());
+    return this.httpClient.get<UserSubscriptionsDataResponse[]>(this.API_PATH + "/api/admin/users/subscriptions", {params})
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  public AddUserSubscription(userSubscriptionRequest: UserSubscriptionRequest){
+    return this.httpClient.post(this.API_PATH + "/api/admin/users/addSubscription", userSubscriptionRequest)
+    .pipe(
+      catchError(this.handleError)
+    );
   }
 
 }
