@@ -154,21 +154,21 @@ export class ReservationComponent implements OnInit{
       //console.log(formattedDate);
       this.hourSchedulesFootball.forEach(schedule => {
         const isInReservation = this.reservationsFotball.some(reservation =>
-          reservation.hourSchedule === schedule.time && reservation.localDate === formattedDate
+          reservation.hourSchedule === schedule.time && reservation.reservationDate === formattedDate
         );
         schedule.reserved = isInReservation;
       });
 
       this.hourSchedulesBasketball.forEach(schedule => {
         const isInReservation = this.reservationsBasketball.some(reservation =>
-          reservation.hourSchedule === schedule.time && reservation.localDate === formattedDate
+          reservation.hourSchedule === schedule.time && reservation.reservationDate === formattedDate
         );
         schedule.reserved = isInReservation;
       });
 
       this.hourSchedulesTenis.forEach(schedule => {
         const isInReservation = this.reservationsTenis.some(reservation =>
-          reservation.hourSchedule === schedule.time && reservation.localDate === formattedDate
+          reservation.hourSchedule === schedule.time && reservation.reservationDate === formattedDate
         );
         schedule.reserved = isInReservation;
       });
@@ -195,7 +195,6 @@ export class ReservationComponent implements OnInit{
         return; // Stop further execution
       }
 
-
       const registrationRequest: ReservationRequest = {
             localDate: formattedDate,
             hourSchedule: schedule.time,
@@ -210,8 +209,8 @@ export class ReservationComponent implements OnInit{
           }, 2000)
           schedule.reserved = true;
         },
-        error: (error: any) =>{
-            console.log(error);
+        error: (any) =>{
+            alert(any);
         }
       });
 

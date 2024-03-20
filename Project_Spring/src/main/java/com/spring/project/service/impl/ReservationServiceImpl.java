@@ -19,6 +19,7 @@ import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,18 +39,22 @@ public class ReservationServiceImpl implements ReservationService {
         if(authentication.isAuthenticated()) {
             Client user = clientService.findClientByEmail(authentication.getName());
             if (user != null) {
-                Reservation reservation = reservationMapper.convertFromDto(reservationRequest,user);
-                fotballReservationServiceImpl.save(reservation);
-                String emailTemplate = loadEmailTemplateFromResource("reservationResponseEmail.html");
-                emailTemplate = emailTemplate.replace("${email}", authentication.getName());
-                emailTemplate = emailTemplate.replace("${hourSchedule}", reservationRequest.getHourSchedule());
-                emailTemplate = emailTemplate.replace("${dateTime}", reservationRequest.getLocalDate());
-                emailSender.send(authentication.getName(), emailTemplate, "Thank you for your reservation");
+                List<Reservation> reservationsForCurrentDayForUser = reservationRepository.findAllByUser_IdAndReservationMadeDate(user.getId(), LocalDate.now());
+                if(reservationsForCurrentDayForUser.size() < 3) {
+                    Reservation reservation = reservationMapper.convertFromDto(reservationRequest, user);
+                    fotballReservationServiceImpl.save(reservation);
+                    String emailTemplate = loadEmailTemplateFromResource("reservationResponseEmail.html");
+                    emailTemplate = emailTemplate.replace("${email}", authentication.getName());
+                    emailTemplate = emailTemplate.replace("${hourSchedule}", reservationRequest.getHourSchedule());
+                    emailTemplate = emailTemplate.replace("${dateTime}", reservationRequest.getLocalDate());
+                    emailSender.send(authentication.getName(), emailTemplate, "Thank you for your reservation");
+                }else{
+                    throw new ClientNotFoundException("You reached the reservations limit per day");
+                }
             }else {
                 throw new ClientNotFoundException("User does not exist");
             }
         }
-
     }
 
     @Override
@@ -69,13 +74,13 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<Reservation> getAllReservations() {
-        return reservationRepository.findAll();
+        return reservationRepository.findAllByOrderByReservationDateAsc();
     }
 
 
     @Override
     public List<Reservation> getAllClientReservations(Integer id) {
-        return reservationRepository.findByuser_Id(id);
+        return reservationRepository.findAllByUser_IdOrderByReservationDateAsc(id);
     }
 
     @Override
@@ -89,7 +94,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public void deleteReservationsForUser(Integer id) {
-        reservationRepository.deleteAllByuser_Id(id);
+        reservationRepository.deleteAllByUser_Id(id);
     }
 
     @Override

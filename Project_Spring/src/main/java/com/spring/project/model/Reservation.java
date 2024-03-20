@@ -2,6 +2,9 @@ package com.spring.project.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -13,23 +16,22 @@ import lombok.*;
 public class Reservation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    private String localDate;
+    @Temporal(TemporalType.DATE)
+    private LocalDate reservationDate;
 
     private String hourSchedule;
 
     private String court;
 
+    @Temporal(TemporalType.DATE)
+    @CreationTimestamp
+    private LocalDate reservationMadeDate;
+
     @ManyToOne
     @JoinColumn(name= "user_id")
     private Client user;
 
-    public Reservation(String localDate, String hourSchedule, String court, Client user) {
-        this.localDate = localDate;
-        this.hourSchedule = hourSchedule;
-        this.court = court;
-        this.user = user;
-    }
 }

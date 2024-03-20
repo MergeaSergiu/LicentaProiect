@@ -1,6 +1,6 @@
 export class ReservationResponse{
     id: number;
-    localDate: string;
+    reservationDate: string;
     hourSchedule: string;
     clientEmail: string;
     court: string;

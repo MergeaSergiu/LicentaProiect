@@ -43,7 +43,7 @@
       <table mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="Date">
         <th mat-header-cell *matHeaderCellDef>Date</th>
-        <td mat-cell *matCellDef="let reservation" style="width: 3%;">{{ reservation.localDate }}</td>
+        <td mat-cell *matCellDef="let reservation" style="width: 3%;">{{ reservation.reservationDate }}</td>
       </ng-container>
       <ng-container matColumnDef="HourSchedule">
         <th mat-header-cell *matHeaderCellDef>Time Slot</th>

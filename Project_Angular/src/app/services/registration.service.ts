@@ -15,12 +15,9 @@ export class RegistrationService {
 
   API_PATH = "http://localhost:8080/project"
   requestHeader = new HttpHeaders({ 'No-Auth': 'True' });
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient) {}
 
-   }
-   ngOnInit(){
-
-   }
+   ngOnInit(){}
 
    handleError(error: HttpErrorResponse){
     return throwError (() => (error.error.errorMessage));
@@ -40,13 +37,8 @@ export class RegistrationService {
     );
    }
 
-   public refreshToken(refreshToken: JwtRefreshToken): Observable<any>{
-    return this.httpClient.post(this.API_PATH + "/auth/refreshToken", refreshToken)
-    .pipe((tap((response: any) =>{
-      localStorage.setItem('jwtRefreshToken', response.refresh_token);
-    }))
-    );
-      
+   public refreshToken(jwtRefreshToken: JwtRefreshToken): Observable<any>{
+    return this.httpClient.post(this.API_PATH + "/auth/refreshToken", jwtRefreshToken);
    }
 
    public sendResetPasswordEmail(resetPassData: ResetPasswordRequest): Observable<any>{

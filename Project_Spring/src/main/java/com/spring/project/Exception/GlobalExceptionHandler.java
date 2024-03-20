@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
         errorResponseContainer.setHttpStatusCode(HttpStatus.NOT_FOUND.value());
         errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(EntityExistsException.class)
@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
 
         errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
         errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
     }
 
 
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
 
         errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
         errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EmailNotAvailableException.class)
@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
 
         errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
         errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -62,7 +62,7 @@ public class GlobalExceptionHandler {
 
         errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
         errorResponseContainer.setErrorMessage(errors);
-        return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -71,7 +71,7 @@ public class GlobalExceptionHandler {
 
         errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
         errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AuthenticationException.class)
@@ -80,7 +80,7 @@ public class GlobalExceptionHandler {
 
         errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
         errorResponseContainer.setErrorMessage("Email or Password are invalid");
-        return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ExpiredJwtException.class)
@@ -89,7 +89,7 @@ public class GlobalExceptionHandler {
 
         errorResponseContainer.setHttpStatusCode(HttpStatus.FORBIDDEN.value());
         errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(ResetPasswordException.class)
@@ -98,7 +98,7 @@ public class GlobalExceptionHandler {
 
         errorResponseContainer.setHttpStatusCode(HttpStatus.GONE.value());
         errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.GONE);
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.GONE);
     }
 
     @ExceptionHandler(ConfirmAccountException.class)
@@ -107,7 +107,7 @@ public class GlobalExceptionHandler {
 
         errorResponseContainer.setHttpStatusCode(HttpStatus.GONE.value());
         errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.GONE);
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.GONE);
     }
 
     @ExceptionHandler(CustomExpiredJwtException.class)
@@ -116,6 +116,6 @@ public class GlobalExceptionHandler {
 
         errorResponseContainer.setHttpStatusCode(HttpStatus.FORBIDDEN.value());
         errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<ErrorResponseContainer>(errorResponseContainer, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.FORBIDDEN);
     }
 }
