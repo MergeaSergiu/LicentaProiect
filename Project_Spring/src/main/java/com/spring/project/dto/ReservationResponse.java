@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ReservationResponse {
     Integer id;
-    String localDate;
+    String reservationDate;
     String hourSchedule;
     String clientEmail;
     String court;

@@ -180,13 +180,11 @@ public class ClientService implements UserDetailsService {
     public void unEnrollUserFromTrainingClass(Integer classId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated()) {
-            TrainingClass trainingClass = trainingClassService.findById(classId);
-            if (trainingClass != null) {
-                enrollmentTrainingClassService.deleteEnrollmentForUser(trainingClass.getId(), clientRepository.findByEmail(authentication.getName()).get().getId());
+            Client user = clientRepository.findByEmail(authentication.getName()).orElse(null);
+                enrollmentTrainingClassService.deleteEnrollmentForUser(classId, user.getId());
             } else {
                 throw new EntityNotFoundException("The training Class does not exist");
             }
         }
-    }
 
 }

@@ -14,17 +14,17 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
 
-    @Query("SELECT e FROM Reservation e WHERE function('date', e.localDate) = :currentDate")
-    List<Reservation> findByLocalDateCurrentDate(@Param("currentDate") LocalDate currentDate);
 
-    List<Reservation> findAll();
+    List<Reservation> findAllByOrderByReservationDateAsc();
 
-    List<Reservation> findByuser_Id(@Param("id") Integer id);
+    List<Reservation> findAllByUser_IdOrderByReservationDateAsc(@Param("id") Integer id);
 
     @Query("SELECT e from Reservation e WHERE e.court = :court")
     List<Reservation> findByCourt(@Param("court") String court);
 
     @Modifying
     @Transactional
-    void deleteAllByuser_Id(@Param("id") Integer id);
+    void deleteAllByUser_Id(@Param("id") Integer id);
+
+    List<Reservation> findAllByUser_IdAndReservationMadeDate(@Param("userId") Integer userId, @Param("currentDate") LocalDate currentDate);
 }

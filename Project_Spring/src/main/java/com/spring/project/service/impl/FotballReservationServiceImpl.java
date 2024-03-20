@@ -19,12 +19,6 @@ public class FotballReservationServiceImpl implements FotballReservationService 
         return reservationRepository.save(reservation);
     }
 
-    public List<Reservation> getReservationWithCurrentDay(){
-            LocalDate localDate = LocalDate.now();
-            return reservationRepository.findByLocalDateCurrentDate(localDate);
-    }
-
-
     @Override
     public void deleteReservation(Integer id){
         reservationRepository.deleteById(id);

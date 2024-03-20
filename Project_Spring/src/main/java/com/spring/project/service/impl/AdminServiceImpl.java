@@ -275,14 +275,7 @@ public class AdminServiceImpl implements AdminService {
             if(user != null) {
                 List<SubscriptionsHistory> subscriptionsHistoryListForUser = subscriptionHistoryRepository.findByUser_IdOrderBySubscriptionEndTimeAsc(id);
                 return subscriptionsHistoryListForUser.stream()
-                        .map( subscriptionsHistory -> UserSubscriptionsDataResponse.builder()
-                                .subscriptionName(subscriptionsHistory.getSubscriptionName())
-                                .subscriptionPrice(subscriptionsHistory.getSubscriptionPrice())
-                                .firstName(subscriptionsHistory.getUser().getFirstName())
-                                .lastName(subscriptionsHistory.getUser().getLastName())
-                                .startDate(subscriptionsHistory.getSubscriptionStartTime())
-                                .endDate(subscriptionsHistory.getSubscriptionEndTime())
-                                .build()).collect(Collectors.toList());
+                        .map(subscriptionsHistoryMapper::convertToDto).collect(Collectors.toList());
 
             }
         }

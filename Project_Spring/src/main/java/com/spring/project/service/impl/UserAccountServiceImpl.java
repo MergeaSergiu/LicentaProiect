@@ -45,14 +45,10 @@ public class UserAccountServiceImpl implements UserAccountService {
             if(authentication.isAuthenticated()) {
                 Client user = clientService.findClientByEmail(authentication.getName());
                 List<Reservation> reservations = reservationService.getAllClientReservations(user.getId());
-                if (reservations != null) {
                     return reservations.stream()
                             .map(courtReservation -> reservationMapper.convertToDto(courtReservation)).collect(Collectors.toList());
-                } else {
-                    throw new EntityNotFoundException("You do not have any reservation yet");
-                }
             }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override

@@ -16,4 +16,5 @@ public class ReservationRequest {
     String localDate;
     String hourSchedule;
     String court;
+    LocalDate currentDate;
 }

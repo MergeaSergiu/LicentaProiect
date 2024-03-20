@@ -24,6 +24,7 @@ export class ClientService{
    ngOnInit(){}
 
    handleError(error: HttpErrorResponse){
+    console.log(error);
     return throwError (() => (error.error.errorMessage));
    }
 
@@ -32,7 +33,7 @@ export class ClientService{
     return this.httpClient.get<ReservationResponse[]>(this.API_PATH + "/api/user/getReservationsByCourt",  {params})
     .pipe(
       catchError(this.handleError)
-    );
+      );
    }
 
    public getAllReservationsForClient(): Observable<ReservationResponse[]>{
@@ -42,11 +43,8 @@ export class ClientService{
     );
    }
 
-   public createReservation(reservationRequest: ReservationRequest):Observable<any>{
-      return this.httpClient.post<any>(this.API_PATH + "/api/user/createReservation", reservationRequest)
-      .pipe(
-        catchError(this.handleError)
-      );
+   public createReservation(reservationRequest: ReservationRequest):Observable<ReservationRequest>{
+      return this.httpClient.post<any>(this.API_PATH + "/api/user/createReservation", reservationRequest);
    }
 
   public deleteReservation(id: number){
