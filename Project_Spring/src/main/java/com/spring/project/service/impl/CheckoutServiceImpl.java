@@ -4,7 +4,6 @@ import com.spring.project.Exception.ClientNotFoundException;
 import com.spring.project.dto.PaymentRequest;
 import com.spring.project.model.Client;
 import com.spring.project.repository.ClientRepository;
-import com.spring.project.repository.SubscriptionHistoryRepository;
 import com.spring.project.service.CheckoutService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -35,14 +34,12 @@ public class CheckoutServiceImpl implements CheckoutService {
     @Override
     public PaymentIntent createPaymentIntent(PaymentRequest paymentRequest) throws StripeException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Client user = clientRepository.findByEmail(authentication.getName()).orElse(null);
-        if (user != null) {
-            CustomerCreateParams Customerparams = CustomerCreateParams.builder()
-                    .setName(user.getLastName() + " " + user.getFirstName())
+            CustomerCreateParams CustomerParams = CustomerCreateParams.builder()
+                    .setName(paymentRequest.getCardHolderName())
                     .setEmail(authentication.getName())
                     .build();
 
-            String customerId = Customer.create(Customerparams).getId();
+            String customerId = Customer.create(CustomerParams).getId();
 
             PaymentIntentCreateParams params =
                     PaymentIntentCreateParams.builder()
@@ -59,9 +56,6 @@ public class CheckoutServiceImpl implements CheckoutService {
                             .setDescription("Subscription Purchase")
                             .build();
             return PaymentIntent.create(params);
-        }else{
-            throw new ClientNotFoundException("There is no user");
-        }
     }
 
 }

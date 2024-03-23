@@ -133,6 +133,13 @@ public checkEnrollmentStatus(trainingClassId: number): Observable<StatusEnrollRe
     );
   }
 
+  public checkUserActiveSubscriptions(): Observable<any> {
+    return this.httpClient.get<any>(this.API_PATH + "/api/user/userActiveSubscriptions")
+    .pipe(
+      catchError(this.handleError)
+      )
+  }
+
   
 
 }

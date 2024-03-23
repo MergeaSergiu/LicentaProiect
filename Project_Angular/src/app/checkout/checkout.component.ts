@@ -5,7 +5,7 @@ import { ClientService } from '../services/client.service';
 import { AdminService } from '../services/admin.service';
 import { SubscriptionRequest } from '../models/subscription-request.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupSuccessComponent } from '../popup-success/popup-success.component';
 
@@ -24,16 +24,20 @@ export class CheckoutComponent implements OnInit{
   displayError: any;
   subscriptionResponse: any;
   subscriptionForm: FormGroup;
+  paymentData: PaymentData;
 
-  constructor(private dialog: MatDialog,private route: ActivatedRoute,private router: Router, private clientService: ClientService, private adminService: AdminService){}
+  constructor(private formBuilder: FormBuilder,private dialog: MatDialog,private route: ActivatedRoute,private router: Router, private clientService: ClientService, private adminService: AdminService){}
 
   ngOnInit(): void{
     this.route.queryParams.subscribe(params => {
       this.subscriptionId = params['subscId'];
     })
     this.fetchSubscriptionData(this.subscriptionId);
-    this.subscriptionForm = new FormGroup({});
+    this.subscriptionForm = this.formBuilder.group({
+      cardholderName: ['', Validators.required],
+    });
     this.setUpStripePaymentForm();
+    console.log(this.subscriptionResponse);
   }
 
   fetchSubscriptionData(subscriptionId: number) {
@@ -69,14 +73,15 @@ export class CheckoutComponent implements OnInit{
       }
 
 
-  async onSubmit() {
+  async onSubmit(form: NgForm) {
 
-    const paymentData = {
-      amount: 10000,
+    this.paymentData = {
+      cardHolderName : form.value.cardHolderName,
+      amount: this.subscriptionResponse.subscriptionPrice * 100,
       currency : "ron"
     }
     try {
-      this.clientService.createPaymentIntent(paymentData).subscribe({
+      this.clientService.createPaymentIntent(this.paymentData).subscribe({
         next: (response: any) => {  
           if(response.status === 'requires_confirmation'){
             
@@ -89,26 +94,24 @@ export class CheckoutComponent implements OnInit{
               if(result.error) {
                 alert(result.error.message)
               }else{
-                
                 this.adminService.AddUserSubscriptionByCard(this.subscriptionId).subscribe({
                   next: (response: any) =>{
-                    var _resultPopUp
+                    var _popUpMessage = this.dialog.open(PopupSuccessComponent, {
+                      width: '50%',
+                      enterAnimationDuration: '400ms',
+                      exitAnimationDuration: '400ms',
+                      data: {
+                        message: 'Payment successful!'
+                      }
+                    });
+                    setTimeout(() => {
+                      _popUpMessage.close();
+                      this.router.navigate(['/client/account']);
+                    }, 1200);
                   },error: (error: any) => {
-                    console.log("Nu merge");
+                    alert('We can not register your subscription')
                   }
               })
-              var _popUpMessage = this.dialog.open(PopupSuccessComponent, {
-                width: '50%',
-                enterAnimationDuration: '400ms',
-                exitAnimationDuration: '400ms',
-                data: {
-                  message: 'Payment successful!'
-                }
-              });
-              setTimeout(() => {
-                _popUpMessage.close();
-                this.router.navigate(['/client/account']);
-              }, 1500);
               }
             })
         } else{
@@ -122,14 +125,13 @@ export class CheckoutComponent implements OnInit{
           });
           setTimeout(() => {
             _popUpMessage.close();
-            
-          }, 1500);
+          }, 1200);
         } 
       }
       })
       // Reset form or perform other actions after successful submission
     } catch (error) {
-      console.error('Error handling payment and saving subscription data:', error);
+      alert('Error handling payment and saving subscription data:');
       // Handle error
     }
   }

@@ -12,6 +12,7 @@ import lombok.Setter;
 @Builder
 public class PaymentRequest {
 
+    private String cardHolderName;
     private int amount;
     private String currency;
 

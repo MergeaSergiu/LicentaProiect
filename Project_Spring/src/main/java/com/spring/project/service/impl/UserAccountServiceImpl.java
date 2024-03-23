@@ -1,17 +1,14 @@
 package com.spring.project.service.impl;
 
-import com.spring.project.dto.ReservationResponse;
-import com.spring.project.dto.TrainingClassResponse;
-import com.spring.project.dto.UpdateUserRequest;
-import com.spring.project.dto.UserDataResponse;
+import com.spring.project.Exception.ClientNotFoundException;
+import com.spring.project.Exception.CustomExpiredJwtException;
+import com.spring.project.dto.*;
 import com.spring.project.mapper.ReservationMapper;
 import com.spring.project.mapper.TrainingClassMapper;
 import com.spring.project.mapper.UserDataMapper;
-import com.spring.project.model.Client;
-import com.spring.project.model.EnrollmentTrainingClass;
-import com.spring.project.model.Reservation;
-import com.spring.project.model.TrainingClass;
+import com.spring.project.model.*;
 import com.spring.project.repository.ClientRepository;
+import com.spring.project.repository.SubscriptionHistoryRepository;
 import com.spring.project.service.EnrollmentTrainingClassService;
 import com.spring.project.service.ReservationService;
 import com.spring.project.service.TrainingClassService;
@@ -22,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +36,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     private final ReservationMapper reservationMapper;
     private final TrainingClassMapper trainingClassMapper;
     private final UserDataMapper userDataMapper;
+    private final SubscriptionHistoryRepository subscriptionHistoryRepository;
 
     @Override
     public List<ReservationResponse> getAllClientReservations() {
@@ -87,5 +86,22 @@ public class UserAccountServiceImpl implements UserAccountService {
             return userDataMapper.convertToDto(user);
         }
         throw new EntityNotFoundException("User does not exist");
+    }
+
+    @Override
+    public boolean getUserActiveSubscriptions() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            Client user = clientService.findClientByEmail(authentication.getName());
+            if(user != null){
+                SubscriptionsHistory activeSubscription = subscriptionHistoryRepository.findActiveSubscriptionForUser(user.getId(), LocalDate.now());
+                if(activeSubscription == null){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

@@ -4,9 +4,6 @@ import com.spring.project.dto.PaymentRequest;
 import com.spring.project.service.CheckoutService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +25,6 @@ public class PaymentController {
     public ResponseEntity<String> createPaymentIntent(@RequestBody PaymentRequest paymentRequest) throws StripeException {
 
         PaymentIntent paymentIntent = checkoutService.createPaymentIntent(paymentRequest);
-
         return new ResponseEntity<>(paymentIntent.toJson(), HttpStatus.OK);
     }
 }

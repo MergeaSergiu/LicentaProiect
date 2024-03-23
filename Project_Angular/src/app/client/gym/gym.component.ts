@@ -17,6 +17,7 @@ export class GymComponent implements OnInit{
   trainingClassesData: TrainingClassResponse[];
   userTrainingClassesData: TrainingClassResponse[];
   selectedTrainingClassId: number;
+  hasActiveSubscription: boolean;
   successfulMessage: string;
   isEnrolled: boolean;
   panelOpenState = false;
@@ -26,6 +27,7 @@ export class GymComponent implements OnInit{
     this.fetchTrainingClassesData();
     this.fetchUserTrainingClassesData();
     this.fetchSubscriptions();
+    this.checkUserActiveSubscription();
   }
 
   selectionChangeHandler(event: any) {
@@ -41,6 +43,14 @@ export class GymComponent implements OnInit{
     this.selectedTrainingClassId = null;
     this.selectedTrainingClass = null;
     this.isEnrolled = false;
+  }
+
+  checkUserActiveSubscription(){
+    this.clientService.checkUserActiveSubscriptions().subscribe({
+      next: (response) => {
+          this.hasActiveSubscription = response.hasActiveSubscription;
+      }
+    })
   }
 
   fetchTrainingClassesData(){
