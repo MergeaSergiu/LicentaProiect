@@ -14,6 +14,7 @@ import { ReservationdetailsComponent } from "./admin/reservationdetails/reservat
 import { GymdetailsComponent } from "./admin/gymdetails/gymdetails.component";
 import { UserdetailsComponent } from "./admin/userdetails/userdetails.component";
 import { UserSubscriptionsComponent } from "./admin/user-subscriptions/user-subscriptions.component";
+import { CheckoutComponent } from "./checkout/checkout.component";
 
 const appRoutes : Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -27,7 +28,8 @@ const appRoutes : Routes = [
     {path: 'clientDashboard', component: ClientComponent},
     { path: 'reservations', component: ReservationComponent},
     { path: 'gym', component: GymComponent},
-    { path: 'account', component: AccountComponent}
+    { path: 'account', component: AccountComponent},
+    { path: 'checkout', component: CheckoutComponent}
     ]},
     { path: 'admin',
     canActivate: [authGuard],

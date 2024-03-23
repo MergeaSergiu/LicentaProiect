@@ -3,6 +3,7 @@ import { AdminService } from '../../services/admin.service';
 import { TrainingClassResponse } from '../../models/trainingclass-response.model';
 import { ClientService } from '../../services/client.service';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-gym',
@@ -19,7 +20,7 @@ export class GymComponent implements OnInit{
   successfulMessage: string;
   isEnrolled: boolean;
   panelOpenState = false;
-  constructor(private adminService: AdminService, private clientService: ClientService,private _responseBar: MatSnackBar){}
+  constructor(private router: Router, private adminService: AdminService, private clientService: ClientService,private _responseBar: MatSnackBar){}
 
   ngOnInit(): void{
     this.fetchTrainingClassesData();
@@ -108,6 +109,10 @@ export class GymComponent implements OnInit{
         this.subscriptions = response;
       }
     })
+  }
+
+  goToCheckoutPage(subscriptionId: number) {
+    this.router.navigate(['/client/checkout'], { queryParams: { subscId: subscriptionId } });
   }
 
 }

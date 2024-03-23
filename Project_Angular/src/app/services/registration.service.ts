@@ -43,9 +43,6 @@ export class RegistrationService {
 
    public sendResetPasswordEmail(resetPassData: ResetPasswordRequest): Observable<any>{
     return this.httpClient.post(this.API_PATH + "/auth/resetPass", resetPassData, {headers: this.requestHeader})
-    .pipe(
-      catchError(this.handleError)
-    );
    }
 
    public updatePassword(updatePassword: UpdatePasswordRequest): Observable<any>{

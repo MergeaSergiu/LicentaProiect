@@ -177,8 +177,8 @@ public class AdminServiceImpl implements AdminService {
             Subscription subscription = subscriptionService.findById(id).orElse(null);
             if(subscription != null){
                 return subscriptionMapper.convertToDto(subscription);
-                }
             }
+        }
         throw new CustomExpiredJwtException("Session expired");
     }
 
@@ -304,10 +304,26 @@ public class AdminServiceImpl implements AdminService {
             Client user = clientRepository.findById(userSubscriptionRequest.getUserId()).orElse(null);
             Subscription subscription = subscriptionRepository.findById(userSubscriptionRequest.getSubscriptionId()).orElse(null);
             SubscriptionsHistory activeSubscription = subscriptionHistoryRepository.findActiveSubscriptionForUser(user.getId(), LocalDate.now());
-            if(activeSubscription == null){
-            if(subscription != null) {
+            if(activeSubscription == null && subscription != null){
                 SubscriptionsHistory subscriptionsHistory = subscriptionsHistoryMapper.convertFromDto(user,subscription);
                 subscriptionHistoryRepository.save(subscriptionsHistory);
+            }else{
+                throw new EntityExistsException("User already has a active subscription");
+            }
+        }
+    }
+
+    @Override
+    public void addSubscriptionForUserByCard(Integer subscriptionId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            Client user = clientRepository.findByEmail(authentication.getName()).orElse(null);
+            Subscription subscription = subscriptionRepository.findById(subscriptionId).orElse(null);
+            SubscriptionsHistory activeSubscription = subscriptionHistoryRepository.findActiveSubscriptionForUser(user.getId(), LocalDate.now());
+            if(activeSubscription == null){
+                if(subscription != null) {
+                    SubscriptionsHistory subscriptionsHistory = subscriptionsHistoryMapper.convertFromDto(user,subscription);
+                    subscriptionHistoryRepository.save(subscriptionsHistory);
                 }
             }else{
                 throw new EntityExistsException("User already has a active subscription");

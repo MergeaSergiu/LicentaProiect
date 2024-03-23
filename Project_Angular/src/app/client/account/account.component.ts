@@ -61,12 +61,10 @@ export class AccountComponent implements OnInit {
 
 
   saveProfile(currentUser: UserDataResponse): void{
-    console.log("A mers");
       const userDataRequest: UpdateUserRequest = {
           firstName: currentUser.firstName,
           lastName: currentUser.lastName
       };
-      console.log(userDataRequest);
       this.clientService.updateUserData(userDataRequest).subscribe({
         next: (response) =>{
           this.inEditMode = false;
@@ -76,10 +74,8 @@ export class AccountComponent implements OnInit {
   }
 
   cancelEdit(): void {
-    // Reset editedUser to the original currentUser
     this.inEditMode = false;
     this.fetchUserData();
-    
   }
 
   
