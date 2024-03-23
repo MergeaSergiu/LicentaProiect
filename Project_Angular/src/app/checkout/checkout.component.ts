@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupSuccessComponent } from '../popup-success/popup-success.component';
+import { error } from 'console';
 
 @Component({
   selector: 'app-checkout',
@@ -37,7 +38,6 @@ export class CheckoutComponent implements OnInit{
       cardholderName: ['', Validators.required],
     });
     this.setUpStripePaymentForm();
-    console.log(this.subscriptionResponse);
   }
 
   fetchSubscriptionData(subscriptionId: number) {
@@ -81,54 +81,72 @@ export class CheckoutComponent implements OnInit{
       currency : "ron"
     }
     try {
-      this.clientService.createPaymentIntent(this.paymentData).subscribe({
-        next: (response: any) => {  
-          if(response.status === 'requires_confirmation'){
-            
-          this.stripe.confirmCardPayment(
-              response.client_secret,
-              {payment_method: {
-                card: this.paymentElement
-              }
-            }, {handleActions: false}).then((result: any) => {
-              if(result.error) {
-                alert(result.error.message)
-              }else{
-                this.adminService.AddUserSubscriptionByCard(this.subscriptionId).subscribe({
-                  next: (response: any) =>{
-                    var _popUpMessage = this.dialog.open(PopupSuccessComponent, {
-                      width: '50%',
-                      enterAnimationDuration: '400ms',
-                      exitAnimationDuration: '400ms',
-                      data: {
-                        message: 'Payment successful!'
-                      }
-                    });
-                    setTimeout(() => {
-                      _popUpMessage.close();
-                      this.router.navigate(['/client/account']);
-                    }, 1200);
-                  },error: (error: any) => {
-                    alert('We can not register your subscription')
-                  }
-              })
+
+      this.clientService.checkUserActiveSubscriptions().subscribe({
+        next: (response) => {
+          if(response.hasActiveSubscription == false){
+            this.clientService.createPaymentIntent(this.paymentData).subscribe({
+              next: (response: any) => {  
+                this.stripe.confirmCardPayment(
+                    response.client_secret,
+                    {payment_method: {
+                      card: this.paymentElement
+                    }
+                  }, {
+                    handleActions: false
+                  }).then((result: any) => {
+                    if(result.error) {
+                      var _popUpMessage = this.dialog.open(PopupSuccessComponent, {
+                        width: '50%',
+                        enterAnimationDuration: '400ms',
+                        exitAnimationDuration: '400ms',
+                        data: {
+                          message: 'Payment failed!'
+                        }
+                      });
+                      setTimeout(() => {
+                        _popUpMessage.close();
+                      }, 1200);
+                    }else{
+                      this.adminService.AddUserSubscriptionByCard(this.subscriptionId).subscribe({
+                        next: (response: any) =>{
+                          var _popUpMessage = this.dialog.open(PopupSuccessComponent, {
+                            width: '50%',
+                            enterAnimationDuration: '400ms',
+                            exitAnimationDuration: '400ms',
+                            data: {
+                              message: 'Payment successful!'
+                            }
+                          });
+                          setTimeout(() => {
+                            _popUpMessage.close();
+                            this.router.navigate(['/client/account']);
+                          }, 1200);
+                        },error: (error: any) => {
+                          alert('We can not register your subscription')
+                        }
+                    })
+                    }
+                  })
               }
             })
-        } else{
-          var _popUpMessage = this.dialog.open(PopupSuccessComponent, {
-            width: '50%',
-            enterAnimationDuration: '400ms',
-            exitAnimationDuration: '400ms',
-            data: {
-              message: 'Payment failed!'
-            }
-          });
-          setTimeout(() => {
-            _popUpMessage.close();
-          }, 1200);
-        } 
-      }
-      })
+          }else{
+            var _popUpMessage = this.dialog.open(PopupSuccessComponent, {
+              width: '50%',
+              enterAnimationDuration: '400ms',
+              exitAnimationDuration: '400ms',
+              data: {
+                message: 'You already have an active subscription. We can not proced your payment'
+              }
+            });
+            setTimeout(() => {
+              _popUpMessage.close();
+            }, 1200);
+          }
+        }
+       });
+
+
       // Reset form or perform other actions after successful submission
     } catch (error) {
       alert('Error handling payment and saving subscription data:');
