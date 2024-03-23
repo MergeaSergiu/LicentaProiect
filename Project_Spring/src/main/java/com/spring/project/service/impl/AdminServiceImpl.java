@@ -81,16 +81,19 @@ public class AdminServiceImpl implements AdminService {
                 if(trainingClasses != null){
                     for(TrainingClass trainingClass : trainingClasses){
                             deleteTrainingClass(trainingClass.getId());
+                            enrollmentTrainingClassRepository.deleteAllByTrainingClass_Id(id);
                     }
                 }
+
+            }else if(client.getRole().getName().equals("USER")) {
+                reservationService.deleteReservationsForUser(id);
+                enrollmentTrainingClassRepository.deleteAllByUser_id(id);
+                subscriptionHistoryRepository.deleteAllByUser_Id(id);
             }
-            confirmationTokenService.deleteByclient_Id(id);
-            passwordResetTokenService.deleteByclient_Id(id);
-            reservationService.deleteReservationsForUser(id);
-            enrollmentTrainingClassRepository.deleteAllByUser_id(id);
-            subscriptionHistoryRepository.deleteAllByUser_Id(id);
-            clientRepository.deleteById(id);
         }
+        confirmationTokenService.deleteByclient_Id(id);
+        passwordResetTokenService.deleteByclient_Id(id);
+        clientRepository.deleteById(id);
     }
 
     @Override
@@ -99,13 +102,16 @@ public class AdminServiceImpl implements AdminService {
         if(authentication.isAuthenticated()){
             Role role = roleRepsitory.findById(roleRequest.getId()).orElse(null);
             Client client = clientService.findClientById(id);
-            if(role.getName().equals("USER") && !clientRepository.findById(client.getId()).get().getRole().getName().equals("USER")){
+            if(clientRepository.findById(client.getId()).get().getRole().getName().equals("USER") && !role.getName().equals("USER")){
                 reservationService.deleteReservationsForUser(client.getId());
-            }else if(role.getName().equals("TRAINER") && !clientRepository.findById(id).get().getRole().getName().equals("TRAINER")){
+                enrollmentTrainingClassRepository.deleteAllByUser_id(client.getId());
+                subscriptionHistoryRepository.deleteAllByUser_Id(id);
+            }else if(clientRepository.findById(id).get().getRole().getName().equals("TRAINER") && !role.getName().equals("TRAINER")){
                 List<TrainingClass> trainingClasses = trainingClassService.getTrainingClassesForTrainer(id);
                 if(trainingClasses != null){
                     for(TrainingClass trainingClass : trainingClasses){
                         deleteTrainingClass(trainingClass.getId());
+                        enrollmentTrainingClassRepository.deleteAllByTrainingClass_Id(trainingClass.getId());
                     }
                 }
             }
