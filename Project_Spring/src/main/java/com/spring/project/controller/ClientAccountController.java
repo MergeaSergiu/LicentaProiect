@@ -1,9 +1,7 @@
 package com.spring.project.controller;
 
-import com.spring.project.dto.ReservationResponse;
-import com.spring.project.dto.TrainingClassResponse;
-import com.spring.project.dto.UpdateUserRequest;
-import com.spring.project.dto.UserDataResponse;
+import com.spring.project.dto.*;
+import com.spring.project.model.SubscriptionsHistory;
 import com.spring.project.service.TrainerService;
 import com.spring.project.service.UserAccountService;
 import lombok.AllArgsConstructor;
@@ -51,10 +49,16 @@ public class ClientAccountController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-
     @GetMapping("/getEnrollClasses")
     public ResponseEntity<List<TrainingClassResponse>> getEnrollClassesForUser(){
         return ResponseEntity.ok(userAccountService.getEnrollClasses());
     }
+
+    @GetMapping("/userActiveSubscriptions")
+    public ResponseEntity<?> getUserActiveSubscriptions(){
+        boolean hasActiveSubscription = userAccountService.getUserActiveSubscriptions();
+        return ResponseEntity.ok().body("{\"hasActiveSubscription\": " + hasActiveSubscription + "}");
+    }
+
 
 }

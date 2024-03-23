@@ -48,6 +48,8 @@ import { TrainerComponent } from './trainerDashboard/trainer.component';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { UserSubscriptionsComponent } from './admin/user-subscriptions/user-subscriptions.component';
 import { PopupAddSubForUserComponent } from './popup-add-sub-for-user/popup-add-sub-for-user.component';
+import { CheckoutComponent } from './checkout/checkout.component';
+import { PopupSuccessComponent } from './popup-success/popup-success.component';
 
 @NgModule({
   declarations: [
@@ -74,6 +76,8 @@ import { PopupAddSubForUserComponent } from './popup-add-sub-for-user/popup-add-
     TrainerComponent,
     UserSubscriptionsComponent,
     PopupAddSubForUserComponent,
+    CheckoutComponent,
+    PopupSuccessComponent
   ],
   imports: [
     BrowserModule,

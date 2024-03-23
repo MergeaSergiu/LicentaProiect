@@ -8,6 +8,8 @@ import { UpdateUserRequest } from "../models/userdata-request.model";
 import { TrainingClassResponse } from "../models/trainingclass-response.model";
 import { StatusEnrollResponse } from "../models/statusEnroll-response.model";
 import { UserSubscriptionsDataResponse } from "../models/userSubscriptionData-response.model";
+import { PaymentData } from "../models/payment-data.model";
+import { SubscriptionRequest } from "../models/subscription-request.model";
 
 
 @Injectable({
@@ -114,5 +116,30 @@ public checkEnrollmentStatus(trainingClassId: number): Observable<StatusEnrollRe
       catchError(this.handleError)
     );
   }
+
+
+  public getSubscriptionById(id: number): Observable<any> {
+    const params = new HttpParams().set('id', id.toString());
+    return this.httpClient.get<any>(this.API_PATH  + "/api/admin/getSubscription", {params})
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  public createPaymentIntent(paymentData: PaymentData): Observable<any> {
+    return this.httpClient.post<any>(this.API_PATH + "/api/user/payment-intent", paymentData)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  public checkUserActiveSubscriptions(): Observable<any> {
+    return this.httpClient.get<any>(this.API_PATH + "/api/user/userActiveSubscriptions")
+    .pipe(
+      catchError(this.handleError)
+      )
+  }
+
+  
 
 }

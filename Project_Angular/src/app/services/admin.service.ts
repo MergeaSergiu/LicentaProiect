@@ -163,4 +163,9 @@ export class AdminService{
     );
   }
 
+  public AddUserSubscriptionByCard(subscriptionId: number): Observable<any> {
+    const params = new HttpParams().set('subscriptionId', subscriptionId.toString());
+    return this.httpClient.post<any>(this.API_PATH  + "/api/admin/users/addSubscriptionByUser", null, {params})
+  }
+
 }

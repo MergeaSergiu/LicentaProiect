@@ -81,16 +81,19 @@ public class AdminServiceImpl implements AdminService {
                 if(trainingClasses != null){
                     for(TrainingClass trainingClass : trainingClasses){
                             deleteTrainingClass(trainingClass.getId());
+                            enrollmentTrainingClassRepository.deleteAllByTrainingClass_Id(id);
                     }
                 }
+
+            }else if(client.getRole().getName().equals("USER")) {
+                reservationService.deleteReservationsForUser(id);
+                enrollmentTrainingClassRepository.deleteAllByUser_id(id);
+                subscriptionHistoryRepository.deleteAllByUser_Id(id);
             }
-            confirmationTokenService.deleteByclient_Id(id);
-            passwordResetTokenService.deleteByclient_Id(id);
-            reservationService.deleteReservationsForUser(id);
-            enrollmentTrainingClassRepository.deleteAllByUser_id(id);
-            subscriptionHistoryRepository.deleteAllByUser_Id(id);
-            clientRepository.deleteById(id);
         }
+        confirmationTokenService.deleteByclient_Id(id);
+        passwordResetTokenService.deleteByclient_Id(id);
+        clientRepository.deleteById(id);
     }
 
     @Override
@@ -99,13 +102,16 @@ public class AdminServiceImpl implements AdminService {
         if(authentication.isAuthenticated()){
             Role role = roleRepsitory.findById(roleRequest.getId()).orElse(null);
             Client client = clientService.findClientById(id);
-            if(role.getName().equals("USER") && !clientRepository.findById(client.getId()).get().getRole().getName().equals("USER")){
+            if(clientRepository.findById(client.getId()).get().getRole().getName().equals("USER") && !role.getName().equals("USER")){
                 reservationService.deleteReservationsForUser(client.getId());
-            }else if(role.getName().equals("TRAINER") && !clientRepository.findById(id).get().getRole().getName().equals("TRAINER")){
+                enrollmentTrainingClassRepository.deleteAllByUser_id(client.getId());
+                subscriptionHistoryRepository.deleteAllByUser_Id(id);
+            }else if(clientRepository.findById(id).get().getRole().getName().equals("TRAINER") && !role.getName().equals("TRAINER")){
                 List<TrainingClass> trainingClasses = trainingClassService.getTrainingClassesForTrainer(id);
                 if(trainingClasses != null){
                     for(TrainingClass trainingClass : trainingClasses){
                         deleteTrainingClass(trainingClass.getId());
+                        enrollmentTrainingClassRepository.deleteAllByTrainingClass_Id(trainingClass.getId());
                     }
                 }
             }
@@ -177,8 +183,8 @@ public class AdminServiceImpl implements AdminService {
             Subscription subscription = subscriptionService.findById(id).orElse(null);
             if(subscription != null){
                 return subscriptionMapper.convertToDto(subscription);
-                }
             }
+        }
         throw new CustomExpiredJwtException("Session expired");
     }
 
@@ -304,10 +310,26 @@ public class AdminServiceImpl implements AdminService {
             Client user = clientRepository.findById(userSubscriptionRequest.getUserId()).orElse(null);
             Subscription subscription = subscriptionRepository.findById(userSubscriptionRequest.getSubscriptionId()).orElse(null);
             SubscriptionsHistory activeSubscription = subscriptionHistoryRepository.findActiveSubscriptionForUser(user.getId(), LocalDate.now());
-            if(activeSubscription == null){
-            if(subscription != null) {
+            if(activeSubscription == null && subscription != null){
                 SubscriptionsHistory subscriptionsHistory = subscriptionsHistoryMapper.convertFromDto(user,subscription);
                 subscriptionHistoryRepository.save(subscriptionsHistory);
+            }else{
+                throw new EntityExistsException("User already has a active subscription");
+            }
+        }
+    }
+
+    @Override
+    public void addSubscriptionForUserByCard(Integer subscriptionId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            Client user = clientRepository.findByEmail(authentication.getName()).orElse(null);
+            Subscription subscription = subscriptionRepository.findById(subscriptionId).orElse(null);
+            SubscriptionsHistory activeSubscription = subscriptionHistoryRepository.findActiveSubscriptionForUser(user.getId(), LocalDate.now());
+            if(activeSubscription == null){
+                if(subscription != null) {
+                    SubscriptionsHistory subscriptionsHistory = subscriptionsHistoryMapper.convertFromDto(user,subscription);
+                    subscriptionHistoryRepository.save(subscriptionsHistory);
                 }
             }else{
                 throw new EntityExistsException("User already has a active subscription");

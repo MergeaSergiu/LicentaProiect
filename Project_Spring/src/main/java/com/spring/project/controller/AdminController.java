@@ -132,6 +132,12 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @PostMapping("/users/addSubscriptionByUser")
+    public ResponseEntity<Void> addSubscriptionForUser(@RequestParam("subscriptionId") Integer subscriptionId){
+        adminService.addSubscriptionForUserByCard(subscriptionId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @GetMapping("/users/subscriptionsData")
     public ResponseEntity<List<UserSubscriptionsDataResponse>> getUserSubscription(){
         List<UserSubscriptionsDataResponse> userSubscriptionsDataResponses = adminService.getUserSubscriptionsData();

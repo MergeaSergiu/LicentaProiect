@@ -1,8 +1,6 @@
 package com.spring.project.service;
-import com.spring.project.dto.ReservationResponse;
-import com.spring.project.dto.TrainingClassResponse;
-import com.spring.project.dto.UpdateUserRequest;
-import com.spring.project.dto.UserDataResponse;
+import com.spring.project.dto.*;
+import com.spring.project.model.SubscriptionsHistory;
 
 
 import java.util.List;
@@ -15,4 +13,6 @@ public interface UserAccountService {
     void updateUserProfile(UpdateUserRequest updateUserRequest);
 
     UserDataResponse getUserProfileData();
+
+    boolean getUserActiveSubscriptions();
 }

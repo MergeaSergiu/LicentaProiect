@@ -1,5 +1,5 @@
 import {  HttpErrorResponse, HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from "@angular/common/http";
-import { Observable, mergeMap, of, throwError } from "rxjs";
+import { Observable, map, mergeMap, of, throwError } from "rxjs";
 import { catchError, switchMap } from "rxjs";
 import { RegistrationService } from "../services/registration.service";
 import { Injectable } from "@angular/core";
@@ -24,13 +24,19 @@ export class AuthInterceptor implements HttpInterceptor{
         const refresh_token: JwtRefreshToken = {
             refreshToken: this.registrationService.getRefreshToken()
         }
+
+        // console.log(this.registrationService.refreshToken(refresh_token).subscribe({
+        //     next: (response) => {
+        //         console.log(response);
+        //     }
+        // }));
        
         return next.handle(req).pipe(
             catchError((error: any) =>{
                     if(error.status === 403){
                        return this.registrationService.refreshToken(refresh_token).pipe(
-                        switchMap((res: any) => {
-                            localStorage.setItem('jwtToken', res.access_token);
+                        mergeMap((res: any) => {
+                            this.registrationService.setToken(res.access_token);
                             req = this.addToken(req, res.access_token);
                             return next.handle(req);
                         }),

@@ -43,4 +43,6 @@ public interface AdminService {
      List<UserSubscriptionsDataResponse> getUserSubscriptionsData();
 
      void addSubscriptionForUser(UserSubscriptionRequest userSubscriptionRequest);
+
+    void addSubscriptionForUserByCard(Integer subscriptionId);
 }

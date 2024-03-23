@@ -47,7 +47,8 @@ public class ClientRegistrationController {
 
     @PostMapping("/refreshToken")
     public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody JwtRefreshToken jwtRefreshToken)  {
-        return ResponseEntity.ok(registrationService.refreshToken(jwtRefreshToken));
+        AuthenticationResponse authenticationResponse = registrationService.refreshToken(jwtRefreshToken);
+        return ResponseEntity.ok(authenticationResponse);
     }
 
     @PostMapping("/resetPass")
