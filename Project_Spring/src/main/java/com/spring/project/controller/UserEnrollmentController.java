@@ -25,13 +25,13 @@ public class UserEnrollmentController {
     private final UserAccountService userAccountService;
 
     @PostMapping("/classes/{trainingClassId}")
-    public ResponseEntity<Void> enrollUserToTrainingClass(@PathVariable("trainingClassId") Integer trainingClassId){
+    public ResponseEntity<Void> enrollUserToTrainingClass(@PathVariable("trainingClassId") Long trainingClassId){
         clientService.enrollUserToTrainingClass(trainingClassId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/classes/{trainingClassId}")
-    public ResponseEntity<StatusEnrollResponse> checkEnrollmentStatus(@PathVariable ("trainingClassId") Integer trainingClassId){
+    public ResponseEntity<StatusEnrollResponse> checkEnrollmentStatus(@PathVariable ("trainingClassId") Long trainingClassId){
         StatusEnrollResponse isEnrolled = clientService.checkEnrollmentStatus(trainingClassId);
         return ResponseEntity.ok(isEnrolled);
     }
@@ -42,7 +42,7 @@ public class UserEnrollmentController {
     }
 
     @DeleteMapping("/classes/{trainingClassId}")
-    public ResponseEntity<Void> UnenrollUserFromTrainingClass(@PathVariable("trainingClassId") Integer trainingClassId){
+    public ResponseEntity<Void> UnenrollUserFromTrainingClass(@PathVariable("trainingClassId") Long trainingClassId){
         clientService.unEnrollUserFromTrainingClass(trainingClassId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

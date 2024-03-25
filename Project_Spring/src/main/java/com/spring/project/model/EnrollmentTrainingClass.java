@@ -14,11 +14,11 @@ public class EnrollmentTrainingClass {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Client user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "training_class_id")

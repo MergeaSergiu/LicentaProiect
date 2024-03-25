@@ -1,6 +1,6 @@
 package com.spring.project.token;
 
-import com.spring.project.model.Client;
+import com.spring.project.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,13 +32,13 @@ public class ConfirmationToken {
             nullable = false,
             name = "client_id"
     )
-    private Client client;
+    private User user;
 
-    public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiredAt, Client client) {
+    public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiredAt, User user) {
         this.token = token;
         this.createdAt = createdAt;
         this.expiredAt = expiredAt;
         this.confirmedAt = null;
-        this.client = client;
+        this.user = user;
     }
 }

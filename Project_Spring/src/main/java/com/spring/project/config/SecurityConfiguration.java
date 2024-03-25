@@ -35,8 +35,8 @@ public class SecurityConfiguration {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("project/api/v1/auth/**").permitAll()
-                        .requestMatchers("project/api/v1/users/trainer").hasAnyRole("TRAINER")
+                        .requestMatchers("/project/api/v1/auth/**").permitAll()
+                        .requestMatchers("/project/api/v1/users/trainer").hasAnyRole("TRAINER")
                                 .requestMatchers("project/api/v1/users/**").hasAnyRole("USER", "TRAINER", "ADMIN")
                                 .requestMatchers("/project/api/v1/payment/**").hasAnyRole("USER")
                                 .requestMatchers("/project/api/v1/reservations/**").hasAnyRole("USER", "ADMIN")

@@ -8,11 +8,11 @@ public interface AdminService {
 
      List<UserDataResponse> getAllClients();
 
-     UserDataResponse getUserData(Integer id);
+     UserDataResponse getUserData(Long id);
 
-     void deleteUser(Integer id);
+     void deleteUser(Long id);
 
-     void updateUserRole(Integer id, RoleRequest roleRequest);
+     void updateUserRole(Long id, RoleRequest roleRequest);
 
      List<TrainerResponse> getAllTrainers();
 
@@ -22,27 +22,27 @@ public interface AdminService {
 
      void createSubscription(CreateSubscriptionRequest createSubscriptionRequest);
 
-     void updateSubscription(Integer id, CreateSubscriptionRequest subscriptionRequest);
+     void updateSubscription(Long id, CreateSubscriptionRequest subscriptionRequest);
 
-     SubscriptionResponse getSubscriptionById(Integer id);
+     SubscriptionResponse getSubscriptionById(Long id);
 
-     void deleteSubscription(Integer id);
+     void deleteSubscription(Long id);
 
      List<TrainingClassResponse> getAllTrainingClasses();
 
-     TrainingClassResponse getTrainingClass(Integer id);
+     TrainingClassResponse getTrainingClass(Long id);
 
      void createTrainingClass(TrainingClassRequest classRequest);
 
-    void updateTrainingClass(Integer id, TrainingClassRequest trainingClassRequest);
+    void updateTrainingClass(Long id, TrainingClassRequest trainingClassRequest);
 
-    void deleteTrainingClass(Integer id);
+    void deleteTrainingClass(Long id);
 
-     List<UserSubscriptionsDataResponse> getUserSubscriptionsData(Integer id);
+     List<UserSubscriptionsDataResponse> getUserSubscriptionsData(Long id);
 
      List<UserSubscriptionsDataResponse> getUserSubscriptionsData();
 
      void addSubscriptionForUser(UserSubscriptionRequest userSubscriptionRequest);
 
-    void addSubscriptionForUserByCard(Integer subscriptionId);
+    void addSubscriptionForUserByCard(Long subscriptionId);
 }

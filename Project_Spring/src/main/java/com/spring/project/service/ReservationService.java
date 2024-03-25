@@ -14,11 +14,11 @@ public interface ReservationService {
 
     List<Reservation> getAllReservations();
 
-    List<Reservation> getAllClientReservations(Integer id);
+    List<Reservation> getAllClientReservations(Long id);
 
-    void deleteReservation(Integer id);
+    void deleteReservation(Long id);
 
-    void deleteReservationsForUser(Integer id);
+    void deleteReservationsForUser(Long id);
 
     List<ReservationResponse> getReservationsByCourt(String court);
 }

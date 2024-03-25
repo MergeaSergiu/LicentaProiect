@@ -26,19 +26,19 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDataResponse> getUserData(@PathVariable("userId") Integer userId){
+    public ResponseEntity<UserDataResponse> getUserData(@PathVariable("userId") Long userId){
         UserDataResponse userDataResponse = adminService.getUserData(userId);
         return ResponseEntity.ok(userDataResponse);
     }
 
     @DeleteMapping("{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("userId") Integer userId){
+    public ResponseEntity<Void> deleteUser(@PathVariable("userId") Long userId){
         adminService.deleteUser(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/{userId}/role")
-    public ResponseEntity<Void> updateUserRole(@PathVariable("userId") Integer userId, @RequestBody RoleRequest roleRequest){
+    public ResponseEntity<Void> updateUserRole(@PathVariable("userId") Long userId, @RequestBody RoleRequest roleRequest){
         adminService.updateUserRole(userId, roleRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/subscriptions")
-    public ResponseEntity<List<UserSubscriptionsDataResponse>> getUserSubscriptions(@PathVariable("userId") Integer userId){
+    public ResponseEntity<List<UserSubscriptionsDataResponse>> getUserSubscriptions(@PathVariable("userId") Long userId){
         List<UserSubscriptionsDataResponse> userSubscriptionsDataResponses =  adminService.getUserSubscriptionsData(userId);
         return ResponseEntity.ok(userSubscriptionsDataResponses);
     }
@@ -62,7 +62,7 @@ public class UserController {
     }
 
     @PostMapping("/subscriptions/{subscriptionId}")
-    public ResponseEntity<Void> addSubscriptionForUser(@PathVariable("subscriptionId") Integer subscriptionId){
+    public ResponseEntity<Void> addSubscriptionForUser(@PathVariable("subscriptionId") Long subscriptionId){
         adminService.addSubscriptionForUserByCard(subscriptionId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

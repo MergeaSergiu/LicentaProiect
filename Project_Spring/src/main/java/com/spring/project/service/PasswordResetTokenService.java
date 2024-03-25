@@ -12,5 +12,5 @@ public interface PasswordResetTokenService {
 
     Optional<PasswordResetToken> getToken(String resetToken);
 
-    void deleteByclient_Id(Integer id);
+    void deleteByclient_Id(Long id);
 }

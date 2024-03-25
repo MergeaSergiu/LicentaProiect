@@ -1,7 +1,5 @@
 package com.spring.project.service.impl;
 
-import com.spring.project.Exception.ClientNotFoundException;
-import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.dto.*;
 import com.spring.project.mapper.ReservationMapper;
 import com.spring.project.mapper.TrainingClassMapper;
@@ -42,7 +40,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     public List<ReservationResponse> getAllClientReservations() {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if(authentication.isAuthenticated()) {
-                Client user = clientService.findClientByEmail(authentication.getName());
+                User user = clientService.findClientByEmail(authentication.getName());
                 List<Reservation> reservations = reservationService.getAllClientReservations(user.getId());
                     return reservations.stream()
                             .map(courtReservation -> reservationMapper.convertToDto(courtReservation)).collect(Collectors.toList());
@@ -53,8 +51,8 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public List<TrainingClassResponse> getEnrollClasses() {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Client client = clientService.findClientByEmail(authentication.getName());
-            List<EnrollmentTrainingClass> enrollmentTrainingClasses = enrollmentTrainingClassService.getClassesByUserId(client.getId());
+            User user = clientService.findClientByEmail(authentication.getName());
+            List<EnrollmentTrainingClass> enrollmentTrainingClasses = enrollmentTrainingClassService.getClassesByUserId(user.getId());
             if (enrollmentTrainingClasses != null) {
                 List<TrainingClassResponse> enrollClassResponses = new ArrayList<>();
                 for(EnrollmentTrainingClass enrollmentTrainingClass : enrollmentTrainingClasses){
@@ -71,7 +69,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     public void updateUserProfile(UpdateUserRequest updateUserRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
-            Client user = clientService.findClientByEmail(authentication.getName());
+            User user = clientService.findClientByEmail(authentication.getName());
             user.setFirstName(updateUserRequest.getFirstName());
             user.setLastName(updateUserRequest.getLastName());
             clientRepository.save(user);
@@ -82,7 +80,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     public UserDataResponse getUserProfileData() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
-            Client user = clientService.findClientByEmail(authentication.getName());
+            User user = clientService.findClientByEmail(authentication.getName());
             return userDataMapper.convertToDto(user);
         }
         throw new EntityNotFoundException("User does not exist");
@@ -92,7 +90,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     public boolean getUserActiveSubscriptions() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
-            Client user = clientService.findClientByEmail(authentication.getName());
+            User user = clientService.findClientByEmail(authentication.getName());
             if(user != null){
                 SubscriptionsHistory activeSubscription = subscriptionHistoryRepository.findActiveSubscriptionForUser(user.getId(), LocalDate.now());
                 if(activeSubscription == null){

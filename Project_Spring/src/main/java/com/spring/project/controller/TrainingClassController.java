@@ -27,13 +27,13 @@ public class TrainingClassController {
     }
 
     @GetMapping("/{trainingClassId}")
-    public ResponseEntity<TrainingClassResponse> getTrainingClass(@PathVariable("trainingClassId") Integer trainingClassId){
+    public ResponseEntity<TrainingClassResponse> getTrainingClass(@PathVariable("trainingClassId") Long trainingClassId){
         TrainingClassResponse trainingClassResponse = adminService.getTrainingClass(trainingClassId);
         return ResponseEntity.ok(trainingClassResponse);
     }
 
     @DeleteMapping("/{trainingClassId}")
-    public ResponseEntity<String> deleteTrainingClass(@PathVariable("trainingClassId") Integer trainingClassId){
+    public ResponseEntity<String> deleteTrainingClass(@PathVariable("trainingClassId") Long trainingClassId){
         adminService.deleteTrainingClass(trainingClassId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -45,7 +45,7 @@ public class TrainingClassController {
     }
 
     @PutMapping("/{trainingClassId}")
-    public ResponseEntity<Void> updateTrainingClass(@RequestParam("id") Integer id, @RequestBody TrainingClassRequest trainingClassRequest){
+    public ResponseEntity<Void> updateTrainingClass(@RequestParam("id") Long id, @RequestBody TrainingClassRequest trainingClassRequest){
         adminService.updateTrainingClass(id,trainingClassRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

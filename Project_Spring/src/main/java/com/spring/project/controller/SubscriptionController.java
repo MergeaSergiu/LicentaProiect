@@ -33,20 +33,20 @@ public class SubscriptionController {
     }
 
     @GetMapping("/{subscriptionId}")
-    public ResponseEntity<SubscriptionResponse> getSubscriptionById(@PathVariable("subscriptionId") Integer subscriptionId){
+    public ResponseEntity<SubscriptionResponse> getSubscriptionById(@PathVariable("subscriptionId") Long subscriptionId){
         SubscriptionResponse subscriptionResponse = adminService.getSubscriptionById(subscriptionId);
         return ResponseEntity.ok(subscriptionResponse);
     }
 
 
     @PutMapping("/{subscriptionId}")
-    public ResponseEntity<Void> updateSubscription(@RequestParam("id") Integer id, @RequestBody CreateSubscriptionRequest subscriptionRequest){
+    public ResponseEntity<Void> updateSubscription(@RequestParam("id") Long id, @RequestBody CreateSubscriptionRequest subscriptionRequest){
         adminService.updateSubscription(id, subscriptionRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{subscriptionId}")
-    public ResponseEntity<Void> deleteSubscription(@RequestParam("subscriptionId") Integer subscriptionId){
+    public ResponseEntity<Void> deleteSubscription(@RequestParam("subscriptionId") Long subscriptionId){
         adminService.deleteSubscription(subscriptionId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

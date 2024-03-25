@@ -1,8 +1,6 @@
 package com.spring.project.service.impl;
 
-import com.spring.project.Exception.ClientNotFoundException;
 import com.spring.project.dto.PaymentRequest;
-import com.spring.project.model.Client;
 import com.spring.project.repository.ClientRepository;
 import com.spring.project.service.CheckoutService;
 import com.stripe.Stripe;
@@ -23,11 +21,7 @@ import org.springframework.stereotype.Service;
 public class CheckoutServiceImpl implements CheckoutService {
 
 
-    @Autowired
-    private ClientRepository clientRepository;
- public CheckoutServiceImpl(ClientRepository clientRepository,
-                            @Value("${stripe.key.secret}") String secretKey){
-     this.clientRepository = clientRepository;
+ public CheckoutServiceImpl(@Value("${stripe.key.secret}") String secretKey){
      Stripe.apiKey = secretKey;
  }
 

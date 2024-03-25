@@ -11,9 +11,9 @@ public interface SubscriptionService {
 
     List<Subscription> getAllSubscriptionPlans();
 
-    Optional<Subscription> findById(Integer id);
+    Optional<Subscription> findById(Long id);
 
     Subscription findBySubscriptionName(String subscriptionName);
 
-    void deleteSubscription(Integer id);
+    void deleteSubscription(Long id);
 }

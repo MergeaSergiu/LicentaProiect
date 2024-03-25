@@ -18,12 +18,12 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="_client")
-public class Client implements UserDetails {
+@Table(name="_user")
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+    private Long id;
 
     @NotBlank(message = "First Name cannot be blank")
     private String firstName;
@@ -45,11 +45,11 @@ public class Client implements UserDetails {
     private Role role;
 
 
-    public Client(String firstName,
-                  String lastName,
-                  String email,
-                  String password,
-                  Role role) {
+    public User(String firstName,
+                String lastName,
+                String email,
+                String password,
+                Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
