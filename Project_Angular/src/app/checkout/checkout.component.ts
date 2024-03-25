@@ -40,6 +40,10 @@ export class CheckoutComponent implements OnInit{
     this.setUpStripePaymentForm();
   }
 
+  goToGymPage(){
+    this.router.navigate(['/client/gym'])
+  }
+
   fetchSubscriptionData(subscriptionId: number) {
     this.clientService.getSubscriptionById(subscriptionId).subscribe({
       next: (response: any) => {
@@ -65,11 +69,9 @@ export class CheckoutComponent implements OnInit{
         iconColor: '#fa755a'
       }
     };
-         this.elements = this.stripe.elements({ style});
-       
-         
-          this.paymentElement = this.elements.create("card");
-         this.paymentElement.mount("#card-element");
+        this.elements = this.stripe.elements({style});
+        this.paymentElement = this.elements.create("card");
+        this.paymentElement.mount("#card-element");
       }
 
 

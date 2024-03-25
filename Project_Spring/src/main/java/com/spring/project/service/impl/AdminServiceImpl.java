@@ -20,6 +20,8 @@ import org.springframework.util.StreamUtils;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -321,16 +323,21 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void addSubscriptionForUserByCard(Integer subscriptionId) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
             Client user = clientRepository.findByEmail(authentication.getName()).orElse(null);
             Subscription subscription = subscriptionRepository.findById(subscriptionId).orElse(null);
             SubscriptionsHistory activeSubscription = subscriptionHistoryRepository.findActiveSubscriptionForUser(user.getId(), LocalDate.now());
-            if(activeSubscription == null){
-                if(subscription != null) {
+            if(activeSubscription == null && subscription != null){
                     SubscriptionsHistory subscriptionsHistory = subscriptionsHistoryMapper.convertFromDto(user,subscription);
                     subscriptionHistoryRepository.save(subscriptionsHistory);
-                }
+                    String emailTemplate = loadEmailTemplateFromResource("paymentResponse.html");
+                    emailTemplate = emailTemplate.replace("${email}", authentication.getName());
+                    emailTemplate = emailTemplate.replace("${subscription}", subscription.getSubscriptionName());
+                    emailTemplate = emailTemplate.replace("${price}", subscription.getSubscriptionPrice().toString());
+                    emailTemplate = emailTemplate.replace("${date}", LocalDateTime.now().format(formatter));
+                    emailSender.send(authentication.getName(), emailTemplate, "Payment billing");
             }else{
                 throw new EntityExistsException("User already has a active subscription");
             }
