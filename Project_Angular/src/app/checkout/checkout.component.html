@@ -1,4 +1,11 @@
+
+
 <div class="container">
+    <div class="return">
+        <button type="submit" class="back-button" (click)="goToGymPage()">Back
+            <span><mat-icon>keyboard_return</mat-icon></span>
+        </button>
+    </div>
 <mat-card class="example-card">
 <form #checkoutForm="ngForm" (ngSubmit)="onSubmit(checkoutForm)">
     <div class="user-info">
