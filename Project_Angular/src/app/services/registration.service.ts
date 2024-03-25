@@ -13,7 +13,7 @@ import { JwtRefreshToken } from '../auth/refresh-token.model';
 export class RegistrationService {
     
 
-  API_PATH = "http://localhost:8080/project"
+  API_PATH = "http://localhost:8080/project/v1/auth"
   requestHeader = new HttpHeaders({ 'No-Auth': 'True' });
   constructor(private httpClient: HttpClient) {}
 
@@ -24,29 +24,29 @@ export class RegistrationService {
    }
    
    public singUp(signupData: RegistrationRequest): Observable<any>{
-    return this.httpClient.post(this.API_PATH + "/auth/registration", signupData, {headers: this.requestHeader})
+    return this.httpClient.post(this.API_PATH + "/registration", signupData, {headers: this.requestHeader})
     .pipe(
       catchError(this.handleError)
     );
    }
    
    public logIn(loginData: LoginRequest): Observable<any>{
-    return this.httpClient.post(this.API_PATH + "/auth/authenticate", loginData, {headers: this.requestHeader})
+    return this.httpClient.post(this.API_PATH + "/login", loginData, {headers: this.requestHeader})
     .pipe(
       catchError(this.handleError)
     );
    }
 
    public refreshToken(jwtRefreshToken: JwtRefreshToken): Observable<any>{
-    return this.httpClient.post(this.API_PATH + "/auth/refreshToken", jwtRefreshToken);
+    return this.httpClient.post(this.API_PATH + "/refreshToken", jwtRefreshToken);
    }
 
    public sendResetPasswordEmail(resetPassData: ResetPasswordRequest): Observable<any>{
-    return this.httpClient.post(this.API_PATH + "/auth/resetPass", resetPassData, {headers: this.requestHeader})
+    return this.httpClient.post(this.API_PATH + "/resetPass", resetPassData, {headers: this.requestHeader})
    }
 
    public updatePassword(updatePassword: UpdatePasswordRequest): Observable<any>{
-    return this.httpClient.post(this.API_PATH + "/auth/changePassword", updatePassword, {headers: this.requestHeader})
+    return this.httpClient.post(this.API_PATH + "/changePassword", updatePassword, {headers: this.requestHeader})
     .pipe(
       catchError(this.handleError)
     );

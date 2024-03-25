@@ -3,7 +3,6 @@ import { environment } from '../../environment';
 import { PaymentData} from '../models/payment-data.model';
 import { ClientService } from '../services/client.service';
 import { AdminService } from '../services/admin.service';
-import { SubscriptionRequest } from '../models/subscription-request.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -110,7 +109,7 @@ export class CheckoutComponent implements OnInit{
                         _popUpMessage.close();
                       }, 1200);
                     }else{
-                      this.adminService.AddUserSubscriptionByCard(this.subscriptionId).subscribe({
+                      this.clientService.AddUserSubscriptionByCard(this.subscriptionId).subscribe({
                         next: (response: any) =>{
                           var _popUpMessage = this.dialog.open(PopupSuccessComponent, {
                             width: '50%',

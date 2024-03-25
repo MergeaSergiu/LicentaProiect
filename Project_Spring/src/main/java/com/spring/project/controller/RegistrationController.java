@@ -15,10 +15,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping(path ="project/auth")
+@RequestMapping(path ="project/api/v1/auth")
 @AllArgsConstructor
 @Validated
-public class ClientRegistrationController {
+public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping("/registration")
@@ -39,7 +39,7 @@ public class ClientRegistrationController {
         return "confirmAccountResponse.html";
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest request){
             AuthenticationResponse authenticationResponse = registrationService.authenticate(request);
             return ResponseEntity.ok(authenticationResponse);
