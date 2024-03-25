@@ -38,7 +38,7 @@ export class RegistrationService {
    }
 
    public refreshToken(jwtRefreshToken: JwtRefreshToken): Observable<any>{
-    return this.httpClient.post(this.API_PATH + "/refreshToken", jwtRefreshToken);
+    return this.httpClient.post(this.API_PATH + "/refreshToken", jwtRefreshToken,{headers: this.requestHeader});
    }
 
    public sendResetPasswordEmail(resetPassData: ResetPasswordRequest): Observable<any>{

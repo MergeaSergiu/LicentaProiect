@@ -45,8 +45,8 @@ public class TrainingClassController {
     }
 
     @PutMapping("/{trainingClassId}")
-    public ResponseEntity<Void> updateTrainingClass(@RequestParam("id") Long id, @RequestBody TrainingClassRequest trainingClassRequest){
-        adminService.updateTrainingClass(id,trainingClassRequest);
+    public ResponseEntity<Void> updateTrainingClass(@PathVariable("trainingClassId") Long trainingClassId, @RequestBody TrainingClassRequest trainingClassRequest){
+        adminService.updateTrainingClass(trainingClassId,trainingClassRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

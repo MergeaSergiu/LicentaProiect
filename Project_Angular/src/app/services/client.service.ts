@@ -37,14 +37,14 @@ export class ClientService{
    }
 
    public getAllReservationsForClient(): Observable<ReservationResponse[]>{
-    return this.httpClient.get<ReservationResponse[]>(this.API_PATH + "/user/clientReservations")
+    return this.httpClient.get<ReservationResponse[]>(`${this.API_PATH}/users/reservations`)
     .pipe(
       catchError(this.handleError)
     );
    }
 
    public createReservation(reservationRequest: ReservationRequest):Observable<ReservationRequest>{
-      return this.httpClient.post<any>(this.API_PATH + "/reservations", reservationRequest);
+      return this.httpClient.post<any>(`${this.API_PATH}/reservations`, reservationRequest);
    }
 
   public deleteReservation(reservationId: number){

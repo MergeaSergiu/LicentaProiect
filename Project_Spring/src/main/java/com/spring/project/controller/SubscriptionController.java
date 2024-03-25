@@ -40,8 +40,8 @@ public class SubscriptionController {
 
 
     @PutMapping("/{subscriptionId}")
-    public ResponseEntity<Void> updateSubscription(@RequestParam("id") Long id, @RequestBody CreateSubscriptionRequest subscriptionRequest){
-        adminService.updateSubscription(id, subscriptionRequest);
+    public ResponseEntity<Void> updateSubscription(@RequestParam("subscriptionId") Long subscriptionId, @RequestBody CreateSubscriptionRequest subscriptionRequest){
+        adminService.updateSubscription(subscriptionId, subscriptionRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
