@@ -128,7 +128,6 @@ public class ClientService implements UserDetailsService {
     }
 
     public void enrollUserToTrainingClass(Long id) {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()) {
             TrainingClass trainingClass = trainingClassService.findById(id);
@@ -141,6 +140,8 @@ public class ClientService implements UserDetailsService {
                     emailTemplate = emailTemplate.replace("${email}", authentication.getName());
                     emailTemplate = emailTemplate.replace("{enrollClass}", trainingClass.getClassName());
                     emailService.send(authentication.getName(), emailTemplate, "Thank you for joining the class");
+                }else{
+                    throw new EntityNotFoundException("User does not exist");
                 }
             }
         }else {

@@ -2,6 +2,7 @@ package com.spring.project.controller;
 
 import com.spring.project.dto.TrainingClassRequest;
 import com.spring.project.dto.TrainingClassResponse;
+import com.spring.project.model.TrainingClass;
 import com.spring.project.service.AdminService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +40,9 @@ public class TrainingClassController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createTrainingClass(@RequestBody TrainingClassRequest classRequest) {
-        adminService.createTrainingClass(classRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<TrainingClass> createTrainingClass(@RequestBody TrainingClassRequest classRequest) {
+        TrainingClass trainingClass = adminService.createTrainingClass(classRequest);
+        return ResponseEntity.ok(trainingClass);
     }
 
     @PutMapping("/{trainingClassId}")

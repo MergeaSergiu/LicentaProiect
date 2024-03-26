@@ -31,16 +31,10 @@ export class ClientService{
 
    public getReservations(court: string): Observable<ReservationResponse[]>{
     return this.httpClient.get<ReservationResponse[]>(`${this.API_PATH}/reservations/${court}`)
-    .pipe(
-      catchError(this.handleError)
-      );
    }
 
    public getAllReservationsForClient(): Observable<ReservationResponse[]>{
     return this.httpClient.get<ReservationResponse[]>(`${this.API_PATH}/users/reservations`)
-    .pipe(
-      catchError(this.handleError)
-    );
    }
 
    public createReservation(reservationRequest: ReservationRequest):Observable<ReservationRequest>{
@@ -49,96 +43,55 @@ export class ClientService{
 
   public deleteReservation(reservationId: number){
     return this.httpClient.delete<any>(`${this.API_PATH}/reservations/${reservationId}`)
-    .pipe(
-      catchError(this.handleError)
-    );
   }
 
   public getUserProfileData(): Observable<UserDataResponse>{
     return this.httpClient.get<UserDataResponse>(`${this.API_PATH}/users/profile`)
-    .pipe(
-      catchError(this.handleError)
-    );
 }
 
 
 public updateUserData(updateUserRequest:UpdateUserRequest): Observable<any>{
   return this.httpClient.put<UpdateUserRequest>(`${this.API_PATH}/users`, updateUserRequest)
-  .pipe(
-    catchError(this.handleError)
-  );
 }
 
 public getTrainerClasses(): Observable<TrainingClassResponse[]>{
   return this.httpClient.get<TrainingClassResponse[]>(`${this.API_PATH}/users/trainer/classes`)
-  .pipe(
-    catchError(this.handleError)
-  );
 }
 
 public enrollUserToTrainingClass(trainingClassId: number){
   return this.httpClient.post<any>(`${this.API_PATH}/users/classes/${trainingClassId}`, null)
-  .pipe(
-    catchError(this.handleError)
-  );
 }
 
 public checkEnrollmentStatus(trainingClassId: number): Observable<StatusEnrollResponse>{
     return this.httpClient.get<StatusEnrollResponse>(`${this.API_PATH}/users/classes/${trainingClassId}`)
-    .pipe(
-      catchError(this.handleError)
-    );
-  }
+}
 
   public getUserTrainingClasses(): Observable<TrainingClassResponse[]>{
     return this.httpClient.get<TrainingClassResponse[]>(`${this.API_PATH}/users/classes`)
-    .pipe(
-      catchError(this.handleError)
-    );
-  }
+}
 
   public unEnrolleUser(trainingClassId: number){
     return this.httpClient.delete<any>(`${this.API_PATH}/users/classes/${trainingClassId}`)
-    .pipe(
-      catchError(this.handleError)
-    );
-  }
+}
 
   public getUserSubscriptionsData(): Observable<UserSubscriptionsDataResponse[]>{
     return this.httpClient.get<UserSubscriptionsDataResponse[]>(`${this.API_PATH}/users/subscriptions`)
-    .pipe(
-      catchError(this.handleError)
-    );
-  }
+}
 
   public getSubscriptionById(subscriptionId: number): Observable<any> {
     return this.httpClient.get<any>(`${this.API_PATH}/subscriptions/${subscriptionId}`)
-    .pipe(
-      catchError(this.handleError)
-    );
-  }
+}
 
   public createPaymentIntent(paymentData: PaymentData): Observable<any> {
     return this.httpClient.post<any>(this.API_PATH + "/payment/payment-intent", paymentData)
-    .pipe(
-      catchError(this.handleError)
-    );
-  }
+}
 
   public AddUserSubscriptionByCard(subscriptionId: number): Observable<any> {
     return this.httpClient.post<any>(`${this.API_PATH}/users/subscriptions/${subscriptionId}`, null)
-    .pipe(
-      catchError(this.handleError)
-    );
-  }
+}
 
   public checkUserActiveSubscriptions(): Observable<any> {
     return this.httpClient.get<any>(`${this.API_PATH}/users/activeSubscriptions`)
-    .pipe(
-      catchError(this.handleError)
-      );
-  }
-
-  
+}
 
 }

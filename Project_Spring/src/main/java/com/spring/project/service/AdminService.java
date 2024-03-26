@@ -1,6 +1,9 @@
 package com.spring.project.service;
 
 import com.spring.project.dto.*;
+import com.spring.project.model.Subscription;
+import com.spring.project.model.SubscriptionsHistory;
+import com.spring.project.model.TrainingClass;
 
 import java.util.List;
 
@@ -32,7 +35,7 @@ public interface AdminService {
 
      TrainingClassResponse getTrainingClass(Long id);
 
-     void createTrainingClass(TrainingClassRequest classRequest);
+     TrainingClass createTrainingClass(TrainingClassRequest classRequest);
 
     void updateTrainingClass(Long id, TrainingClassRequest trainingClassRequest);
 
@@ -42,7 +45,7 @@ public interface AdminService {
 
      List<UserSubscriptionsDataResponse> getUserSubscriptionsData();
 
-     void addSubscriptionForUser(UserSubscriptionRequest userSubscriptionRequest);
+     SubscriptionsHistory addSubscriptionForUser(UserSubscriptionRequest userSubscriptionRequest);
 
     void addSubscriptionForUserByCard(Long subscriptionId);
 }

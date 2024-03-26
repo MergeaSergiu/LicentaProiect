@@ -85,7 +85,7 @@ export class GymComponent implements OnInit{
         this.fetchUserTrainingClassesData();
         this.isEnrolled = true;
         const config = new MatSnackBarConfig();
-        config.verticalPosition = 'top'; // Set position to top
+        config.verticalPosition = 'top';
         this._responseBar.open("Congrats! You are enrolled", "",config);
         setTimeout(() => {
           this._responseBar.dismiss();

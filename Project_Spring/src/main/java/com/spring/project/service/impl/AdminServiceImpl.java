@@ -224,10 +224,10 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void createTrainingClass(TrainingClassRequest classRequest) {
+    public TrainingClass createTrainingClass(TrainingClassRequest classRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated()) {
-            if (trainingClassService.getTrainingClassByName(classRequest.getClassName()) == null && clientService.findClientById(Long.valueOf(classRequest.getTrainerId())) != null) {
+            if (clientService.findClientById(Long.valueOf(classRequest.getTrainerId())) != null) {
                    User trainer = clientService.findClientById(Long.valueOf(classRequest.getTrainerId()));
                     TrainingClass trainingClass = trainingClassMapper.convertFromDto(classRequest, trainer);
                     trainingClassService.createTrainingClass(trainingClass);
@@ -235,11 +235,14 @@ public class AdminServiceImpl implements AdminService {
                     emailTemplate = emailTemplate.replace("${email}", authentication.getName());
                     emailTemplate = emailTemplate.replace("${trainingClass}", classRequest.getClassName());
                     emailSender.send(authentication.getName(), emailTemplate, "Training class was created");
-                }
-            else {
-                throw new EntityExistsException("There is already a class with this name");
+                    return trainingClass;
+                } else {
+                throw new EntityExistsException("Trainer does not exist");
             }
+        }else {
+            throw new CustomExpiredJwtException("Session has expired");
         }
+
     }
 
     @Override
@@ -257,7 +260,7 @@ public class AdminServiceImpl implements AdminService {
                     trainingClass.setTrainer(clientService.findClientById(Long.valueOf(trainingClassRequest.getTrainerId())));
                     trainingClassService.createTrainingClass(trainingClass);
                 }else {
-                    throw new EntityExistsException("There is a trainingClas with this name");
+                    throw new EntityExistsException("There is a training class with this name");
                 }
             }else{
                 throw new EntityNotFoundException("Training class could not be updated");
@@ -306,7 +309,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void addSubscriptionForUser(UserSubscriptionRequest userSubscriptionRequest) {
+    public SubscriptionsHistory addSubscriptionForUser(UserSubscriptionRequest userSubscriptionRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
             User user = clientRepository.findById(Long.valueOf(userSubscriptionRequest.getUserId())).orElse(null);
@@ -315,10 +318,14 @@ public class AdminServiceImpl implements AdminService {
             if(activeSubscription == null && subscription != null){
                 SubscriptionsHistory subscriptionsHistory = subscriptionsHistoryMapper.convertFromDto(user,subscription);
                 subscriptionHistoryRepository.save(subscriptionsHistory);
+                return subscriptionsHistory;
             }else{
                 throw new EntityExistsException("User already has a active subscription");
             }
+        }else{
+            throw new CustomExpiredJwtException("Session has expired");
         }
+
     }
 
     @Override

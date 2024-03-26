@@ -87,9 +87,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseContainer> handleExpiredJwtException(ExpiredJwtException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
 
-        errorResponseContainer.setHttpStatusCode(HttpStatus.FORBIDDEN.value());
+        errorResponseContainer.setHttpStatusCode(HttpStatus.UNAUTHORIZED.value());
         errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<>(errorResponseContainer, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(ResetPasswordException.class)
@@ -114,8 +114,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseContainer> handleCustomExpiredJwtException(CustomExpiredJwtException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
 
-        errorResponseContainer.setHttpStatusCode(HttpStatus.FORBIDDEN.value());
+        errorResponseContainer.setHttpStatusCode(HttpStatus.UNAUTHORIZED.value());
         errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<>(errorResponseContainer, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.UNAUTHORIZED);
     }
 }

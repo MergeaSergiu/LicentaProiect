@@ -1,6 +1,8 @@
 package com.spring.project.controller;
 
 import com.spring.project.dto.*;
+import com.spring.project.model.Subscription;
+import com.spring.project.model.SubscriptionsHistory;
 import com.spring.project.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,9 +58,9 @@ public class UserController {
     }
 
     @PostMapping("/subscriptions")
-    public ResponseEntity<Void> addSubscriptionForUser(@RequestBody UserSubscriptionRequest userSubscriptionRequest){
-        adminService.addSubscriptionForUser(userSubscriptionRequest);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<SubscriptionsHistory> addSubscriptionForUser(@RequestBody UserSubscriptionRequest userSubscriptionRequest){
+        SubscriptionsHistory subscriptionsHistory = adminService.addSubscriptionForUser(userSubscriptionRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(subscriptionsHistory);
     }
 
     @PostMapping("/subscriptions/{subscriptionId}")

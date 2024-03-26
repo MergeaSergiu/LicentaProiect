@@ -43,6 +43,8 @@ export class AuthInterceptor implements HttpInterceptor{
                             return throwError (() => (error.error.errorMessage));
                         })
                        );
+                    }else{
+                        return throwError (() => (error.error.errorMessage));
                     }
                 })
         );
