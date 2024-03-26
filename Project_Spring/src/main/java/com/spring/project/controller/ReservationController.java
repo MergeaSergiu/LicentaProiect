@@ -25,23 +25,24 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getAllReservations(){
-        return ResponseEntity.ok(adminService.getAllReservations());
+        List<ReservationResponse> reservationResponseList = adminService.getAllReservations();
+        return new ResponseEntity<>(reservationResponseList, HttpStatus.OK);
     }
     @PostMapping
     public ResponseEntity<Void> createReservation(@RequestBody ReservationRequest reservationRequest){
         reservationService.saveReservation(reservationRequest);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @DeleteMapping("/{reservationId}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("reservationId") Long reservationId){
         reservationService.deleteReservation(reservationId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/{court}")
     public ResponseEntity<List<ReservationResponse>> getReservationsByCourt(@PathVariable("court") String court){
         List<ReservationResponse> reservationResponseList = reservationService.getReservationsByCourt(court);
-        return ResponseEntity.ok(reservationResponseList);
+        return new ResponseEntity<>(reservationResponseList, HttpStatus.OK);
     }
 
 }

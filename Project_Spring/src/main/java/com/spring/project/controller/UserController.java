@@ -24,13 +24,13 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserDataResponse>> getAllUsers(){
         List<UserDataResponse> userDataResponse = adminService.getAllClients();
-        return ResponseEntity.ok(userDataResponse);
+        return new ResponseEntity<>(userDataResponse, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDataResponse> getUserData(@PathVariable("userId") Long userId){
         UserDataResponse userDataResponse = adminService.getUserData(userId);
-        return ResponseEntity.ok(userDataResponse);
+        return new ResponseEntity<>(userDataResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/{userId}")
@@ -48,13 +48,13 @@ public class UserController {
     @GetMapping("/trainers")
     public ResponseEntity<List<TrainerResponse>> getAllTrainers(){
         List<TrainerResponse> trainersResponses = adminService.getAllTrainers();
-        return ResponseEntity.ok(trainersResponses);
+        return new ResponseEntity<>(trainersResponses, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/subscriptions")
     public ResponseEntity<List<UserSubscriptionsDataResponse>> getUserSubscriptions(@PathVariable("userId") Long userId){
         List<UserSubscriptionsDataResponse> userSubscriptionsDataResponses =  adminService.getUserSubscriptionsData(userId);
-        return ResponseEntity.ok(userSubscriptionsDataResponses);
+        return new ResponseEntity<>(userSubscriptionsDataResponses, HttpStatus.OK);
     }
 
     @PostMapping("/subscriptions")
@@ -66,13 +66,13 @@ public class UserController {
     @PostMapping("/subscriptions/{subscriptionId}")
     public ResponseEntity<Void> addSubscriptionForUser(@PathVariable("subscriptionId") Long subscriptionId){
         adminService.addSubscriptionForUserByCard(subscriptionId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/subscriptions")
     public ResponseEntity<List<UserSubscriptionsDataResponse>> getUserSubscriptions(){
         List<UserSubscriptionsDataResponse> userSubscriptionsDataResponses = adminService.getUserSubscriptionsData();
-        return ResponseEntity.ok(userSubscriptionsDataResponses);
+        return new ResponseEntity<>(userSubscriptionsDataResponses, HttpStatus.OK);
     }
 
 }

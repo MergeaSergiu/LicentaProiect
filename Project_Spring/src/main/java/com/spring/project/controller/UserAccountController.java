@@ -28,18 +28,18 @@ public class UserAccountController {
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> getReservationHistory(){
         List<ReservationResponse> reservations = userAccountService.getAllClientReservations();
-        return ResponseEntity.ok(reservations);
+        return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
 
     @GetMapping("/profile")
     public ResponseEntity<UserDataResponse> getUserProfileData(){
         UserDataResponse userDataResponse = userAccountService.getUserProfileData();
-        return ResponseEntity.ok(userDataResponse);
+        return new ResponseEntity<>(userDataResponse,HttpStatus.OK);
     }
     @GetMapping("/trainer/classes")
     public ResponseEntity<List<TrainingClassResponse>> getTrainingClasses(){
         List<TrainingClassResponse> trainingClassesForTrainer = trainerService.getTrainingClassesForTrainer();
-        return ResponseEntity.ok(trainingClassesForTrainer);
+        return new ResponseEntity<>(trainingClassesForTrainer, HttpStatus.OK);
     }
 
     @PutMapping

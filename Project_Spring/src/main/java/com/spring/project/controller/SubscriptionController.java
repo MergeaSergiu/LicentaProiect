@@ -23,7 +23,7 @@ public class SubscriptionController {
     @GetMapping
     public ResponseEntity<List<SubscriptionResponse>> getAllSubscriptions(){
         List<SubscriptionResponse> subscriptionResponse = adminService.getAllSubscriptions();
-        return ResponseEntity.ok(subscriptionResponse);
+        return new ResponseEntity<>(subscriptionResponse, HttpStatus.OK);
     }
 
     @PostMapping
@@ -35,7 +35,7 @@ public class SubscriptionController {
     @GetMapping("/{subscriptionId}")
     public ResponseEntity<SubscriptionResponse> getSubscriptionById(@PathVariable("subscriptionId") Long subscriptionId){
         SubscriptionResponse subscriptionResponse = adminService.getSubscriptionById(subscriptionId);
-        return ResponseEntity.ok(subscriptionResponse);
+        return new ResponseEntity<>(subscriptionResponse, HttpStatus.OK);
     }
 
 

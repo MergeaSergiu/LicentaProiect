@@ -22,6 +22,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponseContainer, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(CreateReservationException.class)
+    public ResponseEntity<ErrorResponseContainer> handleCreateReservationException(CreateReservationException ex){
+        ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
+
+        errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
+        errorResponseContainer.setErrorMessage(ex.getMessage());
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(EntityExistsException.class)
     public ResponseEntity<ErrorResponseContainer> handleEntityExistsException(EntityExistsException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();

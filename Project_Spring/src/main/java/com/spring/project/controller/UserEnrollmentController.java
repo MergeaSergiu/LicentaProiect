@@ -33,17 +33,18 @@ public class UserEnrollmentController {
     @GetMapping("/classes/{trainingClassId}")
     public ResponseEntity<StatusEnrollResponse> checkEnrollmentStatus(@PathVariable ("trainingClassId") Long trainingClassId){
         StatusEnrollResponse isEnrolled = clientService.checkEnrollmentStatus(trainingClassId);
-        return ResponseEntity.ok(isEnrolled);
+        return new ResponseEntity<>(isEnrolled, HttpStatus.OK);
     }
 
     @GetMapping("/classes")
     public ResponseEntity<List<TrainingClassResponse>> getEnrollClassesForUser(){
-        return ResponseEntity.ok(userAccountService.getEnrollClasses());
+        List<TrainingClassResponse> trainingClassResponseList = userAccountService.getEnrollClasses();
+        return new ResponseEntity<>(trainingClassResponseList, HttpStatus.OK);
     }
 
     @DeleteMapping("/classes/{trainingClassId}")
     public ResponseEntity<Void> UnenrollUserFromTrainingClass(@PathVariable("trainingClassId") Long trainingClassId){
         clientService.unEnrollUserFromTrainingClass(trainingClassId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -24,13 +24,13 @@ public class TrainingClassController {
     @GetMapping
     public ResponseEntity<List<TrainingClassResponse>> getTrainingClasses(){
         List<TrainingClassResponse> trainingClassResponse = adminService.getAllTrainingClasses();
-        return ResponseEntity.ok(trainingClassResponse);
+        return new ResponseEntity<>(trainingClassResponse, HttpStatus.OK);
     }
 
     @GetMapping("/{trainingClassId}")
     public ResponseEntity<TrainingClassResponse> getTrainingClass(@PathVariable("trainingClassId") Long trainingClassId){
         TrainingClassResponse trainingClassResponse = adminService.getTrainingClass(trainingClassId);
-        return ResponseEntity.ok(trainingClassResponse);
+        return new ResponseEntity<>(trainingClassResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/{trainingClassId}")
@@ -40,9 +40,9 @@ public class TrainingClassController {
     }
 
     @PostMapping
-    public ResponseEntity<TrainingClass> createTrainingClass(@RequestBody TrainingClassRequest classRequest) {
-        TrainingClass trainingClass = adminService.createTrainingClass(classRequest);
-        return ResponseEntity.ok(trainingClass);
+    public ResponseEntity<Void> createTrainingClass(@RequestBody TrainingClassRequest classRequest) {
+        adminService.createTrainingClass(classRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{trainingClassId}")

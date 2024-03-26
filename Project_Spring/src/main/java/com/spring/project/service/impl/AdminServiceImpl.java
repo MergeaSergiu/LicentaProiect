@@ -226,8 +226,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public TrainingClass createTrainingClass(TrainingClassRequest classRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.isAuthenticated()) {
-            if (clientService.findClientById(Long.valueOf(classRequest.getTrainerId())) != null) {
+        if (authentication.isAuthenticated() && clientService.findClientById(Long.valueOf(classRequest.getTrainerId())) != null) {
                    User trainer = clientService.findClientById(Long.valueOf(classRequest.getTrainerId()));
                     TrainingClass trainingClass = trainingClassMapper.convertFromDto(classRequest, trainer);
                     trainingClassService.createTrainingClass(trainingClass);
@@ -236,13 +235,9 @@ public class AdminServiceImpl implements AdminService {
                     emailTemplate = emailTemplate.replace("${trainingClass}", classRequest.getClassName());
                     emailSender.send(authentication.getName(), emailTemplate, "Training class was created");
                     return trainingClass;
-                } else {
-                throw new EntityExistsException("Trainer does not exist");
-            }
-        }else {
+        } else {
             throw new CustomExpiredJwtException("Session has expired");
         }
-
     }
 
     @Override

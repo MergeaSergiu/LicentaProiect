@@ -1,6 +1,7 @@
 package com.spring.project.service.impl;
 
 import com.spring.project.Exception.ClientNotFoundException;
+import com.spring.project.Exception.CreateReservationException;
 import com.spring.project.dto.ReservationRequest;
 import com.spring.project.dto.ReservationResponse;
 import com.spring.project.email.EmailSender;
@@ -49,7 +50,7 @@ public class ReservationServiceImpl implements ReservationService {
                     emailTemplate = emailTemplate.replace("${dateTime}", reservationRequest.getLocalDate());
                     emailSender.send(authentication.getName(), emailTemplate, "Thank you for your reservation");
                 }else{
-                    throw new ClientNotFoundException("You reached the reservations limit per day");
+                    throw new CreateReservationException("You reached the reservations limit per day");
                 }
             }else {
                 throw new ClientNotFoundException("User does not exist");
