@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SubscriptionRepository extends JpaRepository<Subscription, Integer> {
+public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
 
     @Query("SELECT s From Subscription s WHERE s.subscriptionName = :subscriptionName")
     Subscription findBySubscriptionName(String subscriptionName);

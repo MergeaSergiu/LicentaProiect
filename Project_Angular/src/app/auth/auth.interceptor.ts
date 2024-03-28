@@ -25,17 +25,12 @@ export class AuthInterceptor implements HttpInterceptor{
             refreshToken: this.registrationService.getRefreshToken()
         }
 
-        // console.log(this.registrationService.refreshToken(refresh_token).subscribe({
-        //     next: (response) => {
-        //         console.log(response);
-        //     }
-        // }));
        
         return next.handle(req).pipe(
             catchError((error: any) =>{
-                    if(error.status === 403){
+                    if(error.status === 401){
                        return this.registrationService.refreshToken(refresh_token).pipe(
-                        mergeMap((res: any) => {
+                        switchMap((res: any) => {
                             this.registrationService.setToken(res.access_token);
                             req = this.addToken(req, res.access_token);
                             return next.handle(req);
@@ -48,6 +43,8 @@ export class AuthInterceptor implements HttpInterceptor{
                             return throwError (() => (error.error.errorMessage));
                         })
                        );
+                    }else{
+                        return throwError (() => (error.error.errorMessage));
                     }
                 })
         );

@@ -15,8 +15,8 @@ import java.time.LocalDate;
 public class TrainerReservation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private LocalDate localDate;
 
@@ -28,6 +28,6 @@ public class TrainerReservation {
 
     @ManyToOne
     @JoinColumn(name = "client_id")
-    private Client client;
+    private User user;
 
 }

@@ -26,8 +26,8 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     }
 
     @Override
-    public void deleteByclient_Id(Integer id) {
-        confirmationTokenRepository.deleteByclient_Id(id);
+    public void deleteByclient_Id(Long id) {
+        confirmationTokenRepository.deleteByuser_Id(id);
     }
 
     public void setConfirmedAt(String token) {
@@ -35,7 +35,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
                 token, LocalDateTime.now());
     }
 
-    public ConfirmationToken findTokenByUserId(int id){
-        return confirmationTokenRepository.findByclient_Id(id);
+    public ConfirmationToken findTokenByUserId(Long id){
+        return confirmationTokenRepository.findByuser_Id(id);
     }
 }

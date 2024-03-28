@@ -2,7 +2,7 @@ package com.spring.project.service.impl;
 
 import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.mapper.TrainingClassMapper;
-import com.spring.project.model.Client;
+import com.spring.project.model.User;
 import com.spring.project.model.TrainingClass;
 import com.spring.project.service.TrainerService;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ public class TrainerServiceImpl implements TrainerService {
 
     public List<TrainingClassResponse> getTrainingClassesForTrainer() {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Client trainer = clientService.findClientByEmail(authentication.getName());
+            User trainer = clientService.findClientByEmail(authentication.getName());
             List<TrainingClass> trainingClasses = trainingClassServiceImpl.getTrainingClassesForTrainer(trainer.getId());
             if (trainingClasses != null) {
                 return trainingClasses.stream()

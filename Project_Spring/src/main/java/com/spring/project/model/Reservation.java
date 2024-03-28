@@ -17,7 +17,7 @@ public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    private Long id;
 
     @Temporal(TemporalType.DATE)
     private LocalDate reservationDate;
@@ -32,6 +32,6 @@ public class Reservation {
 
     @ManyToOne
     @JoinColumn(name= "user_id")
-    private Client user;
+    private User user;
 
 }

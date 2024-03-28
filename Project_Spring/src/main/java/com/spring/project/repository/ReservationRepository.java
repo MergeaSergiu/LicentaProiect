@@ -12,19 +12,19 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
+public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
 
     List<Reservation> findAllByOrderByReservationDateAsc();
 
-    List<Reservation> findAllByUser_IdOrderByReservationDateAsc(@Param("id") Integer id);
+    List<Reservation> findAllByUser_IdOrderByReservationDateAsc(@Param("id") Long id);
 
     @Query("SELECT e from Reservation e WHERE e.court = :court")
     List<Reservation> findByCourt(@Param("court") String court);
 
     @Modifying
     @Transactional
-    void deleteAllByUser_Id(@Param("id") Integer id);
+    void deleteAllByUser_Id(@Param("id") Long id);
 
-    List<Reservation> findAllByUser_IdAndReservationMadeDate(@Param("userId") Integer userId, @Param("currentDate") LocalDate currentDate);
+    List<Reservation> findAllByUser_IdAndReservationMadeDate(@Param("userId") Long userId, @Param("currentDate") LocalDate currentDate);
 }

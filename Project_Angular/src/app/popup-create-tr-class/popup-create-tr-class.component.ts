@@ -46,8 +46,9 @@ export class PopupCreateTrClassComponent {
     this.adminService.createTrainingClass(trainingClass).subscribe({
       next: (response) => {
         this.closePopUp();
-      }, error: (any) =>{
-        alert("Can not create a trainingClass")
+      }, error: (error: any) =>{
+        console.log(error);
+        alert(error)
       }
     });
   }

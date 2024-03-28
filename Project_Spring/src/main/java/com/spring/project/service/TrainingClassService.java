@@ -10,10 +10,10 @@ public interface TrainingClassService {
 
     TrainingClass getTrainingClassByName(String className);
 
-    TrainingClass findById(Integer id);
+    TrainingClass findById(Long id);
 
-    void deleteTrainingClass(Integer id);
+    void deleteTrainingClass(Long id);
 
     List<TrainingClass> getTrainingClasses();
-    List<TrainingClass> getTrainingClassesForTrainer(Integer id);
+    List<TrainingClass> getTrainingClassesForTrainer(Long id);
 }

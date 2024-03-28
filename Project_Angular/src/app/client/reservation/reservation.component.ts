@@ -209,8 +209,8 @@ export class ReservationComponent implements OnInit{
           }, 2000)
           schedule.reserved = true;
         },
-        error: (any) =>{
-            alert(any);
+        error: (error) =>{
+            alert(error);
         }
       });
 

@@ -1,11 +1,12 @@
 package com.spring.project.service.impl;
 
 import com.spring.project.Exception.ClientNotFoundException;
+import com.spring.project.Exception.CreateReservationException;
 import com.spring.project.dto.ReservationRequest;
 import com.spring.project.dto.ReservationResponse;
 import com.spring.project.email.EmailSender;
 import com.spring.project.mapper.ReservationMapper;
-import com.spring.project.model.Client;
+import com.spring.project.model.User;
 import com.spring.project.model.Reservation;
 import com.spring.project.repository.ReservationRepository;
 import com.spring.project.service.ReservationService;
@@ -37,7 +38,7 @@ public class ReservationServiceImpl implements ReservationService {
     public void saveReservation(ReservationRequest reservationRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()) {
-            Client user = clientService.findClientByEmail(authentication.getName());
+            User user = clientService.findClientByEmail(authentication.getName());
             if (user != null) {
                 List<Reservation> reservationsForCurrentDayForUser = reservationRepository.findAllByUser_IdAndReservationMadeDate(user.getId(), LocalDate.now());
                 if(reservationsForCurrentDayForUser.size() < 3) {
@@ -49,7 +50,7 @@ public class ReservationServiceImpl implements ReservationService {
                     emailTemplate = emailTemplate.replace("${dateTime}", reservationRequest.getLocalDate());
                     emailSender.send(authentication.getName(), emailTemplate, "Thank you for your reservation");
                 }else{
-                    throw new ClientNotFoundException("You reached the reservations limit per day");
+                    throw new CreateReservationException("You reached the reservations limit per day");
                 }
             }else {
                 throw new ClientNotFoundException("User does not exist");
@@ -79,12 +80,12 @@ public class ReservationServiceImpl implements ReservationService {
 
 
     @Override
-    public List<Reservation> getAllClientReservations(Integer id) {
+    public List<Reservation> getAllClientReservations(Long id) {
         return reservationRepository.findAllByUser_IdOrderByReservationDateAsc(id);
     }
 
     @Override
-    public void deleteReservation(Integer id) {
+    public void deleteReservation(Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         fotballReservationServiceImpl.deleteReservation(id);
         String emailTemplate = loadEmailTemplateFromResource("deleteReservationEmail.html");
@@ -93,7 +94,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public void deleteReservationsForUser(Integer id) {
+    public void deleteReservationsForUser(Long id) {
         reservationRepository.deleteAllByUser_Id(id);
     }
 

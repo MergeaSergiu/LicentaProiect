@@ -18,11 +18,11 @@ public class SubscriptionsHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Client user;
+    private User user;
 
     private String subscriptionName;
 

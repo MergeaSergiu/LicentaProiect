@@ -8,10 +8,10 @@ public interface EnrollmentTrainingClassService {
 
     void saveEnrollmentAction(EnrollmentTrainingClass enrollmentTrainingClass);
 
-    List<EnrollmentTrainingClass> getClassesByUserId(Integer id);
+    List<EnrollmentTrainingClass> getClassesByUserId(Long id);
 
 
-    void deleteEnrollmentForUser(Integer trainingClassId, Integer clientId);
+    void deleteEnrollmentForUser(Long trainingClassId, Long clientId);
 
-    void deleteAllEnrollsForTrainingClass(Integer trainingClassId);
+    void deleteAllEnrollsForTrainingClass(Long trainingClassId);
 }

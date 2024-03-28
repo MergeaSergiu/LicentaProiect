@@ -13,8 +13,8 @@ import lombok.*;
 public class Subscription {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String subscriptionName;
     private Double subscriptionPrice;
     private Integer subscriptionTime;

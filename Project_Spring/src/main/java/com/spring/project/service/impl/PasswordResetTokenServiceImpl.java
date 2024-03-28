@@ -32,7 +32,7 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
     }
 
     @Override
-    public void deleteByclient_Id(Integer id) {
-        passwordResetTokenRepository.deleteByclient_Id(id);
+    public void deleteByclient_Id(Long id) {
+        passwordResetTokenRepository.deleteByuser_Id(id);
     }
 }

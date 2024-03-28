@@ -8,7 +8,7 @@ public interface FotballReservationService {
 
     Reservation save(Reservation reservation);
 
-    void deleteReservation(Integer id);
+    void deleteReservation(Long id);
 
     List<Reservation> getReservationsByCourt(String court);
 

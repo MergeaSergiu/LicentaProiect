@@ -24,7 +24,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return subscriptionRepository.findAll();
     }
 
-    public Optional<Subscription> findById(Integer id){
+    public Optional<Subscription> findById(Long id){
         return subscriptionRepository.findById(id);
     }
 
@@ -32,7 +32,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return subscriptionRepository.findBySubscriptionName(subscriptionName);
     }
 
-    public void deleteSubscription(Integer id) {
+    public void deleteSubscription(Long id) {
         subscriptionRepository.deleteById(id);
     }
 }

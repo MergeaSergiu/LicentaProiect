@@ -62,23 +62,23 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<UserDataResponse> getAllClients() {
-            List<Client> clients = clientRepository.findAll();
-              return clients.stream()
+            List<User> users = clientRepository.findAll();
+              return users.stream()
                     .map(userDataMapper::convertToDto).collect(Collectors.toList());
     }
 
     @Override
-    public UserDataResponse getUserData(Integer id) {
-        Client user = clientService.findClientById(id);
+    public UserDataResponse getUserData(Long id) {
+        User user = clientService.findClientById(id);
         return userDataMapper.convertToDto(user);
     }
 
     @Override
-    public void deleteUser(Integer id) {
+    public void deleteUser(Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
-            Client client = clientService.findClientById(id);
-            if(client.getRole().getName().equals("TRAINER")){
+            User user = clientService.findClientById(id);
+            if(user.getRole().getName().equals("TRAINER")){
                 List<TrainingClass> trainingClasses = trainingClassService.getTrainingClassesForTrainer(id);
                 if(trainingClasses != null){
                     for(TrainingClass trainingClass : trainingClasses){
@@ -87,7 +87,7 @@ public class AdminServiceImpl implements AdminService {
                     }
                 }
 
-            }else if(client.getRole().getName().equals("USER")) {
+            }else if(user.getRole().getName().equals("USER")) {
                 reservationService.deleteReservationsForUser(id);
                 enrollmentTrainingClassRepository.deleteAllByUser_id(id);
                 subscriptionHistoryRepository.deleteAllByUser_Id(id);
@@ -99,14 +99,14 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void updateUserRole(Integer id, RoleRequest roleRequest) {
+    public void updateUserRole(Long id, RoleRequest roleRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
-            Role role = roleRepsitory.findById(roleRequest.getId()).orElse(null);
-            Client client = clientService.findClientById(id);
-            if(clientRepository.findById(client.getId()).get().getRole().getName().equals("USER") && !role.getName().equals("USER")){
-                reservationService.deleteReservationsForUser(client.getId());
-                enrollmentTrainingClassRepository.deleteAllByUser_id(client.getId());
+            Role role = roleRepsitory.findById(Long.valueOf(roleRequest.getId())).orElse(null);
+            User user = clientService.findClientById(id);
+            if(clientRepository.findById(user.getId()).get().getRole().getName().equals("USER") && !role.getName().equals("USER")){
+                reservationService.deleteReservationsForUser(user.getId());
+                enrollmentTrainingClassRepository.deleteAllByUser_id(user.getId());
                 subscriptionHistoryRepository.deleteAllByUser_Id(id);
             }else if(clientRepository.findById(id).get().getRole().getName().equals("TRAINER") && !role.getName().equals("TRAINER")){
                 List<TrainingClass> trainingClasses = trainingClassService.getTrainingClassesForTrainer(id);
@@ -117,14 +117,14 @@ public class AdminServiceImpl implements AdminService {
                     }
                 }
             }
-            client.setRole(role);
-            clientRepository.save(client);
+            user.setRole(role);
+            clientRepository.save(user);
         }
     }
 
     @Override
     public List<TrainerResponse> getAllTrainers() {
-        List<Client> trainers = clientRepository.getAllTrainers();
+        List<User> trainers = clientRepository.getAllTrainers();
         return trainers.stream()
                 .map(trainerDataMapper::convertToDto).collect(Collectors.toList());
     }
@@ -158,7 +158,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void updateSubscription(Integer id, CreateSubscriptionRequest subscriptionRequest) {
+    public void updateSubscription(Long id, CreateSubscriptionRequest subscriptionRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated()) {
             Subscription subscription = subscriptionService.findById(id).orElse(null);
@@ -179,7 +179,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public SubscriptionResponse getSubscriptionById(Integer id) {
+    public SubscriptionResponse getSubscriptionById(Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
             Subscription subscription = subscriptionService.findById(id).orElse(null);
@@ -191,7 +191,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void deleteSubscription(Integer id) {
+    public void deleteSubscription(Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated()) {
             subscriptionService.deleteSubscription(id);
@@ -213,7 +213,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public TrainingClassResponse getTrainingClass(Integer id) {
+    public TrainingClassResponse getTrainingClass(Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
             TrainingClass trainingClass = trainingClassService.findById(id);
@@ -224,26 +224,24 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void createTrainingClass(TrainingClassRequest classRequest) {
+    public TrainingClass createTrainingClass(TrainingClassRequest classRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.isAuthenticated()) {
-            if (trainingClassService.getTrainingClassByName(classRequest.getClassName()) == null && clientService.findClientById(classRequest.getTrainerId()) != null) {
-                   Client trainer = clientService.findClientById(classRequest.getTrainerId());
+        if (authentication.isAuthenticated() && clientService.findClientById(Long.valueOf(classRequest.getTrainerId())) != null) {
+                   User trainer = clientService.findClientById(Long.valueOf(classRequest.getTrainerId()));
                     TrainingClass trainingClass = trainingClassMapper.convertFromDto(classRequest, trainer);
                     trainingClassService.createTrainingClass(trainingClass);
                     String emailTemplate = loadEmailTemplateFromResource("trainingClassCreated.html");
                     emailTemplate = emailTemplate.replace("${email}", authentication.getName());
                     emailTemplate = emailTemplate.replace("${trainingClass}", classRequest.getClassName());
                     emailSender.send(authentication.getName(), emailTemplate, "Training class was created");
-                }
-            else {
-                throw new EntityExistsException("There is already a class with this name");
-            }
+                    return trainingClass;
+        } else {
+            throw new CustomExpiredJwtException("Session has expired");
         }
     }
 
     @Override
-    public void updateTrainingClass(Integer id, TrainingClassRequest trainingClassRequest) {
+    public void updateTrainingClass(Long id, TrainingClassRequest trainingClassRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated()) {
             TrainingClass trainingClass = trainingClassService.findById(id);
@@ -254,10 +252,10 @@ public class AdminServiceImpl implements AdminService {
                     trainingClass.setStartTime(trainingClass.getStartTime());
                     trainingClass.setDuration(trainingClassRequest.getDuration());
                     trainingClass.setLocalDate(trainingClassRequest.getLocalDate());
-                    trainingClass.setTrainer(clientService.findClientById(trainingClassRequest.getTrainerId()));
+                    trainingClass.setTrainer(clientService.findClientById(Long.valueOf(trainingClassRequest.getTrainerId())));
                     trainingClassService.createTrainingClass(trainingClass);
                 }else {
-                    throw new EntityExistsException("There is a trainingClas with this name");
+                    throw new EntityExistsException("There is a training class with this name");
                 }
             }else{
                 throw new EntityNotFoundException("Training class could not be updated");
@@ -266,7 +264,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void deleteTrainingClass(Integer id) {
+    public void deleteTrainingClass(Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated()) {
             enrollmentTrainingClassService.deleteAllEnrollsForTrainingClass(id);
@@ -275,11 +273,11 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<UserSubscriptionsDataResponse> getUserSubscriptionsData(Integer id) {
+    public List<UserSubscriptionsDataResponse> getUserSubscriptionsData(Long id) {
         List<UserSubscriptionsDataResponse> responseData = new ArrayList<>();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
-            Client user = clientRepository.findById(id).orElse(null);
+            User user = clientRepository.findById(id).orElse(null);
             if(user != null) {
                 List<SubscriptionsHistory> subscriptionsHistoryListForUser = subscriptionHistoryRepository.findByUser_IdOrderBySubscriptionEndTimeAsc(id);
                 return subscriptionsHistoryListForUser.stream()
@@ -295,7 +293,7 @@ public class AdminServiceImpl implements AdminService {
         List<UserSubscriptionsDataResponse> responseData = new ArrayList<>();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
-            Client user = clientRepository.findByEmail(authentication.getName()).orElse(null);
+            User user = clientRepository.findByEmail(authentication.getName()).orElse(null);
             if(user != null) {
                 List<SubscriptionsHistory> subscriptionsHistoryListForUser = subscriptionHistoryRepository.findByUser_IdOrderBySubscriptionEndTimeAsc(user.getId());
                 return subscriptionsHistoryListForUser.stream()
@@ -306,27 +304,31 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void addSubscriptionForUser(UserSubscriptionRequest userSubscriptionRequest) {
+    public SubscriptionsHistory addSubscriptionForUser(UserSubscriptionRequest userSubscriptionRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
-            Client user = clientRepository.findById(userSubscriptionRequest.getUserId()).orElse(null);
-            Subscription subscription = subscriptionRepository.findById(userSubscriptionRequest.getSubscriptionId()).orElse(null);
+            User user = clientRepository.findById(Long.valueOf(userSubscriptionRequest.getUserId())).orElse(null);
+            Subscription subscription = subscriptionRepository.findById(Long.valueOf(userSubscriptionRequest.getSubscriptionId())).orElse(null);
             SubscriptionsHistory activeSubscription = subscriptionHistoryRepository.findActiveSubscriptionForUser(user.getId(), LocalDate.now());
             if(activeSubscription == null && subscription != null){
                 SubscriptionsHistory subscriptionsHistory = subscriptionsHistoryMapper.convertFromDto(user,subscription);
                 subscriptionHistoryRepository.save(subscriptionsHistory);
+                return subscriptionsHistory;
             }else{
                 throw new EntityExistsException("User already has a active subscription");
             }
+        }else{
+            throw new CustomExpiredJwtException("Session has expired");
         }
+
     }
 
     @Override
-    public void addSubscriptionForUserByCard(Integer subscriptionId) {
+    public void addSubscriptionForUserByCard(Long subscriptionId) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
-            Client user = clientRepository.findByEmail(authentication.getName()).orElse(null);
+            User user = clientRepository.findByEmail(authentication.getName()).orElse(null);
             Subscription subscription = subscriptionRepository.findById(subscriptionId).orElse(null);
             SubscriptionsHistory activeSubscription = subscriptionHistoryRepository.findActiveSubscriptionForUser(user.getId(), LocalDate.now());
             if(activeSubscription == null && subscription != null){

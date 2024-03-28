@@ -23,18 +23,18 @@ public class TrainingClassServiceImpl implements TrainingClassService {
         return trainingClassRepository.getTrainingClassByName(className);
     }
 
-    public TrainingClass findById(Integer id) {
+    public TrainingClass findById(Long id) {
         return trainingClassRepository.findById(id).orElse(null);
     }
 
-    public void deleteTrainingClass(Integer id) {
+    public void deleteTrainingClass(Long id) {
         trainingClassRepository.deleteById(id);
     }
 
     public List<TrainingClass> getTrainingClasses() {
         return trainingClassRepository.findAll();
     }
-    public List<TrainingClass> getTrainingClassesForTrainer(Integer id) {
+    public List<TrainingClass> getTrainingClassesForTrainer(Long id) {
         return trainingClassRepository.findAllByTrainer_Id(id);
     }
 }

@@ -9,7 +9,6 @@ import { TrainingClassResponse } from "../models/trainingclass-response.model";
 import { StatusEnrollResponse } from "../models/statusEnroll-response.model";
 import { UserSubscriptionsDataResponse } from "../models/userSubscriptionData-response.model";
 import { PaymentData } from "../models/payment-data.model";
-import { SubscriptionRequest } from "../models/subscription-request.model";
 
 
 @Injectable({
@@ -17,7 +16,7 @@ import { SubscriptionRequest } from "../models/subscription-request.model";
   })
 export class ClientService{
 
-  API_PATH = "http://localhost:8080/project"
+  API_PATH = "http://localhost:8080/project/api/v1"
   requestHeader = new HttpHeaders({ 'No-Auth': 'True' });
 
 
@@ -31,115 +30,68 @@ export class ClientService{
    }
 
    public getReservations(court: string): Observable<ReservationResponse[]>{
-    const params = new HttpParams().set('court', court);
-    return this.httpClient.get<ReservationResponse[]>(this.API_PATH + "/api/user/getReservationsByCourt",  {params})
-    .pipe(
-      catchError(this.handleError)
-      );
+    return this.httpClient.get<ReservationResponse[]>(`${this.API_PATH}/reservations/${court}`)
    }
 
    public getAllReservationsForClient(): Observable<ReservationResponse[]>{
-    return this.httpClient.get<ReservationResponse[]>(this.API_PATH + "/api/user/clientReservations")
-    .pipe(
-      catchError(this.handleError)
-    );
+    return this.httpClient.get<ReservationResponse[]>(`${this.API_PATH}/users/reservations`)
    }
 
    public createReservation(reservationRequest: ReservationRequest):Observable<ReservationRequest>{
-      return this.httpClient.post<any>(this.API_PATH + "/api/user/createReservation", reservationRequest);
+      return this.httpClient.post<any>(`${this.API_PATH}/reservations`, reservationRequest);
    }
 
-  public deleteReservation(id: number){
-    const params = new HttpParams().set('id', id.toString());
-    return this.httpClient.delete<any>(this.API_PATH + "/api/user/deleteReservation", { params})
-    .pipe(
-      catchError(this.handleError)
-    );
+  public deleteReservation(reservationId: number){
+    return this.httpClient.delete<any>(`${this.API_PATH}/reservations/${reservationId}`)
   }
 
   public getUserProfileData(): Observable<UserDataResponse>{
-    return this.httpClient.get<UserDataResponse>(this.API_PATH + "/api/user/getUserProfileData")
-    .pipe(
-      catchError(this.handleError)
-    );
+    return this.httpClient.get<UserDataResponse>(`${this.API_PATH}/users/profile`)
 }
 
 
 public updateUserData(updateUserRequest:UpdateUserRequest): Observable<any>{
-  return this.httpClient.put<UpdateUserRequest>(this.API_PATH + "/api/user/updateUserProfile", updateUserRequest)
-  .pipe(
-    catchError(this.handleError)
-  );
+  return this.httpClient.put<UpdateUserRequest>(`${this.API_PATH}/users`, updateUserRequest)
 }
 
 public getTrainerClasses(): Observable<TrainingClassResponse[]>{
-  return this.httpClient.get<TrainingClassResponse[]>(this.API_PATH + "/api/user/getTrainerClasses")
-  .pipe(
-    catchError(this.handleError)
-  );
+  return this.httpClient.get<TrainingClassResponse[]>(`${this.API_PATH}/users/trainer/classes`)
 }
 
-public enrollUserToTrainingClass(id: number){
-  const params = new HttpParams().set('id', id.toString());
-  return this.httpClient.post<any>(this.API_PATH  + "/api/user/enrollUser", null,{params})
-  .pipe(
-    catchError(this.handleError)
-  );
+public enrollUserToTrainingClass(trainingClassId: number){
+  return this.httpClient.post<any>(`${this.API_PATH}/users/classes/${trainingClassId}`, null)
 }
 
 public checkEnrollmentStatus(trainingClassId: number): Observable<StatusEnrollResponse>{
-    const params = new HttpParams().set('trainingClassId', trainingClassId.toString());
-    return this.httpClient.get<StatusEnrollResponse>(this.API_PATH  + "/api/user/checkEnrollmentStatus", {params})
-    .pipe(
-      catchError(this.handleError)
-      );
-  }
+    return this.httpClient.get<StatusEnrollResponse>(`${this.API_PATH}/users/classes/${trainingClassId}`)
+}
 
   public getUserTrainingClasses(): Observable<TrainingClassResponse[]>{
-    return this.httpClient.get<TrainingClassResponse[]>(this.API_PATH + "/api/user/getEnrollClasses")
-    .pipe(
-      catchError(this.handleError)
-    );
-  }
+    return this.httpClient.get<TrainingClassResponse[]>(`${this.API_PATH}/users/classes`)
+}
 
-  public unEnrolleUser(classId: number){
-    const params = new HttpParams().set('classId', classId.toString());
-    return this.httpClient.delete<any>(this.API_PATH + "/api/user/unEnroll", {params})
-    .pipe(
-      catchError(this.handleError)
-    );
-  }
+  public unEnrolleUser(trainingClassId: number){
+    return this.httpClient.delete<any>(`${this.API_PATH}/users/classes/${trainingClassId}`)
+}
 
   public getUserSubscriptionsData(): Observable<UserSubscriptionsDataResponse[]>{
-    return this.httpClient.get<UserSubscriptionsDataResponse[]>(this.API_PATH + "/api/admin/users/subscriptionsData")
-    .pipe(
-      catchError(this.handleError)
-    );
-  }
+    return this.httpClient.get<UserSubscriptionsDataResponse[]>(`${this.API_PATH}/users/subscriptions`)
+}
 
-
-  public getSubscriptionById(id: number): Observable<any> {
-    const params = new HttpParams().set('id', id.toString());
-    return this.httpClient.get<any>(this.API_PATH  + "/api/admin/getSubscription", {params})
-    .pipe(
-      catchError(this.handleError)
-    );
-  }
+  public getSubscriptionById(subscriptionId: number): Observable<any> {
+    return this.httpClient.get<any>(`${this.API_PATH}/subscriptions/${subscriptionId}`)
+}
 
   public createPaymentIntent(paymentData: PaymentData): Observable<any> {
-    return this.httpClient.post<any>(this.API_PATH + "/api/user/payment-intent", paymentData)
-    .pipe(
-      catchError(this.handleError)
-    );
-  }
+    return this.httpClient.post<any>(this.API_PATH + "/payment/payment-intent", paymentData)
+}
+
+  public AddUserSubscriptionByCard(subscriptionId: number): Observable<any> {
+    return this.httpClient.post<any>(`${this.API_PATH}/users/subscriptions/${subscriptionId}`, null)
+}
 
   public checkUserActiveSubscriptions(): Observable<any> {
-    return this.httpClient.get<any>(this.API_PATH + "/api/user/userActiveSubscriptions")
-    .pipe(
-      catchError(this.handleError)
-      )
-  }
-
-  
+    return this.httpClient.get<any>(`${this.API_PATH}/users/activeSubscriptions`)
+}
 
 }

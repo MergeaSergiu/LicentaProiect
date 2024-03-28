@@ -20,7 +20,7 @@ public class FotballReservationServiceImpl implements FotballReservationService 
     }
 
     @Override
-    public void deleteReservation(Integer id){
+    public void deleteReservation(Long id){
         reservationRepository.deleteById(id);
     }
 

@@ -11,16 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface TrainingClassRepository extends JpaRepository<TrainingClass, Integer> {
+public interface TrainingClassRepository extends JpaRepository<TrainingClass, Long> {
 
     @Query("SELECT c FROM TrainingClass c where c.className = :className")
     TrainingClass getTrainingClassByName(@Param("className") String className);
 
-    List<TrainingClass> findAllByTrainer_Id(Integer id);
+    List<TrainingClass> findAllByTrainer_Id(Long id);
 
-    @Transactional
-    @Modifying
-    @Query("DELETE TrainingClass e WHERE e.className = :className")
-    void deleteByClassName(@Param("className") String className);
 
 }

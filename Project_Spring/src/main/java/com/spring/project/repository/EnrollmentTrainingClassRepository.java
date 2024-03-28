@@ -14,21 +14,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Repository
-public interface EnrollmentTrainingClassRepository extends JpaRepository<EnrollmentTrainingClass, Integer> {
+public interface EnrollmentTrainingClassRepository extends JpaRepository<EnrollmentTrainingClass, Long> {
 
-    List<EnrollmentTrainingClass> findAllByuser_Id(Integer id);
+    List<EnrollmentTrainingClass> findAllByuser_Id(Long id);
 
     @Modifying
     @Transactional
     @Query("DELETE FROM EnrollmentTrainingClass WHERE trainingClass.id = :trainingClassId AND user.id = :userId")
-    void deleteByTrainingClassIdAndUserId(@Param("trainingClassId") Integer trainingClassId, @Param("userId") Integer userId);
+    void deleteByTrainingClassIdAndUserId(@Param("trainingClassId") Long trainingClassId, @Param("userId") Long userId);
 
     @Modifying
     @Transactional
-    void deleteAllByTrainingClass_Id(@Param("trainingClassId") Integer trainingClassId);
+    void deleteAllByTrainingClass_Id(@Param("trainingClassId") Long trainingClassId);
 
     @Modifying
     @Transactional
-    void deleteAllByUser_id(@Param("user_id") Integer userId);
+    void deleteAllByUser_id(@Param("user_id") Long userId);
 
 }

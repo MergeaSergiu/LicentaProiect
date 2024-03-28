@@ -22,6 +22,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponseContainer, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(CreateReservationException.class)
+    public ResponseEntity<ErrorResponseContainer> handleCreateReservationException(CreateReservationException ex){
+        ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
+
+        errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
+        errorResponseContainer.setErrorMessage(ex.getMessage());
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(EntityExistsException.class)
     public ResponseEntity<ErrorResponseContainer> handleEntityExistsException(EntityExistsException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
@@ -87,9 +96,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseContainer> handleExpiredJwtException(ExpiredJwtException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
 
-        errorResponseContainer.setHttpStatusCode(HttpStatus.FORBIDDEN.value());
+        errorResponseContainer.setHttpStatusCode(HttpStatus.UNAUTHORIZED.value());
         errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<>(errorResponseContainer, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(ResetPasswordException.class)
@@ -114,8 +123,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseContainer> handleCustomExpiredJwtException(CustomExpiredJwtException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
 
-        errorResponseContainer.setHttpStatusCode(HttpStatus.FORBIDDEN.value());
+        errorResponseContainer.setHttpStatusCode(HttpStatus.UNAUTHORIZED.value());
         errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<>(errorResponseContainer, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.UNAUTHORIZED);
     }
 }

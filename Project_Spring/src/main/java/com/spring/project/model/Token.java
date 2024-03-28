@@ -23,6 +23,6 @@ public class Token {
 
     @ManyToOne
     @JoinColumn(name = "client_id")
-    public Client client;
+    public User user;
 
 }

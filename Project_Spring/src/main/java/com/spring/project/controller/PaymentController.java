@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/project/api/user")
+@RequestMapping("/project/api/v1/payment")
 public class PaymentController {
 
     public PaymentController(CheckoutService checkoutService) {
@@ -25,6 +25,6 @@ public class PaymentController {
     public ResponseEntity<String> createPaymentIntent(@RequestBody PaymentRequest paymentRequest) throws StripeException {
 
         PaymentIntent paymentIntent = checkoutService.createPaymentIntent(paymentRequest);
-        return new ResponseEntity<>(paymentIntent.toJson(), HttpStatus.OK);
+        return new ResponseEntity<>(paymentIntent.toJson(), HttpStatus.CREATED);
     }
 }

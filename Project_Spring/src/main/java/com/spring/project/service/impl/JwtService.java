@@ -90,12 +90,9 @@ public class JwtService {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-
     }
 
     private Key getSignInKey() {
-//        byte[] keyBytes = Decoders.BASE.decode(SECRET_KEY);
-//        return Keys.hmacShaKeyFor(keyBytes);
         byte[] secretBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
         return new SecretKeySpec(secretBytes, SignatureAlgorithm.HS512.getJcaName());
     }

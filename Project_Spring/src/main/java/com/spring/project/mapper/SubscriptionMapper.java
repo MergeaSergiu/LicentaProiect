@@ -10,7 +10,7 @@ public class SubscriptionMapper {
 
     public SubscriptionResponse convertToDto(Subscription subscription){
         return SubscriptionResponse.builder()
-                .id(subscription.getId())
+                .id(Math.toIntExact(subscription.getId()))
                 .subscriptionName(subscription.getSubscriptionName())
                 .subscriptionPrice(subscription.getSubscriptionPrice())
                 .subscriptionTime(subscription.getSubscriptionTime())

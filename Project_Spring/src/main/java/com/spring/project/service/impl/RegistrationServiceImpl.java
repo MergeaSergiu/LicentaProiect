@@ -6,7 +6,7 @@ import com.spring.project.email.EmailSender;
 import com.spring.project.mapper.AuthenticationMapper;
 import com.spring.project.mapper.PasswordResetMapper;
 import com.spring.project.mapper.UserMapper;
-import com.spring.project.model.Client;
+import com.spring.project.model.User;
 import com.spring.project.model.Role;
 import com.spring.project.repository.ClientRepository;
 import com.spring.project.repository.RoleRepsitory;
@@ -68,10 +68,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         Role role = roleRepsitory.findByName("USER");
 
-        Client user = userMapper.convertFromDto(request,role);
+        User user = userMapper.convertFromDto(request,role);
         String receivedToken = clientService.signUpClient(user);
 
-        String link = "http://localhost:8080/project/auth/confirm?token=" + receivedToken;
+        String link = "http://localhost:8080/project/api/v1/auth/confirm?token=" + receivedToken;
         String emailTemplate = loadEmailTemplateFromResource("confirmAccountEmail.html");
         emailTemplate = emailTemplate.replace("${email}", request.getEmail());
         emailTemplate = emailTemplate.replace("${resetLink}",link);
@@ -91,18 +91,18 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new EmailNotAvailableException("Email does not respect the criteria");
         }
 
-        Client client = clientService.findClientByEmail(resetPassEmailRequest.getEmail());
-        if(client == null){
+        User user = clientService.findClientByEmail(resetPassEmailRequest.getEmail());
+        if(user == null){
             throw new ResetPasswordException("There is no account with this email");
         }
 
         String resetToken = UUID.randomUUID().toString();
         PasswordResetToken passwordResetToken = new PasswordResetToken(
                 resetToken,
-                client
+                user
         );
         passwordResetTokenServiceImpl.savePasswordResetToken(passwordResetToken);
-        String link = "http://localhost:8080/project/auth/confirmResetToken?resetToken=" + resetToken;
+        String link = "http://localhost:8080/project/api/v1/auth/confirmResetToken?resetToken=" + resetToken;
         String emailTemplate = loadEmailTemplateFromResource("resetPasswordEmail.html");
         emailTemplate = emailTemplate.replace("${email}", resetPassEmailRequest.getEmail());
         emailTemplate = emailTemplate.replace("${resetLink}",link);
@@ -143,7 +143,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new ConfirmAccountException("The request expired. Please create a new account");
         }
         confirmationTokenServiceImpl.setConfirmedAt(token);
-        clientService.enableClient(confirmationToken.getClient().getEmail());
+        clientService.enableClient(confirmationToken.getUser().getEmail());
         return "Account was confirmed. Please log in";
     }
 
@@ -170,7 +170,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public PasswordResetResponse updateClientPassword(PasswordResetRequest passwordResetRequest) {
         PasswordResetToken passwordResetToken = passwordResetTokenService.getToken(passwordResetRequest.getToken()).orElseThrow();
-        Client client = passwordResetToken.getClient();
+        User user = passwordResetToken.getUser();
 
         boolean isValidPassword = passwordValidator.test(passwordResetRequest.getNewPassword());
         if (!isValidPassword) {
@@ -185,9 +185,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if(!passwordResetRequest.getNewPassword().equals(passwordResetRequest.getConfirmedPassword())){
             throw new ResetPasswordException("Password are not matching. Please write again the passwords");
         }
-        if(passwordResetToken.getConfirmedAt() != null && client != null && passwordResetToken.getExpiredAt().compareTo(LocalDateTime.now()) > 0 ) {
+        if(passwordResetToken.getConfirmedAt() != null && user != null && passwordResetToken.getExpiredAt().compareTo(LocalDateTime.now()) > 0 ) {
             passwordResetToken.setAlreadyUsed(true);
-            clientService.resetClientPassword(client, passwordResetRequest.getNewPassword());
+            clientService.resetClientPassword(user, passwordResetRequest.getNewPassword());
             return passwordResetMapper.convertToDto("Password was updated. Please log in");
         }else {
             throw new ResetPasswordException("Password could not be updated");

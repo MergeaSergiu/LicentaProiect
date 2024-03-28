@@ -1,7 +1,7 @@
 package com.spring.project.token;
 
 
-import com.spring.project.model.Client;
+import com.spring.project.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,14 +36,14 @@ public class PasswordResetToken {
             nullable = false,
             name = "client_id"
     )
-    private Client client;
+    private User user;
 
-    public PasswordResetToken(String token, Client client) {
+    public PasswordResetToken(String token, User user) {
         this.token = token;
         this.createdAt = LocalDateTime.now();
         this.confirmedAt = null;
         this.expiredAt = createdAt.plusMinutes(20);
         this.alreadyUsed = false;
-        this.client = client;
+        this.user = user;
     }
 }
