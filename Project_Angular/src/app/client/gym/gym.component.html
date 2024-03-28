@@ -67,6 +67,7 @@
             <mat-card-content>{{subscription.subscriptionDescription}}</mat-card-content>
             <mat-card-actions>
             <button *ngIf="!hasActiveSubscription" mat-raised-button matTooltip="Pay using your card" color="primary" (click)="goToCheckoutPage(subscription.id)">Get your subscription</button>
+            <mat-icon>payment</mat-icon>
             </mat-card-actions>
         </mat-card>
         <br>

@@ -15,12 +15,13 @@ import { GymdetailsComponent } from "./admin/gymdetails/gymdetails.component";
 import { UserdetailsComponent } from "./admin/userdetails/userdetails.component";
 import { UserSubscriptionsComponent } from "./admin/user-subscriptions/user-subscriptions.component";
 import { CheckoutComponent } from "./checkout/checkout.component";
+import { TrainersComponent } from "./client/trainers/trainers.component";
 
 const appRoutes : Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full'},
     { path: 'authentication', component: AuthenticationComponent},
-    { path: 'login', component: LoginComponent },
-    { path: 'recoverPass', component: RecoverPasswordComponent  },
+    { path: 'login', component: LoginComponent},
+    { path: 'recoverPass', component: RecoverPasswordComponent},
     { path: 'client',
     canActivate: [authGuard],
     data: {roles: 'USER'},
@@ -29,7 +30,8 @@ const appRoutes : Routes = [
     { path: 'reservations', component: ReservationComponent},
     { path: 'gym', component: GymComponent},
     { path: 'account', component: AccountComponent},
-    { path: 'checkout', component: CheckoutComponent}
+    { path: 'checkout', component: CheckoutComponent},
+    { path: 'trainers', component: TrainersComponent}
     ]},
     { path: 'admin',
     canActivate: [authGuard],

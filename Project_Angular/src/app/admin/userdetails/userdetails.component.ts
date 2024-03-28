@@ -65,7 +65,6 @@ export class UserdetailsComponent implements OnInit{
 
     _editRolePopUp.afterClosed().subscribe(response =>{
       this.fetchUsersData();
-
     })
   }
 
