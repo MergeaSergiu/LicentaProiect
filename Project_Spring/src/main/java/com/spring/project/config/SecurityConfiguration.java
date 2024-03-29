@@ -36,6 +36,7 @@ public class SecurityConfiguration {
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/project/api/v1/auth/**").permitAll()
+                        .requestMatchers("/project/api/v1/collaboration/**").hasAnyRole("USER", "TRAINER")
                                 .requestMatchers("project/api/v1/users/**").hasAnyRole("USER", "TRAINER", "ADMIN")
                                 .requestMatchers("/project/api/v1/payment/**").hasAnyRole("USER")
                                 .requestMatchers("/project/api/v1/reservations/**").hasAnyRole("USER", "ADMIN")

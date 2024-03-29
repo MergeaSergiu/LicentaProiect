@@ -22,7 +22,7 @@ public class TrainerCollaboration {
 
     private LocalDate startDate;
 
-    private Boolean accepted;
+    CollaborationStatus  collaborationStatus;
 
     @ManyToOne
     @JoinColumn(name = "trainer_id")

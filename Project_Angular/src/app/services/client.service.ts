@@ -94,4 +94,16 @@ public checkEnrollmentStatus(trainingClassId: number): Observable<StatusEnrollRe
     return this.httpClient.get<any>(`${this.API_PATH}/users/activeSubscriptions`)
 }
 
+public sendCollabRequest(trainerId: number): Observable<any>{
+  return this.httpClient.post<any>(`${this.API_PATH}/collaboration/users/${trainerId}`, null)
+}
+
+public getTrainerCollaborations():Observable<any> {
+  return this.httpClient.get<any>(`${this.API_PATH}/collaboration/users/trainers`);
+}
+
+public acceptRequestForCollaboration(collaborationId: number): Observable<any>{
+  return this.httpClient.post<any>(`${this.API_PATH}/collaboration/users/${collaborationId}`, null)
+}
+
 }

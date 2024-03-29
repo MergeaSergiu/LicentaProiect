@@ -13,9 +13,20 @@
         <ng-container matColumnDef="Collab">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let trainer" style="width: 3%;">
-            <button mat-icon-button matTooltip="Send a collaboration request" color="primary" aria-label="Collaboration" (click)="collabWithTrainer(trainer.id)">
-                <mat-icon>send</mat-icon>
-            </button>
+                <ng-container *ngIf="sentRequest == 0">
+                    <!-- Buttons for NOT_SENT status -->
+                    <button mat-flat-button color="accent" matTooltip="Send a collaboration request" aria-label="Collaboration" (click)="collabWithTrainer(trainer.id)">
+                    <mat-icon>send</mat-icon>
+                    </button>
+                </ng-container>
+                <ng-container *ngIf="sentRequest == 1">
+                    <!-- Buttons for PENDING status -->
+                    <button mat-flat-button color="warn" matTooltip="Trainer must accept/decline" aria-label="Collaboration">Response...</button>
+                </ng-container>
+                <ng-container *ngIf="sentRequest == 2">
+                    <!-- Buttons for ACCEPTED status -->
+                    <button mat-flat-button color="accent" matTooltip="Request accepted" aria-label="Collaboration">Accepted</button>
+                </ng-container>
             </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
