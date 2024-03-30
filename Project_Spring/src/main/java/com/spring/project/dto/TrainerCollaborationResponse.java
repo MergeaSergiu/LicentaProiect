@@ -11,7 +11,7 @@ import lombok.Data;
 public class TrainerCollaborationResponse {
 
     private Long collaborationId;
-    private String firstNameUser;
-    private String lastNameUser;
+    private String firstName;
+    private String lastName;
     private CollaborationStatus collaborationStatus;
 }

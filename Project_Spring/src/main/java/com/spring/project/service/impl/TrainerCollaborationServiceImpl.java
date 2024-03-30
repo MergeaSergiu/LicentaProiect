@@ -13,7 +13,6 @@ import com.spring.project.repository.TrainerCollaborationRepository;
 import com.spring.project.service.TrainerCollaborationService;
 import jakarta.persistence.EntityExistsException;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
@@ -27,7 +26,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -96,7 +94,7 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
                 List<TrainerCollaboration> collaborationListForTrainer = trainerCollaborationRepository.findAllByTrainer_Id(currentTrainer.getId());
                 if(collaborationListForTrainer.size() > 0) {
                     return collaborationListForTrainer.stream()
-                            .map(collaboration -> trainerCollaborationMapper.convertToDto(collaboration)).collect(Collectors.toList());
+                            .map(collaboration -> trainerCollaborationMapper.convertToDtoForTrainer(collaboration)).collect(Collectors.toList());
                 }
                 else{
                     return new ArrayList<>();
@@ -165,6 +163,28 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
                 trainerCollaborationRepository.updateCollaborationStatus(trainerCollaboration.getId(), CollaborationStatus.ENDED);
             }else{
                 throw new ClientNotFoundException("This collaboration does not exist");
+            }
+        }else{
+            throw new CustomExpiredJwtException("Session has expired");
+        }
+    }
+
+    @Override
+    public List<TrainerCollaborationResponse> getCollaborationForUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            User currentUser = clientRepository.findByEmail(authentication.getName()).orElse(null);
+            if(currentUser != null){
+                List<TrainerCollaboration> collaborationListForTrainer = trainerCollaborationRepository.findAllByUser_Id(currentUser.getId());
+                if(collaborationListForTrainer.size() > 0) {
+                    return collaborationListForTrainer.stream()
+                            .map(collaboration -> trainerCollaborationMapper.convertToDtoForUser(collaboration)).collect(Collectors.toList());
+                }
+                else{
+                    return new ArrayList<>();
+                }
+            }else {
+                throw new ClientNotFoundException("Trainer does not exist");
             }
         }else{
             throw new CustomExpiredJwtException("Session has expired");

@@ -17,6 +17,8 @@ public interface TrainerCollaborationRepository extends JpaRepository<TrainerCol
 
     List<TrainerCollaboration> findAllByTrainer_Id(@Param("id") Long id);
 
+    List<TrainerCollaboration> findAllByUser_Id(@Param("id") Long id);
+
     @Modifying
     @Transactional
     @Query("UPDATE TrainerCollaboration s SET s.collaborationStatus = :collaborationStatus WHERE s.id = :collaborationId")

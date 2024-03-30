@@ -16,4 +16,6 @@ public interface TrainerCollaborationService {
 
     void finishCollaboration(Long collaborationId);
 
+    List<TrainerCollaborationResponse> getCollaborationForUser();
+
 }

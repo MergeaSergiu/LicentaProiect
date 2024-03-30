@@ -16,18 +16,33 @@ export class TrainersComponent implements OnInit{
 
   constructor(private adminService: AdminService, private clientService: ClientService){}
   trainers: any[];
-  displayedColumns: string[] = ['Name', 'Collab'];
-  sentRequest: number = 0;
+  userCollaborations: any[];
+  displayedColumns: string[] = ['Trainer', 'Collab'];
+  displayedColumns2: string[] = ['Trainer', 'Status'];
   dataSource: MatTableDataSource<any>;
+  dataSource2: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatPaginator) paginator2!: MatPaginator;
 
   ngOnInit(): void {
     this.fetchAllTrainers();  
+    this.getUserCollaboration();
   }
 
   Filterchange(data:Event){
     const value=(data.target as HTMLInputElement).value;
     this.dataSource.filter=value;
+  }
+
+  getUserCollaboration(){
+    this.clientService.getCollaborationsForUser().subscribe({
+        next: (response) => {
+          console.log(response);
+            this.userCollaborations = response;
+            this.dataSource2 = new MatTableDataSource<any>(this.userCollaborations);
+            this.dataSource2.paginator = this.paginator2;
+        }
+    })
   }
 
 
@@ -45,9 +60,17 @@ export class TrainersComponent implements OnInit{
   public collabWithTrainer(trainerId: number){
     this.clientService.sendCollabRequest(trainerId).subscribe({
       next: (response) => {
-        this.sentRequest = 1;
+        this.getUserCollaboration();
       },error: (error) => {
         alert(error);
+      }
+    })
+  }
+
+  declineRequest(collaborationId: number){
+    this.clientService.declineRequestForCollaboration(collaborationId).subscribe({
+      next: (response) => {
+        this.getUserCollaboration();
       }
     })
   }

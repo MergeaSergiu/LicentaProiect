@@ -7,11 +7,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class TrainerCollaborationMapper {
 
-    public TrainerCollaborationResponse convertToDto(TrainerCollaboration trainerCollaboration){
+    public TrainerCollaborationResponse convertToDtoForTrainer(TrainerCollaboration trainerCollaboration){
         return TrainerCollaborationResponse.builder()
                 .collaborationId(trainerCollaboration.getId())
-                .firstNameUser(trainerCollaboration.getUser().getFirstName())
-                .lastNameUser(trainerCollaboration.getUser().getLastName())
+                .firstName(trainerCollaboration.getUser().getFirstName())
+                .lastName(trainerCollaboration.getUser().getLastName())
+                .collaborationStatus(trainerCollaboration.getCollaborationStatus())
+                .build();
+    }
+
+    public TrainerCollaborationResponse convertToDtoForUser(TrainerCollaboration trainerCollaboration){
+        return TrainerCollaborationResponse.builder()
+                .collaborationId(trainerCollaboration.getId())
+                .firstName(trainerCollaboration.getTrainer().getFirstName())
+                .lastName(trainerCollaboration.getTrainer().getLastName())
                 .collaborationStatus(trainerCollaboration.getCollaborationStatus())
                 .build();
     }

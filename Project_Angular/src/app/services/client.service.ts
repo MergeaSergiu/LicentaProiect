@@ -114,4 +114,8 @@ public finishCollaborationWithUser(collaborationId: number){
   return this.httpClient.put<any>(`${this.API_PATH}/collaboration/users/trainers/ended/${collaborationId}`,null)
 }
 
+public getCollaborationsForUser():Observable<any>{
+  return this.httpClient.get<any>(`${this.API_PATH}/collaboration/users`)
+}
+
 }

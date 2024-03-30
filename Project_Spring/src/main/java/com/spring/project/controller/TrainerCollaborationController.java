@@ -31,6 +31,12 @@ public class TrainerCollaborationController {
         return new ResponseEntity<>(trainerCollaborationResponses, HttpStatus.OK);
     }
 
+    @GetMapping
+    public ResponseEntity<List<TrainerCollaborationResponse>> getCollaborationForUser(){
+        List<TrainerCollaborationResponse> userCollaborationResponses = trainerCollaborationService.getCollaborationForUser();
+        return new ResponseEntity<>(userCollaborationResponses, HttpStatus.OK);
+    }
+
     @PutMapping("/trainers/{collaborationId}")
     public ResponseEntity<Void> acceptUserCollaboration(@PathVariable("collaborationId") Long collaborationId){
         trainerCollaborationService.acceptUserCollaboration(collaborationId);
