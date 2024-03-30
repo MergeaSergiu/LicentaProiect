@@ -44,6 +44,22 @@ export class TrainerComponent implements OnInit{
     })
   }
 
+  public declineRequest(collaborationId: number) {
+    this.clientService.declineRequestForCollaboration(collaborationId).subscribe({
+      next: (response: any) => {
+        this.getCollaborationForTrainer();
+      }
+    })
+  }
+
+  public finishCollaboration(collaborationId: number){
+    this.clientService.finishCollaborationWithUser(collaborationId).subscribe({
+      next: (response) => {
+        this.getCollaborationForTrainer();
+      }
+    })
+  }
+
   
 }
 

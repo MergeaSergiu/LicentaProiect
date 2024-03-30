@@ -11,6 +11,7 @@ import com.spring.project.model.User;
 import com.spring.project.repository.ClientRepository;
 import com.spring.project.repository.TrainerCollaborationRepository;
 import com.spring.project.service.TrainerCollaborationService;
+import jakarta.persistence.EntityExistsException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -24,7 +25,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,9 +56,11 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.isAuthenticated()){
             User user = clientRepository.findByEmail(authentication.getName()).orElse(null);
-            if(user != null){
-                User trainer = clientRepository.findById(trainerId).orElse(null);
-                if(trainer != null){
+            User trainer = clientRepository.findById(trainerId).orElse(null);
+            if(user != null && trainer != null){
+                List<CollaborationStatus> activeStatuses = Arrays.asList(CollaborationStatus.ACCEPTED, CollaborationStatus.PENDING);
+                List<TrainerCollaboration> existingCollaboration = trainerCollaborationRepository.findByUserAndCollaborationStatusIn(user, activeStatuses);
+                if(existingCollaboration.size() == 0) {
                     TrainerCollaboration trainerCollaboration = TrainerCollaboration.builder()
                             .startDate(LocalDate.now())
                             .collaborationStatus(CollaborationStatus.PENDING)
@@ -65,18 +70,18 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
                     trainerCollaborationRepository.save(trainerCollaboration);
                     String emailTemplateTrainer = loadEmailTemplateFromResource("collabRequestReceive.html");
                     emailTemplateTrainer = emailTemplateTrainer.replace("${email}", trainer.getEmail());
-                    emailTemplateTrainer = emailTemplateTrainer.replace("${userName}", user.getFirstName()+ " " + user.getLastName());
+                    emailTemplateTrainer = emailTemplateTrainer.replace("${userName}", user.getFirstName() + " " + user.getLastName());
                     emailSender.send(trainer.getEmail(), emailTemplateTrainer, "Collaboration Request");
                     String emailTemplateUser = loadEmailTemplateFromResource("collabRequestSent.html");
                     emailTemplateUser = emailTemplateUser.replace("${email}", authentication.getName());
                     emailTemplateUser = emailTemplateUser.replace("${trainerName}", trainer.getFirstName() + " " + trainer.getLastName());
                     emailSender.send(authentication.getName(), emailTemplateUser, "Collaboration Request");
                 }else{
-                    throw new ClientNotFoundException("Trainer does not exist");
+                    throw new EntityExistsException("There is already an active reservation");
                 }
-            }else{
-                throw new ClientNotFoundException("User does not exist");
-            }
+                }else{
+                    throw new ClientNotFoundException("Trainer/User does not exist");
+                }
         }else{
             throw new CustomExpiredJwtException("Session has expired");
         }
@@ -100,6 +105,68 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
                     throw new ClientNotFoundException("Trainer does not exist");
                 }
             }else{
+            throw new CustomExpiredJwtException("Session has expired");
+        }
+    }
+
+    @Override
+    public void acceptUserCollaboration(Long collaborationId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            TrainerCollaboration trainerCollaboration = trainerCollaborationRepository.findById(collaborationId).orElse(null);
+            if(trainerCollaboration != null){
+                trainerCollaboration.setCollaborationStatus(CollaborationStatus.ACCEPTED);
+                trainerCollaboration.setStartDate(LocalDate.now());
+                trainerCollaborationRepository.save(trainerCollaboration);
+                User user = trainerCollaboration.getUser();
+                User trainer = trainerCollaboration.getTrainer();
+                String emailTemplateTrainer = loadEmailTemplateFromResource("collabAccepted.html");
+                emailTemplateTrainer = emailTemplateTrainer.replace("${userName}", user.getFirstName() + " " + user.getLastName());
+                emailTemplateTrainer = emailTemplateTrainer.replace("${trainerName}", trainer.getFirstName() + " " + trainer.getLastName());
+                emailTemplateTrainer = emailTemplateTrainer.replace("${startDate}", LocalDate.now().toString());
+                emailSender.send(user.getEmail(), emailTemplateTrainer, "Collaboration Accepted");
+            }
+        }else{
+            throw new CustomExpiredJwtException("Session has expired");
+        }
+    }
+
+    @Override
+    public void declineUserCollaboration(Long collaborationId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            User user = clientRepository.findByEmail(authentication.getName()).orElse(null);
+            if(user != null) {
+                TrainerCollaboration trainerCollaboration = trainerCollaborationRepository.findById(collaborationId).orElse(null);
+                User trainer = trainerCollaboration.getTrainer();
+                if(trainer != null) {
+                    trainerCollaborationRepository.deleteById(collaborationId);
+                    String emailTemplateTrainer = loadEmailTemplateFromResource("declineEmail.html");
+                    emailTemplateTrainer = emailTemplateTrainer.replace("${userName}", user.getFirstName() + " " + user.getLastName());
+                    emailTemplateTrainer = emailTemplateTrainer.replace("${trainerName}", trainer.getFirstName() + " " + trainer.getLastName());
+                    emailSender.send(user.getEmail(), emailTemplateTrainer, "Collaboration Declined");
+                }else{
+                    throw new CustomExpiredJwtException("Trainer does not exist");
+                    }
+                }else{
+                    throw new ClientNotFoundException("User does not exist");
+                }
+            }else{
+                    throw new CustomExpiredJwtException("Session has expired");
+            }
+    }
+
+    @Override
+    public void finishCollaboration(Long collaborationId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()){
+            TrainerCollaboration trainerCollaboration = trainerCollaborationRepository.findById(collaborationId).orElse(null);
+            if(trainerCollaboration != null){
+                trainerCollaborationRepository.updateCollaborationStatus(trainerCollaboration.getId(), CollaborationStatus.ENDED);
+            }else{
+                throw new ClientNotFoundException("This collaboration does not exist");
+            }
+        }else{
             throw new CustomExpiredJwtException("Session has expired");
         }
     }

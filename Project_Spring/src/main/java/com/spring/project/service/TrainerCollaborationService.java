@@ -10,4 +10,10 @@ public interface TrainerCollaborationService {
 
     List<TrainerCollaborationResponse> getCollaborationForTrainer();
 
+    void acceptUserCollaboration(Long collaborationId);
+
+    void declineUserCollaboration(Long collaborationId);
+
+    void finishCollaboration(Long collaborationId);
+
 }

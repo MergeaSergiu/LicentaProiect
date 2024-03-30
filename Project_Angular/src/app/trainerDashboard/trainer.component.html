@@ -15,13 +15,17 @@
             <td mat-cell *matCellDef="let collaboration" style="width: 3%;">
                 <ng-container *ngIf="collaboration.collaborationStatus == 'PENDING'">
                     <!-- Buttons for PENDING status -->
-                    <button mat-raised-button color="primary" (click)="accept(collaboration.collaborationId)">Accept</button>
-                    <button mat-raised-button color="warn" (click)="decline(collaboration.collaborationId)">Decline</button>
+                    <button mat-raised-button color="primary" (click)="acceptRequest(collaboration.collaborationId)">Accept</button>
+                    <button mat-raised-button color="warn" (click)="declineRequest(collaboration.collaborationId)">Decline</button>
                 </ng-container>
                 <ng-container *ngIf="collaboration.collaborationStatus == 'ACCEPTED'">
                     <!-- Buttons for ACCEPTED status -->
-                    <button mat-raised-button color="warn">Finish Collaboration</button>
+                    <button mat-raised-button color="warn" (click)="finishCollaboration(collaboration.collaborationId)">Finish Collaboration</button>
                 </ng-container>
+                <ng-container *ngIf="collaboration.collaborationStatus == 'ENDED'">
+                    <span>Finish</span>
+                </ng-container>
+
             </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

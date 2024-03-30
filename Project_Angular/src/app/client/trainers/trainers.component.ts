@@ -46,6 +46,8 @@ export class TrainersComponent implements OnInit{
     this.clientService.sendCollabRequest(trainerId).subscribe({
       next: (response) => {
         this.sentRequest = 1;
+      },error: (error) => {
+        alert(error);
       }
     })
   }

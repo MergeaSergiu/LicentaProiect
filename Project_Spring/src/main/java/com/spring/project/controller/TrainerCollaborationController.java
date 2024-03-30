@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,4 +30,23 @@ public class TrainerCollaborationController {
         List<TrainerCollaborationResponse> trainerCollaborationResponses = trainerCollaborationService.getCollaborationForTrainer();
         return new ResponseEntity<>(trainerCollaborationResponses, HttpStatus.OK);
     }
+
+    @PutMapping("/trainers/{collaborationId}")
+    public ResponseEntity<Void> acceptUserCollaboration(@PathVariable("collaborationId") Long collaborationId){
+        trainerCollaborationService.acceptUserCollaboration(collaborationId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/trainers/{collaborationId}")
+    public ResponseEntity<Void> declineUserCollaboration(@PathVariable("collaborationId") Long collaborationId){
+        trainerCollaborationService.declineUserCollaboration(collaborationId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping("/trainers/ended/{collaborationId}")
+    public ResponseEntity<Void> finishCollaboration(@PathVariable("collaborationId") Long collaborationId){
+        trainerCollaborationService.finishCollaboration(collaborationId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }

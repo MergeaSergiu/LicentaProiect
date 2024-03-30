@@ -28,7 +28,7 @@ public class TrainerCollaboration {
     @JoinColumn(name = "trainer_id")
     private User trainer;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 }

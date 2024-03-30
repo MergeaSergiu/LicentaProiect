@@ -103,7 +103,15 @@ public getTrainerCollaborations():Observable<any> {
 }
 
 public acceptRequestForCollaboration(collaborationId: number): Observable<any>{
-  return this.httpClient.post<any>(`${this.API_PATH}/collaboration/users/${collaborationId}`, null)
+  return this.httpClient.put<any>(`${this.API_PATH}/collaboration/users/trainers/${collaborationId}`, null)
+}
+
+public declineRequestForCollaboration(collaborationId: number){
+  return this.httpClient.delete<any>(`${this.API_PATH}/collaboration/users/trainers/${collaborationId}`);
+}
+
+public finishCollaborationWithUser(collaborationId: number){
+  return this.httpClient.put<any>(`${this.API_PATH}/collaboration/users/trainers/ended/${collaborationId}`,null)
 }
 
 }
