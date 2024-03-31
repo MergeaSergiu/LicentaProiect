@@ -7,9 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -21,8 +23,8 @@ public interface TrainerCollaborationRepository extends JpaRepository<TrainerCol
 
     @Modifying
     @Transactional
-    @Query("UPDATE TrainerCollaboration s SET s.collaborationStatus = :collaborationStatus WHERE s.id = :collaborationId")
-    void updateCollaborationStatus(@Param("collaborationId") Long collaborationId, @Param("collaborationStatus") CollaborationStatus collaborationStatus);
+    @Query("UPDATE TrainerCollaboration s SET s.collaborationStatus = :collaborationStatus, s.endTime = :endTime WHERE s.id = :collaborationId")
+    void updateCollaborationStatus(@Param("collaborationId") Long collaborationId, @Param("endTime") LocalDate endTime, @Param("collaborationStatus") CollaborationStatus collaborationStatus);
 
     @Query("SELECT tc FROM TrainerCollaboration tc " +
             "WHERE tc.user = :user " +
@@ -31,4 +33,8 @@ public interface TrainerCollaborationRepository extends JpaRepository<TrainerCol
             @Param("user") User user,
             @Param("statuses") List<CollaborationStatus> statuses
     );
+
+    void deleteAllByUser_Id(@Param("userId") Long userId);
+
+    void deleteAllByTrainer_Id(@Param("trainerId") Long trainerId);
 }

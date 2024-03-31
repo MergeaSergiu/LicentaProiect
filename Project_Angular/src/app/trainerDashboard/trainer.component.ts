@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ClientService } from '../services/client.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { CollaborationResponse } from '../models/collaboration-response.model';
 
 @Component({
   selector: 'app-trainer',
@@ -12,7 +13,7 @@ export class TrainerComponent implements OnInit{
   
   constructor(private clientService: ClientService){}
   
-  collaborations: any[];
+  collaborations: CollaborationResponse[];
   displayedColumns: string[] = ['User Name', 'Status'];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;

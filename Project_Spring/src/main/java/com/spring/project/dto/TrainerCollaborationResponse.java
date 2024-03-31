@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -13,5 +15,7 @@ public class TrainerCollaborationResponse {
     private Long collaborationId;
     private String firstName;
     private String lastName;
+    private LocalDate startTime;
+    private LocalDate endTime;
     private CollaborationStatus collaborationStatus;
 }

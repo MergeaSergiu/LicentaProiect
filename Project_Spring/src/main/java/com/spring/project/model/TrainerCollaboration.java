@@ -22,6 +22,8 @@ public class TrainerCollaboration {
 
     private LocalDate startDate;
 
+    private LocalDate endTime;
+
     CollaborationStatus  collaborationStatus;
 
     @ManyToOne

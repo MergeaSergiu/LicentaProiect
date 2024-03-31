@@ -6,6 +6,7 @@ import { UserDataResponse } from '../../models/user-response.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { ClientService } from '../../services/client.service';
+import { CollaborationResponse } from '../../models/collaboration-response.model';
 
 @Component({
   selector: 'app-trainers',
@@ -16,7 +17,7 @@ export class TrainersComponent implements OnInit{
 
   constructor(private adminService: AdminService, private clientService: ClientService){}
   trainers: any[];
-  userCollaborations: any[];
+  userCollaborations: CollaborationResponse[];
   displayedColumns: string[] = ['Trainer', 'Collab'];
   displayedColumns2: string[] = ['Trainer', 'Status'];
   dataSource: MatTableDataSource<any>;

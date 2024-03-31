@@ -21,9 +21,13 @@
                 <ng-container *ngIf="collaboration.collaborationStatus == 'ACCEPTED'">
                     <!-- Buttons for ACCEPTED status -->
                     <button mat-raised-button color="warn" (click)="finishCollaboration(collaboration.collaborationId)">Finish Collaboration</button>
+                    <br>
+                    <span>Start Date: {{collaboration.startTime}}</span>
                 </ng-container>
                 <ng-container *ngIf="collaboration.collaborationStatus == 'ENDED'">
                     <span>Finish</span>
+                    <br>
+                    <span>From: {{collaboration.startTime}} to {{collaboration.endTime}}</span>
                 </ng-container>
 
             </td>

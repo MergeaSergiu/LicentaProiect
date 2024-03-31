@@ -59,12 +59,7 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
                 List<CollaborationStatus> activeStatuses = Arrays.asList(CollaborationStatus.ACCEPTED, CollaborationStatus.PENDING);
                 List<TrainerCollaboration> existingCollaboration = trainerCollaborationRepository.findByUserAndCollaborationStatusIn(user, activeStatuses);
                 if(existingCollaboration.size() == 0) {
-                    TrainerCollaboration trainerCollaboration = TrainerCollaboration.builder()
-                            .startDate(LocalDate.now())
-                            .collaborationStatus(CollaborationStatus.PENDING)
-                            .trainer(trainer)
-                            .user(user)
-                            .build();
+                    TrainerCollaboration trainerCollaboration = trainerCollaborationMapper.createFromDto(user,trainer);
                     trainerCollaborationRepository.save(trainerCollaboration);
                     String emailTemplateTrainer = loadEmailTemplateFromResource("collabRequestReceive.html");
                     emailTemplateTrainer = emailTemplateTrainer.replace("${email}", trainer.getEmail());
@@ -160,7 +155,7 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
         if(authentication.isAuthenticated()){
             TrainerCollaboration trainerCollaboration = trainerCollaborationRepository.findById(collaborationId).orElse(null);
             if(trainerCollaboration != null){
-                trainerCollaborationRepository.updateCollaborationStatus(trainerCollaboration.getId(), CollaborationStatus.ENDED);
+                trainerCollaborationRepository.updateCollaborationStatus(trainerCollaboration.getId(), LocalDate.now(), CollaborationStatus.ENDED);
             }else{
                 throw new ClientNotFoundException("This collaboration does not exist");
             }

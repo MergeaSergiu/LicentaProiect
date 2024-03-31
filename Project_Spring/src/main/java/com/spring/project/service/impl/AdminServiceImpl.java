@@ -49,6 +49,8 @@ public class AdminServiceImpl implements AdminService {
     private final TrainingClassMapper trainingClassMapper;
     private final SubscriptionHistoryMapper subscriptionsHistoryMapper;
     private final EnrollmentTrainingClassRepository enrollmentTrainingClassRepository;
+    private final TrainerCollaborationRepository trainerCollaborationRepository;
+    private final TrainingClassRepository trainingClassRepository;
 
     private String loadEmailTemplateFromResource(String fileName) {
         try {
@@ -84,13 +86,14 @@ public class AdminServiceImpl implements AdminService {
                     for(TrainingClass trainingClass : trainingClasses){
                             deleteTrainingClass(trainingClass.getId());
                             enrollmentTrainingClassRepository.deleteAllByTrainingClass_Id(id);
+                            trainerCollaborationRepository.deleteAllByTrainer_Id(id);
                     }
                 }
-
             }else if(user.getRole().getName().equals("USER")) {
                 reservationService.deleteReservationsForUser(id);
                 enrollmentTrainingClassRepository.deleteAllByUser_id(id);
                 subscriptionHistoryRepository.deleteAllByUser_Id(id);
+                trainerCollaborationRepository.deleteAllByUser_Id(id);
             }
         }
         confirmationTokenService.deleteByclient_Id(id);
@@ -108,14 +111,16 @@ public class AdminServiceImpl implements AdminService {
                 reservationService.deleteReservationsForUser(user.getId());
                 enrollmentTrainingClassRepository.deleteAllByUser_id(user.getId());
                 subscriptionHistoryRepository.deleteAllByUser_Id(id);
+                trainerCollaborationRepository.deleteAllByUser_Id(id);
             }else if(clientRepository.findById(id).get().getRole().getName().equals("TRAINER") && !role.getName().equals("TRAINER")){
                 List<TrainingClass> trainingClasses = trainingClassService.getTrainingClassesForTrainer(id);
                 if(trainingClasses != null){
                     for(TrainingClass trainingClass : trainingClasses){
-                        deleteTrainingClass(trainingClass.getId());
                         enrollmentTrainingClassRepository.deleteAllByTrainingClass_Id(trainingClass.getId());
+                        deleteTrainingClass(trainingClass.getId());
                     }
                 }
+                trainerCollaborationRepository.deleteAllByTrainer_Id(id);
             }
             user.setRole(role);
             clientRepository.save(user);
