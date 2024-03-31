@@ -42,7 +42,9 @@ export class ReservationComponent implements OnInit{
     {time:'17-18', reserved: false},
     {time:'18-19', reserved: false},
     {time:'19-20', reserved: false},
-    {time:'20-21', reserved: false}
+    {time:'20-21', reserved: false},
+    {time:'21-22', reserved: false},
+    {time:'22-23', reserved: false}
   ];
 
   hourSchedulesTenis: HourSchedule[] = [
@@ -52,6 +54,7 @@ export class ReservationComponent implements OnInit{
     {time:'19-20', reserved: false},
     {time:'20-21', reserved: false},
     {time:'21-22', reserved: false},
+    {time:'22-23', reserved: false},
   ];
 
   minDate: Date;

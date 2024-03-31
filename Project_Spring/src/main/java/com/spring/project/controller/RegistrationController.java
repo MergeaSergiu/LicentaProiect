@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @Validated
 public class RegistrationController {
+
     private final RegistrationService registrationService;
 
     @PostMapping("/registration")
