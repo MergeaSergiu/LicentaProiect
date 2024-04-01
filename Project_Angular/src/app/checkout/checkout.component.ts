@@ -55,10 +55,10 @@ export class CheckoutComponent implements OnInit{
     
     const style = {
       base: {
-        color: '#32325d',
+        color: '#ffffff',
         fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
         fontSmoothing: 'antialiased',
-        fontSize: '16px',
+        fontSize: '100px',
         '::placeholder': {
           color: '#aab7c4'
         }
@@ -112,7 +112,6 @@ export class CheckoutComponent implements OnInit{
                       this.clientService.AddUserSubscriptionByCard(this.subscriptionId).subscribe({
                         next: (response: any) =>{
                           var _popUpMessage = this.dialog.open(PopupSuccessComponent, {
-                            width: '50%',
                             enterAnimationDuration: '400ms',
                             exitAnimationDuration: '400ms',
                             data: {
@@ -133,7 +132,6 @@ export class CheckoutComponent implements OnInit{
             })
           }else{
             var _popUpMessage = this.dialog.open(PopupSuccessComponent, {
-              width: '50%',
               enterAnimationDuration: '400ms',
               exitAnimationDuration: '400ms',
               data: {

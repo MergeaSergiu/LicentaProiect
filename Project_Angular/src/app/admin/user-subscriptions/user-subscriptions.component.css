@@ -7,8 +7,17 @@
 }
 
 th{
-    background-color: black !important;
-    color: white;
+  background-color: black !important;
+  color: white;
+  color:#D5DDE5;;
+  background:#1b1e24;
+  border-bottom:4px solid #9ea7af;
+  border-right: 1px solid #343a45;
+  font-size:14px;
+  font-weight: 90;
+  padding:24px;
+  text-align:left;
+  vertical-align:middle;
   }
 
  .createSub {
@@ -25,3 +34,7 @@ th{
   .subs-table tr:not(.active-subscription) {
     background-color: rgb(213, 116, 116); /* Change to your desired background color for inactive subscriptions */
   }
+
+  tr:hover {
+    background-color: rgb(209, 209, 209); /* Change background color on hover */
+}

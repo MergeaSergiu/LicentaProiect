@@ -232,7 +232,7 @@ public class AdminServiceImpl implements AdminService {
     public TrainingClass createTrainingClass(TrainingClassRequest classRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated() && clientService.findClientById(Long.valueOf(classRequest.getTrainerId())) != null) {
-                   User trainer = clientService.findClientById(Long.valueOf(classRequest.getTrainerId()));
+                    User trainer = clientService.findClientById(Long.valueOf(classRequest.getTrainerId()));
                     TrainingClass trainingClass = trainingClassMapper.convertFromDto(classRequest, trainer);
                     trainingClassService.createTrainingClass(trainingClass);
                     String emailTemplate = loadEmailTemplateFromResource("trainingClassCreated.html");

@@ -6,11 +6,10 @@
     width: 530px;
     height: 420px;
     transform: translate(-50%, -50%);
-    background: grey;
-    border-radius: 15px;
-    font-family: 'Poppings', sans-serif;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
     box-sizing: border-box;
-    box-shadow: 2px 15px 20px rgba(0,0,0,1);
 }
 
 .user-profile .title{
@@ -54,9 +53,9 @@
 
 
 .user-profile input{
-    background-color: rgb(200, 150, 0);
+    background-color: rgb(184, 144, 35);
     color: black;
-    border: 2px solid black;
+    border: 2px solid rgb(106, 93, 93);
     border-radius: 10px;
     outline: none;
     width: 35%;
@@ -74,29 +73,28 @@
     justify-content: center;
     margin-bottom: 5px; /* Adjust as needed */
 }
-
-.buttons {
+ .buttons {
     position: relative;
     display: flex;
     justify-content: center;
     margin-top: 250px;
 }
 
-.user-profile .button-profile{
-    color: White;
-    margin-bottom: 10px;
-    background: black;
-    margin-top: 10px;
-    display: flex;
-    left: 50%;
-    font-size: 18px;
-    width: 150px;
-    font-weight: 400;
-    border-radius: 10px 10px 10px 10px;
-    border: none;
-    padding-left: none;
+button{
+    background: #263ca9;
+    color: #ffffff;
+    border-radius: 15px;
+    padding: 8px;
+    font-size: 16px;
+    font-weight: 500;
     cursor: pointer;
+    width: 100%;
+    border: 2px solid rgb(65, 63, 63);
 }
+
+button:hover {
+    filter: contrast(115%);
+  }
 
 .mat-expansion-panel {
     /* Set width */
@@ -143,6 +141,15 @@
 th{
     background-color: black !important;
     color: white;
+    color:#D5DDE5;;
+    background:#1b1e24;
+    border-bottom:4px solid #9ea7af;
+    border-right: 1px solid #343a45;
+    font-size:14px;
+    font-weight: 90;
+    padding:24px;
+    text-align:left;
+    vertical-align:middle;
   }
 
   .user-subs .active-subscription {

@@ -9,6 +9,7 @@ import { TrainingClassResponse } from "../models/trainingclass-response.model";
 import { StatusEnrollResponse } from "../models/statusEnroll-response.model";
 import { UserSubscriptionsDataResponse } from "../models/userSubscriptionData-response.model";
 import { PaymentData } from "../models/payment-data.model";
+import { CollaborationResponse } from "../models/collaboration-response.model";
 
 
 @Injectable({
@@ -98,8 +99,8 @@ public sendCollabRequest(trainerId: number): Observable<any>{
   return this.httpClient.post<any>(`${this.API_PATH}/collaboration/users/${trainerId}`, null)
 }
 
-public getTrainerCollaborations():Observable<any> {
-  return this.httpClient.get<any>(`${this.API_PATH}/collaboration/users/trainers`);
+public getTrainerCollaborations():Observable<CollaborationResponse[]> {
+  return this.httpClient.get<CollaborationResponse[]>(`${this.API_PATH}/collaboration/users/trainers`);
 }
 
 public acceptRequestForCollaboration(collaborationId: number): Observable<any>{
@@ -114,8 +115,8 @@ public finishCollaborationWithUser(collaborationId: number){
   return this.httpClient.put<any>(`${this.API_PATH}/collaboration/users/trainers/ended/${collaborationId}`,null)
 }
 
-public getCollaborationsForUser():Observable<any>{
-  return this.httpClient.get<any>(`${this.API_PATH}/collaboration/users`)
+public getCollaborationsForUser():Observable<CollaborationResponse[]>{
+  return this.httpClient.get<CollaborationResponse[]>(`${this.API_PATH}/collaboration/users`)
 }
 
 }

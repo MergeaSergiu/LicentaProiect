@@ -1,7 +1,9 @@
 
 <app-navbar></app-navbar>
 <div class="trainingClasses">
-    <div class="title">Discover our Training Classes</div>
+    <div class="title-sub">
+        <h2>Discover our Training Classes</h2>
+    </div>
     
     <div class="selector">
         <mat-form-field>
@@ -14,29 +16,27 @@
         </mat-form-field>
     </div>
     <div class="container">
-        <mat-card *ngIf="selectedTrainingClass" >
+        <mat-card *ngIf="selectedTrainingClass" class="trainingClass-card">
+            <div class="inner">
+                <h2 class="title">{{selectedTrainingClass.className}}</h2>
             <div class="deletebutton">
                 <button mat-icon-button class="close-button" (click)="closeCard()">
                     <mat-icon>close</mat-icon>
                 </button>
             </div>
-          <div class="card">
             <!-- Your card HTML structure here -->
-            <h3>{{ selectedTrainingClass.className }}</h3>
-            <p>Date: {{ selectedTrainingClass.localDate }} at {{selectedTrainingClass.startTime}}, duration {{selectedTrainingClass.duration}} mins</p>
-            <p>Intensity: {{selectedTrainingClass.intensity}}</p>
-            <p>Trainer: {{selectedTrainingClass.firstName}} {{selectedTrainingClass.lastName}}</p>
+            <p class="info">Date: {{ selectedTrainingClass.localDate }} at {{selectedTrainingClass.startTime}}, duration {{selectedTrainingClass.duration}} mins</p>
+            <p class="info">Intensity: {{selectedTrainingClass.intensity}}</p>
+            <p class="info">Trainer: {{selectedTrainingClass.firstName}} {{selectedTrainingClass.lastName}}</p>
             <div class="button-container">
-                <div class="button-container">
-                    <button class="button-drop" mat-raised-button color="primary" *ngIf="!isEnrolled" (click)="enrollUserToTrainingClass(selectedTrainingClass.id)">
+                <button class="button-drop" mat-raised-button color="primary" *ngIf="!isEnrolled" (click)="enrollUserToTrainingClass(selectedTrainingClass.id)">
                       Enroll To Training Class
-                    </button>
-                    <button class="button-drop" mat-raised-button color="warn" *ngIf="isEnrolled" (click)="dropOutOfTrainingClass(selectedTrainingClass.id)">
+                </button>
+                <button class="button-drop" mat-raised-button color="warn" *ngIf="isEnrolled" (click)="dropOutOfTrainingClass(selectedTrainingClass.id)">
                       Drop out from class
-                    </button>
-                  </div>
-              </div>
-          </div>
+                </button>
+            </div>
+        </div>
         </mat-card>
       </div>
       <div class="user-classes">
@@ -57,20 +57,24 @@
 </div>
 
 <div class="subscription-list">
-    <div class="title-subscription">Discover our Subscriptions</div>
+    <div class="title-sub">
+        <h2>Discover our Subscriptions</h2>
+    </div>
     <div class="subscriptions">
         <mat-card *ngFor="let subscription of subscriptions" class="subscription-card">
-            <mat-card-header>
-                <mat-card-title>{{ subscription.subscriptionName }}</mat-card-title>
-                    <div class="price">{{ subscription.subscriptionPrice }} RON/month</div>
-                </mat-card-header>
-            <mat-card-content>{{subscription.subscriptionDescription}}</mat-card-content>
+            <div class="inner">
+                <h2 class="title">{{subscription.subscriptionName}}</h2>
+                    <div class="price">
+                        <span>
+                        {{ subscription.subscriptionPrice }} RON/ <small>m</small>
+                     </span>
+                </div>
+            <p class="info"> {{ subscription.subscriptionDescription}} </p>
             <mat-card-actions>
-            <button *ngIf="!hasActiveSubscription" mat-raised-button matTooltip="Pay using your card" color="primary" (click)="goToCheckoutPage(subscription.id)">Get your subscription</button>
-            <mat-icon>payment</mat-icon>
+            <button *ngIf="!hasActiveSubscription" mat-raised-button matTooltip="Pay using your card" color="primary" (click)="goToCheckoutPage(subscription.id)"><mat-icon>payment</mat-icon> Get your subscription </button>
             </mat-card-actions>
+        </div>
         </mat-card>
-        <br>
     </div>
 </div>
 

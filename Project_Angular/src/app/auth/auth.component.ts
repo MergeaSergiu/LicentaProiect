@@ -2,6 +2,8 @@ import { Component } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { RegistrationService } from "../services/registration.service";
 import { RegistrationRequest } from "../models/registration-request.model";
+import { MatSnackBar, MatSnackBarConfig } from "@angular/material/snack-bar";
+import { UtilComponentComponent } from "../util-component/util-component.component";
 
 @Component({
     selector: 'app-auth',
@@ -15,17 +17,17 @@ export class AuthenticationComponent {
     password: string = '';
     hide: boolean = true;
 
-    ngOnInit():void{
+    ngOnInit(): void {
         this.registrationService.clear();
     }
 
-    constructor(private registrationService: RegistrationService ) {}
+    constructor(private registrationService: RegistrationService, private _responseBar: MatSnackBar) { }
 
     togglePasswordVisibility(): void {
         this.hide = !this.hide;
     }
 
-    onSubmitSignUp(form: NgForm){
+    onSubmitSignUp(form: NgForm) {
         const signUpData: RegistrationRequest = {
             firstName: form.value.firstName,
             lastName: form.value.lastName,
@@ -33,16 +35,10 @@ export class AuthenticationComponent {
             password: form.value.password,
         };
         this.registrationService.singUp(signUpData).subscribe({
-            next: (response) =>{
-                   this.succesfullMessage = response.registrationResponse;
-                   setTimeout(() => {
-                    this.succesfullMessage = '';
-                }, 2000)
-            }, error: (errorMessage) =>{
-                this.alertMessage = errorMessage;
-                setTimeout(() => {
-                    this.alertMessage = '';
-                }, 2000)
+            next: (response) => {
+                UtilComponentComponent.openSnackBar(response.registrationResponse, this._responseBar, UtilComponentComponent.SnackbarStates.Success);
+            }, error: (errorMessage) => {
+                UtilComponentComponent.openSnackBar(errorMessage, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
             }
         });
         form.reset();

@@ -8,6 +8,8 @@ import { ReservationRequest } from '../../models/reservation-request.model';
 import { DatePipe } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { UtilComponentComponent } from '../../util-component/util-component.component';
 
 
 interface HourSchedule {
@@ -67,7 +69,7 @@ export class ReservationComponent implements OnInit{
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private registrationService: RegistrationService, private clientService: ClientService, private router: Router ) {
+  constructor(private registrationService: RegistrationService, private clientService: ClientService, private router: Router, private _responseBar: MatSnackBar ) {
     const today = new Date();
     this.minDate = new Date(today.getFullYear(), today.getMonth(), 0); // Start of current month
     this.maxDate = new Date(today.getFullYear(), today.getMonth() + 2, 0); // End of next month
@@ -82,8 +84,8 @@ export class ReservationComponent implements OnInit{
   ngOnInit(): void{
     this.fetchReservationsForClient();
     this.fetchFootballReservations();
-      this.fetchFootballBasketball();
-      this.fetchFootballTenis();
+    this.fetchFootballBasketball();
+    this.fetchFootballTenis();
   }
 
   public fetchReservationsForClient(){
@@ -99,12 +101,8 @@ export class ReservationComponent implements OnInit{
   public deleteReservation(id: number){
       this.clientService.deleteReservation(id).subscribe({
         next:(response:any) =>{
-          this.deleteMessage = "Reservation was deleted";
           this.fetchReservationsForClient();
-          setTimeout(() => {
-              this.deleteMessage = '';
-          }, 2000)
-
+          UtilComponentComponent.openSnackBar("Your reservation was deleted", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
         }
       })
   }
@@ -143,7 +141,7 @@ export class ReservationComponent implements OnInit{
     }
 
     onDateSelected(selectedDate: Date): void {
-      //console.log(selectedDate);
+      console.log(selectedDate);
       this.updateHourSchedules(selectedDate);
     }
 
@@ -194,7 +192,7 @@ export class ReservationComponent implements OnInit{
       const date2 = new Date(formattedCurrentDate);
 
       if (date1 < date2) {
-        alert('Reservation can not be in the past');
+        UtilComponentComponent.openSnackBar("Reservation can not be in the past", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
         return; // Stop further execution
       }
 
@@ -206,10 +204,7 @@ export class ReservationComponent implements OnInit{
 
       this.clientService.createReservation(registrationRequest).subscribe({
         next: (response: any) =>{
-          this.successfullMessage = "The reservation was created successfully";
-          setTimeout(() => {
-              this.successfullMessage = '';
-          }, 2000)
+          UtilComponentComponent.openSnackBar("Your reservation was created", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
           schedule.reserved = true;
         },
         error: (error) =>{
@@ -222,23 +217,5 @@ export class ReservationComponent implements OnInit{
       this.fetchFootballTenis();
       
     }
-
-  public goToGym(){
-    this.router.navigate(['/client/gym']);
-  }
-
-  public goToAccount(){
-    this.router.navigate(['/client/account']);
-  }
-
-  public goToTrainers(){
-    this.router.navigate(['/client/trainers']);
-  }
-
-
-  public logout(){
-    this.registrationService.clear();
-    this.router.navigate(['/login']);
-  }
 
 }

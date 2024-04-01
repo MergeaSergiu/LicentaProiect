@@ -8,6 +8,8 @@ import { Role } from '../../models/role.model';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupEditUserDataComponent } from '../../popup-edit-user-data/popup-edit-user-data.component';
 import { Router } from '@angular/router';
+import { UtilComponentComponent } from '../../util-component/util-component.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -30,7 +32,7 @@ export class UserdetailsComponent implements OnInit{
     {id: 3, name: "TRAINER"}
   ]
 
-  constructor(private adminService: AdminService, private dialog: MatDialog, private router: Router) {
+  constructor(private adminService: AdminService, private dialog: MatDialog, private router: Router, private _responseBar: MatSnackBar) {
     this.fetchUsersData();
   }
   ngOnInit(): void {}
@@ -76,7 +78,7 @@ export class UserdetailsComponent implements OnInit{
   public deleteUserData(id: number){
     this.adminService.deleteUser(id).subscribe({
       next: (response) =>{
-        alert('User was deleted');
+        UtilComponentComponent.openSnackBar("User was deleted", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
         this.fetchUsersData();
 
       }

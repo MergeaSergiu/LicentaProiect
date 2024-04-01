@@ -5,14 +5,35 @@
     margin-right: auto;
 }
 
+.user-collaborations{
+  margin-top: 65px;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 th{
-    background-color: black !important;
-    color: white;
+  background-color: black !important;
+  color: white;
+  color:#D5DDE5;;
+  background:#1b1e24;
+  border-bottom:4px solid #9ea7af;
+  border-right: 1px solid #343a45;
+  font-size:14px;
+  font-weight: 90;
+  padding:24px;
+  text-align:left;
+  vertical-align:middle;
   }
 
   .title{
     background-color: transparent;
     color: white;
-    font-size: 25px;
-    margin-top:5%;
+    font-size: 28px;
+    text-align: center;
+    margin-top:2%;
+}
+
+tr:hover {
+  background-color: rgb(209, 209, 209); /* Change background color on hover */
 }

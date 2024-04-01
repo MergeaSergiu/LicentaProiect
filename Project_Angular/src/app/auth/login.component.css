@@ -1,25 +1,41 @@
 .container{
     border: 2px solid;
     position: absolute;
-    top: 50%;
+    top: 40%;
     left: 50%;
-    width: 420px;
-    height: 500px;
+    width: 400px;
+    height: 440px;
     transform: translate(-50%, -50%);
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.8);
-    font-family: 'Poppings', sans-serif;
+    border-radius: 8px;
+    background: rgba(29, 25, 25, 0.8);
+    font-family: Arial, sans-serif;
     box-sizing: border-box;
-    box-shadow: 2px 15px 20px rgba(0,0,0,1);
+    border: 2px solid rgb(157, 154, 154);
 }
 
+
 .container .title{
-    color: black;
-    font-weight: bold;
+    color: white;
+    font-weight: 300;
     font-size: 25px;
     width: 380px;
     text-align: center;
     line-height: 65px;
+}
+
+.bottom-section {
+    border-top:3px solid white;
+    margin-top:600px;
+    color: white;
+}
+
+.contact-info {
+    display: flex;
+    justify-content: center;
+}
+
+.contact-info p {
+    margin: 0 10px;
 }
 
 .container .form{
@@ -27,32 +43,19 @@
     position: relative;
 }
 
-.container .alert-message{
-    font-size: 20px;
-    margin-top: 5px;
-    color: rgb(208, 0, 0);
-    text-align: center;
-    font-weight: bold;
-    animation: .2s linear;
-}
-
 .container form .form-group{
     position: relative;
-    margin-top: 20px;
+    margin-top: 15px;
     height: 90%;
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
-.toggle-icon{
-    position: absolute;
-}
 
 .container form .form-group input{
     width: 100%;
-    margin-bottom: 10px;
-    border: 2px solid black;
-    border-radius: 40px;
+    margin-bottom: 8px;
+    border-radius: 10px;
     outline: none;
 }
 
@@ -61,63 +64,34 @@
     font-weight: 300;
 }
 
-#hide1{
-    display: none;
-}
-
 .container form .form-group label{
-    color: black;
-    margin-top: -10px;
-    font-weight: bold;
-}
-
-
-.container form .buttons .login-btn{
     color: white;
-    margin-bottom: 10px;
-    background: linear-gradient(-135deg ,  rgb(149, 149, 150), rgb(15, 14, 15));
-    font-size: 18px;
-    width: 250px;
-    margin-top: 20px;
+    margin-top: -10px;
     font-weight: 500;
-    margin-left: 60px;
-    border-radius: 10px 10px 10px 10px;
-    border: none;
-    padding-left: none;
-    cursor: pointer;
 }
 
-.container form .buttons .login-btn:disabled{
+button{
+    background: #162f72;
+    color: #ffffff;
+    border-radius: 5px;
+    border: 1px solid rgb(65, 63, 63);
+    padding: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 4px;
+}
+
+button:hover {
+    filter: contrast(115%);
+  }
+
+  button:disabled{
     opacity: 0.5; /* Reduce the opacity to visually indicate that the button is disabled */
     cursor: not-allowed;
-}
+  }
 
-.container form .buttons .signup-btn{
-    color: White;
-    margin-bottom: 10px;
-    background: linear-gradient(-135deg ,  rgb(149, 149, 150), rgb(15, 14, 15));
-    margin-top: 7px;
-    font-size: 18px;
-    margin-left: 60px;
-    width: 250px;
-    font-weight: 500;
-    border-radius: 10px 10px 10px 10px;
-    border: none;
-    padding-left: none;
-    cursor: pointer;
-}
-
-
-.container form .reset-btn{
-    color: White;
-    background: linear-gradient(-135deg ,  rgb(149, 149, 150), rgb(15, 14, 15));
-    margin-top: 7px;
-    font-size: 18px;
-    margin-left: 60px;
-    width: 250px;
-    font-weight: 500;
-    border-radius: 10px 10px 10px 10px;
-    border: none;
-    padding-left: none;
-    cursor: pointer;
-}
+  .footer{
+    border: 1px solid black;
+  }

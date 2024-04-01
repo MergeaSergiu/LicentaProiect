@@ -4,6 +4,7 @@ import { TrainingClassResponse } from '../../models/trainingclass-response.model
 import { ClientService } from '../../services/client.service';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { UtilComponentComponent } from '../../util-component/util-component.component';
 
 @Component({
   selector: 'app-gym',
@@ -21,7 +22,7 @@ export class GymComponent implements OnInit{
   successfulMessage: string;
   isEnrolled: boolean;
   panelOpenState = false;
-  constructor(private router: Router, private adminService: AdminService, private clientService: ClientService,private _responseBar: MatSnackBar){}
+  constructor(private router: Router, private adminService: AdminService, private clientService: ClientService, private _responseBar: MatSnackBar){}
 
   ngOnInit(): void{
     this.fetchTrainingClassesData();
@@ -84,12 +85,7 @@ export class GymComponent implements OnInit{
       next:(response) =>{
         this.fetchUserTrainingClassesData();
         this.isEnrolled = true;
-        const config = new MatSnackBarConfig();
-        config.verticalPosition = 'top';
-        this._responseBar.open("Congrats! You are enrolled", "",config);
-        setTimeout(() => {
-          this._responseBar.dismiss();
-        }, 2000);
+        UtilComponentComponent.openSnackBar("You have enrolled from training Class", this._responseBar, UtilComponentComponent.SnackbarStates.Default);
       }
     })
   }
@@ -109,6 +105,8 @@ export class GymComponent implements OnInit{
         this.isEnrolled = false;
         this.fetchTrainingClassData(classId);
         this.fetchUserTrainingClassesData();
+        this.isEnrolled = true;
+        UtilComponentComponent.openSnackBar("You have drop out from training Class", this._responseBar, UtilComponentComponent.SnackbarStates.Default);
       }
     })
   }

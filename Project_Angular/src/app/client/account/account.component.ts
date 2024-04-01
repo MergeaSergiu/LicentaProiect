@@ -9,6 +9,8 @@ import { UserSubscriptionsDataResponse } from '../../models/userSubscriptionData
 import { response } from 'express';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { UtilComponentComponent } from '../../util-component/util-component.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-account',
@@ -27,7 +29,7 @@ export class AccountComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   displayedColumns: string[] = ['Subscription', 'Price', 'StartDate', 'EndDate'];
   
-  constructor(private registrationService: RegistrationService, private router: Router, private clientService: ClientService ) {}
+  constructor(private registrationService: RegistrationService, private router: Router, private clientService: ClientService, private _responseBar: MatSnackBar ) {}
 
   toggleEditMode(): void {
     this.inEditMode = true;
@@ -69,6 +71,7 @@ export class AccountComponent implements OnInit {
         next: (response) =>{
           this.inEditMode = false;
           this.fetchUserData();
+          UtilComponentComponent.openSnackBar("Your data was updated", this._responseBar, UtilComponentComponent.SnackbarStates.Default);
         }
       })
   }

@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-popup-success',
@@ -7,7 +7,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrl: './popup-success.component.css'
 })
 export class PopupSuccessComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private matDialog: MatDialogRef<PopupSuccessComponent>){}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any){}
   message: any;
   ngOnInit(): void{
     

@@ -36,7 +36,6 @@
     {{successfullMessage}}
   </div>
    <div class="continer-table">
-    <mat-card>
       <mat-form-field>
         <input matInput (keyup)="Filterchange($event)" placeholder="Enter text">
       </mat-form-field>
@@ -54,7 +53,7 @@
         <td mat-cell *matCellDef="let reservation" style="width: 3%;">{{ reservation.court }}</td>
       </ng-container>
       <ng-container matColumnDef="Delete">
-          <th mat-header-cell *matHeaderCellDef></th>
+          <th mat-header-cell *matHeaderCellDef>Delete</th>
           <td mat-cell *matCellDef="let reservation" style="width: 3%;">
             <button mat-icon-button matTooltip="Delete the reservation" color="warn" aria-label="Delete" (click)="deleteReservation(reservation.id)">
               <mat-icon>delete</mat-icon>
@@ -67,6 +66,5 @@
     </table>
     
     <mat-paginator #paginator1 [pageSizeOptions]="[3]" showFirstLastButtons></mat-paginator>
-  </mat-card>
 </div>
 

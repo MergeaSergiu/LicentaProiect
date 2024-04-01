@@ -30,7 +30,7 @@ mat-card-title{
   .subscriptions{
     position: absolute;
     margin-left: -60px;
-    top: 10px;
+    margin-top: 30px;
   }
   
   .trainingCard{
@@ -55,12 +55,6 @@ mat-card-title{
     position: relative;
   }
 
-  /* .container2 {
-    position: absolute;
-    margin-top: 40px;
-    top: 40px; 
-    right: 10px;
-  } */
   .selector{
     position: absolute;
     margin-top: 60px;
@@ -78,15 +72,12 @@ mat-card-title{
   
   .createSub {
     position: absolute;
-    margin-top: 20px;
-    top: 10px; /* Adjust top position as needed */
-    right: 420px; /* Adjust right position as needed */
+    margin-left: 10%; /* Adjust right position as needed */
+    width: 20%;
   }
 
   .createTrainingClass{
     position: absolute;
-    margin-top: 20px;
-    top: 10px; /* Adjust top position as needed */
     right: 10px; 
 }
 
@@ -94,6 +85,11 @@ mat-card-title{
     flex: 1; /* Take up remaining space */
     max-width: 200px; /* Limit the maximum width */
     margin-right: 20px; /* Add some spacing between the elements */
+  }
+
+
+button:hover {
+    filter: contrast(115%);
   }
 
   .deletebutton{

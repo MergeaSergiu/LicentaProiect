@@ -3,6 +3,8 @@ import { NgForm } from "@angular/forms";
 import { LoginRequest } from "../models/login-request.model";
 import { RegistrationService } from "../services/registration.service";
 import { Router } from "@angular/router";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { UtilComponentComponent } from "../util-component/util-component.component";
 
 @Component({
     selector: 'app-login',
@@ -13,16 +15,19 @@ export class LoginComponent{
 
     alertMessage: string;
     password: string = '';
+    user: LoginRequest | undefined;
 
-    constructor(private registrationService: RegistrationService, private router: Router) { 
+    constructor(private registrationService: RegistrationService, private router: Router, public _responseBar: MatSnackBar) { 
     }
 
     ngOnInit():void{
+        this.user = {} as LoginRequest;
     }
     onSubmitLogIn(form: NgForm){
         const logInData: LoginRequest = {
             email: form.value.email,
-            password: form.value.password
+            password: form.value.password,
+            showPassword: false
         };
         this.registrationService.logIn(logInData).subscribe({
             next: (response: any) =>{
@@ -39,12 +44,9 @@ export class LoginComponent{
                 }
             },
             error: (errorMessage) => {
-                this.alertMessage = errorMessage;
-                setTimeout(() => {
-                    this.alertMessage = '';
-                }, 2000)
-                }
-            });
+                UtilComponentComponent.openSnackBar(errorMessage, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+            }
+        });
             form.reset();
     }
 
