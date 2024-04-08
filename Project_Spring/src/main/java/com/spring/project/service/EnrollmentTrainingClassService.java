@@ -10,7 +10,7 @@ public interface EnrollmentTrainingClassService {
 
     List<EnrollmentTrainingClass> getClassesByUserId(Long id);
 
-
+    EnrollmentTrainingClass findEnrollmentByClassIdAndUserId(Long trainingClassId, Long userId);
     void deleteEnrollmentForUser(Long trainingClassId, Long clientId);
 
     void deleteAllEnrollsForTrainingClass(Long trainingClassId);

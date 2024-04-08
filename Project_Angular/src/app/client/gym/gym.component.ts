@@ -20,7 +20,6 @@ export class GymComponent implements OnInit{
   selectedTrainingClassId: number;
   hasActiveSubscription: boolean;
   successfulMessage: string;
-  isEnrolled: boolean;
   panelOpenState = false;
   constructor(private router: Router, private adminService: AdminService, private clientService: ClientService, private _responseBar: MatSnackBar){}
 
@@ -34,16 +33,6 @@ export class GymComponent implements OnInit{
   selectionChangeHandler(event: any) {
     this.selectedTrainingClassId = event.value;
     this.fetchTrainingClassData(this.selectedTrainingClassId);
-  }
-
-  isEnrolledStatus(id: number){
-    return this.checkEnrollmentStatus(id);
-  }
-
-  closeCard() {
-    this.selectedTrainingClassId = null;
-    this.selectedTrainingClass = null;
-    this.isEnrolled = false;
   }
 
   checkUserActiveSubscription(){
@@ -67,25 +56,19 @@ export class GymComponent implements OnInit{
     this.adminService.getTrainingClassData(id).subscribe({
       next:(response) => {
         this.selectedTrainingClass = response;
-        this.checkEnrollmentStatus(id);
+  
       }
     })
   }
 
-  checkEnrollmentStatus(selectedTrainingClass: number){
-    this.clientService.checkEnrollmentStatus(selectedTrainingClass).subscribe({
-        next: (response) => {
-          this.isEnrolled = response.status === "enrolled";
-        }
-      })
-    }
 
   enrollUserToTrainingClass(classId: number){
     this.clientService.enrollUserToTrainingClass(classId).subscribe({
       next:(response) =>{
         this.fetchUserTrainingClassesData();
-        this.isEnrolled = true;
-        UtilComponentComponent.openSnackBar("You have enrolled from training Class", this._responseBar, UtilComponentComponent.SnackbarStates.Default);
+        UtilComponentComponent.openSnackBar("You have enrolled to training Class", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
+      },error:(error) =>{
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }
@@ -102,10 +85,8 @@ export class GymComponent implements OnInit{
   dropOutOfTrainingClass(classId: number){
     this.clientService.unEnrolleUser(classId).subscribe({
       next: (response) =>{
-        this.isEnrolled = false;
         this.fetchTrainingClassData(classId);
         this.fetchUserTrainingClassesData();
-        this.isEnrolled = true;
         UtilComponentComponent.openSnackBar("You have drop out from training Class", this._responseBar, UtilComponentComponent.SnackbarStates.Default);
       }
     })
@@ -114,6 +95,7 @@ export class GymComponent implements OnInit{
   fetchSubscriptions(){
     return this.adminService.getAllSubscriptions().subscribe({
       next: (response) => {
+        console.log(response);
         this.subscriptions = response;
       }
     })

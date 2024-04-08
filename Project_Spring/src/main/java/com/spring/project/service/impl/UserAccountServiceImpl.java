@@ -43,7 +43,7 @@ public class UserAccountServiceImpl implements UserAccountService {
                 User user = clientService.findClientByEmail(authentication.getName());
                 List<Reservation> reservations = reservationService.getAllClientReservations(user.getId());
                     return reservations.stream()
-                            .map(courtReservation -> reservationMapper.convertToDto(courtReservation)).collect(Collectors.toList());
+                            .map(reservationMapper::convertToDto).collect(Collectors.toList());
             }
         return new ArrayList<>();
     }
@@ -93,11 +93,7 @@ public class UserAccountServiceImpl implements UserAccountService {
             User user = clientService.findClientByEmail(authentication.getName());
             if(user != null){
                 SubscriptionsHistory activeSubscription = subscriptionHistoryRepository.findActiveSubscriptionForUser(user.getId(), LocalDate.now());
-                if(activeSubscription == null){
-                    return false;
-                }else{
-                    return true;
-                }
+                return activeSubscription != null;
             }
         }
         return false;

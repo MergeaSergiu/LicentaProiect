@@ -14,6 +14,7 @@ import com.spring.project.service.PasswordResetTokenService;
 import com.spring.project.service.RegistrationService;
 import com.spring.project.token.ConfirmationToken;
 import com.spring.project.token.PasswordResetToken;
+import com.spring.project.util.UtilMethods;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -46,16 +47,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final AuthenticationMapper authenticationMapper;
     private final PasswordResetMapper passwordResetMapper;
     private final UserMapper userMapper;
+    private final UtilMethods utilMethods;
 
-    private String loadEmailTemplateFromResource(String fileName) {
-        try {
-            Resource resource = new ClassPathResource(fileName);
-            return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
+
     public RegistrationResponse register(RegistrationRequest request){
         boolean isValidEmail = emailValidator.test(request.getEmail());
         if(!isValidEmail){
@@ -72,7 +66,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         String receivedToken = clientService.signUpClient(user);
 
         String link = "http://localhost:8080/project/api/v1/auth/confirm?token=" + receivedToken;
-        String emailTemplate = loadEmailTemplateFromResource("confirmAccountEmail.html");
+        String emailTemplate = utilMethods.loadEmailTemplateFromResource("confirmAccountEmail.html");
         emailTemplate = emailTemplate.replace("${email}", request.getEmail());
         emailTemplate = emailTemplate.replace("${resetLink}",link);
 
@@ -103,7 +97,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         );
         passwordResetTokenServiceImpl.savePasswordResetToken(passwordResetToken);
         String link = "http://localhost:8080/project/api/v1/auth/confirmResetToken?resetToken=" + resetToken;
-        String emailTemplate = loadEmailTemplateFromResource("resetPasswordEmail.html");
+        String emailTemplate = utilMethods.loadEmailTemplateFromResource("resetPasswordEmail.html");
         emailTemplate = emailTemplate.replace("${email}", resetPassEmailRequest.getEmail());
         emailTemplate = emailTemplate.replace("${resetLink}",link);
         emailSender.send(requestClientEmail, emailTemplate, "Reset your password");
@@ -185,7 +179,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if(!passwordResetRequest.getNewPassword().equals(passwordResetRequest.getConfirmedPassword())){
             throw new ResetPasswordException("Password are not matching. Please write again the passwords");
         }
-        if(passwordResetToken.getConfirmedAt() != null && user != null && passwordResetToken.getExpiredAt().compareTo(LocalDateTime.now()) > 0 ) {
+        if(user != null && passwordResetToken.getExpiredAt().isAfter(LocalDateTime.now())) {
             passwordResetToken.setAlreadyUsed(true);
             clientService.resetClientPassword(user, passwordResetRequest.getNewPassword());
             return passwordResetMapper.convertToDto("Password was updated. Please log in");

@@ -28,6 +28,11 @@ public class EnrollmentTrainingClassServiceImpl implements EnrollmentTrainingCla
     }
 
     @Override
+    public EnrollmentTrainingClass findEnrollmentByClassIdAndUserId(Long trainingClassId, Long userId) {
+        return enrollmentTrainingClassRepository.findByTrainingClass_IdAndUser_Id(trainingClassId, userId);
+    }
+
+    @Override
     public void deleteEnrollmentForUser(Long userId, Long trainingClassId) {
         enrollmentTrainingClassRepository.deleteByTrainingClassIdAndUserId(userId, trainingClassId);
     }

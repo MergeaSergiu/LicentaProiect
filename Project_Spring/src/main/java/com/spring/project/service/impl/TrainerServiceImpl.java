@@ -33,7 +33,7 @@ public class TrainerServiceImpl implements TrainerService {
             List<TrainingClass> trainingClasses = trainingClassServiceImpl.getTrainingClassesForTrainer(trainer.getId());
             if (trainingClasses != null) {
                 return trainingClasses.stream()
-                        .map(trainingClass -> trainingClassMapper.convertToDto(trainingClass)).collect(Collectors.toList());
+                        .map(trainingClassMapper::convertToDto).collect(Collectors.toList());
             } else {
                 return new ArrayList<>();
             }

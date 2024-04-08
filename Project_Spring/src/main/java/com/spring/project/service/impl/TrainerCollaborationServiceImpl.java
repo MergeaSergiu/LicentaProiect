@@ -11,6 +11,7 @@ import com.spring.project.model.User;
 import com.spring.project.repository.ClientRepository;
 import com.spring.project.repository.TrainerCollaborationRepository;
 import com.spring.project.service.TrainerCollaborationService;
+import com.spring.project.util.UtilMethods;
 import jakarta.persistence.EntityExistsException;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
@@ -33,21 +34,11 @@ import java.util.stream.Collectors;
 public class TrainerCollaborationServiceImpl implements TrainerCollaborationService {
 
     private final TrainerCollaborationRepository trainerCollaborationRepository;
-
     private final ClientRepository clientRepository;
-
     private final EmailSender emailSender;
     private final TrainerCollaborationMapper trainerCollaborationMapper;
+    private final UtilMethods utilMethods;
 
-    private String loadEmailTemplateFromResource(String fileName) {
-        try {
-            Resource resource = new ClassPathResource(fileName);
-            return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
 
     @Override
     public void sendCollaborationRequest(Long trainerId) {
@@ -61,11 +52,11 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
                 if(existingCollaboration.size() == 0) {
                     TrainerCollaboration trainerCollaboration = trainerCollaborationMapper.createFromDto(user,trainer);
                     trainerCollaborationRepository.save(trainerCollaboration);
-                    String emailTemplateTrainer = loadEmailTemplateFromResource("collabRequestReceive.html");
+                    String emailTemplateTrainer = utilMethods.loadEmailTemplateFromResource("collabRequestReceive.html");
                     emailTemplateTrainer = emailTemplateTrainer.replace("${email}", trainer.getEmail());
                     emailTemplateTrainer = emailTemplateTrainer.replace("${userName}", user.getFirstName() + " " + user.getLastName());
                     emailSender.send(trainer.getEmail(), emailTemplateTrainer, "Collaboration Request");
-                    String emailTemplateUser = loadEmailTemplateFromResource("collabRequestSent.html");
+                    String emailTemplateUser = utilMethods.loadEmailTemplateFromResource("collabRequestSent.html");
                     emailTemplateUser = emailTemplateUser.replace("${email}", authentication.getName());
                     emailTemplateUser = emailTemplateUser.replace("${trainerName}", trainer.getFirstName() + " " + trainer.getLastName());
                     emailSender.send(authentication.getName(), emailTemplateUser, "Collaboration Request");
@@ -89,7 +80,7 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
                 List<TrainerCollaboration> collaborationListForTrainer = trainerCollaborationRepository.findAllByTrainer_Id(currentTrainer.getId());
                 if(collaborationListForTrainer.size() > 0) {
                     return collaborationListForTrainer.stream()
-                            .map(collaboration -> trainerCollaborationMapper.convertToDtoForTrainer(collaboration)).collect(Collectors.toList());
+                            .map(trainerCollaborationMapper::convertToDtoForTrainer).collect(Collectors.toList());
                 }
                 else{
                     return new ArrayList<>();
@@ -104,8 +95,6 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
 
     @Override
     public void acceptUserCollaboration(Long collaborationId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.isAuthenticated()){
             TrainerCollaboration trainerCollaboration = trainerCollaborationRepository.findById(collaborationId).orElse(null);
             if(trainerCollaboration != null){
                 trainerCollaboration.setCollaborationStatus(CollaborationStatus.ACCEPTED);
@@ -113,15 +102,12 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
                 trainerCollaborationRepository.save(trainerCollaboration);
                 User user = trainerCollaboration.getUser();
                 User trainer = trainerCollaboration.getTrainer();
-                String emailTemplateTrainer = loadEmailTemplateFromResource("collabAccepted.html");
+                String emailTemplateTrainer = utilMethods.loadEmailTemplateFromResource("collabAccepted.html");
                 emailTemplateTrainer = emailTemplateTrainer.replace("${userName}", user.getFirstName() + " " + user.getLastName());
                 emailTemplateTrainer = emailTemplateTrainer.replace("${trainerName}", trainer.getFirstName() + " " + trainer.getLastName());
                 emailTemplateTrainer = emailTemplateTrainer.replace("${startDate}", LocalDate.now().toString());
                 emailSender.send(user.getEmail(), emailTemplateTrainer, "Collaboration Accepted");
             }
-        }else{
-            throw new CustomExpiredJwtException("Session has expired");
-        }
     }
 
     @Override
@@ -134,7 +120,7 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
                 User trainer = trainerCollaboration.getTrainer();
                 if(trainer != null) {
                     trainerCollaborationRepository.deleteById(collaborationId);
-                    String emailTemplateTrainer = loadEmailTemplateFromResource("declineEmail.html");
+                    String emailTemplateTrainer = utilMethods.loadEmailTemplateFromResource("declineEmail.html");
                     emailTemplateTrainer = emailTemplateTrainer.replace("${userName}", user.getFirstName() + " " + user.getLastName());
                     emailTemplateTrainer = emailTemplateTrainer.replace("${trainerName}", trainer.getFirstName() + " " + trainer.getLastName());
                     emailSender.send(user.getEmail(), emailTemplateTrainer, "Collaboration Declined");
@@ -151,17 +137,12 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
 
     @Override
     public void finishCollaboration(Long collaborationId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.isAuthenticated()){
             TrainerCollaboration trainerCollaboration = trainerCollaborationRepository.findById(collaborationId).orElse(null);
             if(trainerCollaboration != null){
                 trainerCollaborationRepository.updateCollaborationStatus(trainerCollaboration.getId(), LocalDate.now(), CollaborationStatus.ENDED);
             }else{
                 throw new ClientNotFoundException("This collaboration does not exist");
             }
-        }else{
-            throw new CustomExpiredJwtException("Session has expired");
-        }
     }
 
     @Override
@@ -173,7 +154,7 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
                 List<TrainerCollaboration> collaborationListForTrainer = trainerCollaborationRepository.findAllByUser_Id(currentUser.getId());
                 if(collaborationListForTrainer.size() > 0) {
                     return collaborationListForTrainer.stream()
-                            .map(collaboration -> trainerCollaborationMapper.convertToDtoForUser(collaboration)).collect(Collectors.toList());
+                            .map(trainerCollaborationMapper::convertToDtoForUser).collect(Collectors.toList());
                 }
                 else{
                     return new ArrayList<>();

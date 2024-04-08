@@ -1,6 +1,9 @@
 package com.spring.project.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Data
@@ -16,6 +19,8 @@ public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     public Long id;
+
+    @NotBlank
     public String token;
 
     @Enumerated(EnumType.STRING)
@@ -23,6 +28,7 @@ public class Token {
 
     @ManyToOne
     @JoinColumn(name = "client_id")
+    @NotNull
     public User user;
 
 }

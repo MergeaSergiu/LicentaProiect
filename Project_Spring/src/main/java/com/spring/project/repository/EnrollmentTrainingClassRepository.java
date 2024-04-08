@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,5 +31,7 @@ public interface EnrollmentTrainingClassRepository extends JpaRepository<Enrollm
     @Modifying
     @Transactional
     void deleteAllByUser_id(@Param("user_id") Long userId);
+
+    EnrollmentTrainingClass findByTrainingClass_IdAndUser_Id(@Param("trainingClass_id") Long trainingClassId, @Param("user_id") Long userId);
 
 }

@@ -31,8 +31,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     }
 
     public void setConfirmedAt(String token) {
-        confirmationTokenRepository.updateConfirmedAt(
-                token, LocalDateTime.now());
+        confirmationTokenRepository.updateConfirmedAt(token, LocalDateTime.now());
     }
 
     public ConfirmationToken findTokenByUserId(Long id){

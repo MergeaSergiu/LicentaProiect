@@ -21,12 +21,11 @@ export class CheckoutComponent implements OnInit{
   clientSecret: any;
   subscriptionId: number;
   paymentElement: any;
-  displayError: any;
   subscriptionResponse: any;
   subscriptionForm: FormGroup;
   paymentData: PaymentData;
 
-  constructor(private formBuilder: FormBuilder,private dialog: MatDialog,private route: ActivatedRoute,private router: Router, private clientService: ClientService, private adminService: AdminService){}
+  constructor(private formBuilder: FormBuilder,private dialog: MatDialog,private route: ActivatedRoute,private router: Router, private clientService: ClientService){}
 
   ngOnInit(): void{
     this.route.queryParams.subscribe(params => {
@@ -53,22 +52,22 @@ export class CheckoutComponent implements OnInit{
   
   setUpStripePaymentForm(){
     
-    const style = {
-      base: {
-        color: '#ffffff',
-        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-        fontSmoothing: 'antialiased',
-        fontSize: '100px',
-        '::placeholder': {
-          color: '#aab7c4'
-        }
-      },
-      invalid: {
-        color: '#fa755a',
-        iconColor: '#fa755a'
-      }
-    };
-        this.elements = this.stripe.elements({style});
+    // const style = {
+    //   base: {
+    //     color: '#ffffff',
+    //     fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+    //     fontSmoothing: 'antialiased',
+    //     fontSize: '100px',
+    //     '::placeholder': {
+    //       color: '#aab7c4'
+    //     }
+    //   },
+    //   invalid: {
+    //     color: '#fa755a',
+    //     iconColor: '#fa755a'
+    //   }
+    // };
+        this.elements = this.stripe.elements();
         this.paymentElement = this.elements.create("card");
         this.paymentElement.mount("#card-element");
       }
@@ -125,7 +124,7 @@ export class CheckoutComponent implements OnInit{
                         },error: (error: any) => {
                           alert('We can not register your subscription')
                         }
-                    })
+                      })
                     }
                   })
               }

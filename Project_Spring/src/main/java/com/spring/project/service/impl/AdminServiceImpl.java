@@ -7,6 +7,7 @@ import com.spring.project.mapper.*;
 import com.spring.project.model.*;
 import com.spring.project.repository.*;
 import com.spring.project.service.*;
+import com.spring.project.util.UtilMethods;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -50,17 +51,8 @@ public class AdminServiceImpl implements AdminService {
     private final SubscriptionHistoryMapper subscriptionsHistoryMapper;
     private final EnrollmentTrainingClassRepository enrollmentTrainingClassRepository;
     private final TrainerCollaborationRepository trainerCollaborationRepository;
-    private final TrainingClassRepository trainingClassRepository;
+    private final UtilMethods utilMethods;
 
-    private String loadEmailTemplateFromResource(String fileName) {
-        try {
-            Resource resource = new ClassPathResource(fileName);
-            return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
 
     @Override
     public List<UserDataResponse> getAllClients() {
@@ -77,8 +69,6 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void deleteUser(Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.isAuthenticated()){
             User user = clientService.findClientById(id);
             if(user.getRole().getName().equals("TRAINER")){
                 List<TrainingClass> trainingClasses = trainingClassService.getTrainingClassesForTrainer(id);
@@ -95,7 +85,6 @@ public class AdminServiceImpl implements AdminService {
                 subscriptionHistoryRepository.deleteAllByUser_Id(id);
                 trainerCollaborationRepository.deleteAllByUser_Id(id);
             }
-        }
         confirmationTokenService.deleteByclient_Id(id);
         passwordResetTokenService.deleteByclient_Id(id);
         clientRepository.deleteById(id);
@@ -103,8 +92,6 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void updateUserRole(Long id, RoleRequest roleRequest) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.isAuthenticated()){
             Role role = roleRepsitory.findById(Long.valueOf(roleRequest.getId())).orElse(null);
             User user = clientService.findClientById(id);
             if(clientRepository.findById(user.getId()).get().getRole().getName().equals("USER") && !role.getName().equals("USER")){
@@ -124,7 +111,6 @@ public class AdminServiceImpl implements AdminService {
             }
             user.setRole(role);
             clientRepository.save(user);
-        }
     }
 
     @Override
@@ -139,7 +125,6 @@ public class AdminServiceImpl implements AdminService {
             List<Reservation> reservations = reservationService.getAllReservations();
             return reservations.stream()
                     .map(reservationMapper::convertToDto).collect(Collectors.toList());
-
     }
 
     @Override
@@ -149,6 +134,7 @@ public class AdminServiceImpl implements AdminService {
                 .map(subscriptionMapper::convertToDto).collect(Collectors.toList());
     }
 
+    @Override
     public void createSubscription(CreateSubscriptionRequest createSubscriptionRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated()) {
@@ -235,7 +221,7 @@ public class AdminServiceImpl implements AdminService {
                     User trainer = clientService.findClientById(Long.valueOf(classRequest.getTrainerId()));
                     TrainingClass trainingClass = trainingClassMapper.convertFromDto(classRequest, trainer);
                     trainingClassService.createTrainingClass(trainingClass);
-                    String emailTemplate = loadEmailTemplateFromResource("trainingClassCreated.html");
+                    String emailTemplate = utilMethods.loadEmailTemplateFromResource("trainingClassCreated.html");
                     emailTemplate = emailTemplate.replace("${email}", authentication.getName());
                     emailTemplate = emailTemplate.replace("${trainingClass}", classRequest.getClassName());
                     emailSender.send(authentication.getName(), emailTemplate, "Training class was created");
@@ -270,18 +256,13 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void deleteTrainingClass(Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.isAuthenticated()) {
             enrollmentTrainingClassService.deleteAllEnrollsForTrainingClass(id);
             trainingClassService.deleteTrainingClass(id);
-         }
     }
 
     @Override
     public List<UserSubscriptionsDataResponse> getUserSubscriptionsData(Long id) {
         List<UserSubscriptionsDataResponse> responseData = new ArrayList<>();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.isAuthenticated()){
             User user = clientRepository.findById(id).orElse(null);
             if(user != null) {
                 List<SubscriptionsHistory> subscriptionsHistoryListForUser = subscriptionHistoryRepository.findByUser_IdOrderBySubscriptionEndTimeAsc(id);
@@ -289,7 +270,6 @@ public class AdminServiceImpl implements AdminService {
                         .map(subscriptionsHistoryMapper::convertToDto).collect(Collectors.toList());
 
             }
-        }
         return responseData;
     }
 
@@ -310,8 +290,6 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public SubscriptionsHistory addSubscriptionForUser(UserSubscriptionRequest userSubscriptionRequest) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.isAuthenticated()){
             User user = clientRepository.findById(Long.valueOf(userSubscriptionRequest.getUserId())).orElse(null);
             Subscription subscription = subscriptionRepository.findById(Long.valueOf(userSubscriptionRequest.getSubscriptionId())).orElse(null);
             SubscriptionsHistory activeSubscription = subscriptionHistoryRepository.findActiveSubscriptionForUser(user.getId(), LocalDate.now());
@@ -322,9 +300,6 @@ public class AdminServiceImpl implements AdminService {
             }else{
                 throw new EntityExistsException("User already has a active subscription");
             }
-        }else{
-            throw new CustomExpiredJwtException("Session has expired");
-        }
 
     }
 
@@ -339,7 +314,7 @@ public class AdminServiceImpl implements AdminService {
             if(activeSubscription == null && subscription != null){
                     SubscriptionsHistory subscriptionsHistory = subscriptionsHistoryMapper.convertFromDto(user,subscription);
                     subscriptionHistoryRepository.save(subscriptionsHistory);
-                    String emailTemplate = loadEmailTemplateFromResource("paymentResponse.html");
+                    String emailTemplate = utilMethods.loadEmailTemplateFromResource("paymentResponse.html");
                     emailTemplate = emailTemplate.replace("${email}", authentication.getName());
                     emailTemplate = emailTemplate.replace("${subscription}", subscription.getSubscriptionName());
                     emailTemplate = emailTemplate.replace("${price}", subscription.getSubscriptionPrice().toString());

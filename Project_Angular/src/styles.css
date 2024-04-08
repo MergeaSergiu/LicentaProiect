@@ -7,8 +7,8 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: 100% 100%;
-    margin: 0; font-family: Arial, sans-serif;
-    background-color: rgb(52, 58, 63);
+    font-family: "Poppins", sans-serif;
+    background-color: rgb(223, 223, 223);
 }
 
 .app-notification-error {

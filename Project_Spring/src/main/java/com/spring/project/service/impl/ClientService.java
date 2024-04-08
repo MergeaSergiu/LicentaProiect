@@ -3,7 +3,6 @@ package com.spring.project.service.impl;
 import com.spring.project.Exception.ClientNotFoundException;
 import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.dto.StatusEnrollResponse;
-import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.mapper.ConfirmationTokenMapper;
 import com.spring.project.mapper.EnrollmentClassMapper;
 import com.spring.project.mapper.StatusEnrollResponseMapper;
@@ -16,6 +15,7 @@ import com.spring.project.service.ConfirmationTokenService;
 import com.spring.project.service.EnrollmentTrainingClassService;
 import com.spring.project.service.TrainingClassService;
 import com.spring.project.token.ConfirmationToken;
+import com.spring.project.util.UtilMethods;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -37,7 +37,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -49,10 +48,10 @@ public class ClientService implements UserDetailsService {
     private final TrainingClassService trainingClassService;
     private final EnrollmentTrainingClassService enrollmentTrainingClassService;
     private final EmailServiceImpl emailService;
-    private final TrainingClassMapper trainingClassMapper;
     private final StatusEnrollResponseMapper statusEnrollResponseMapper;
     private final EnrollmentClassMapper enrollmentClassMapper;
     private final ConfirmationTokenMapper confirmationTokenMapper;
+    private final UtilMethods utilMethods;
 
 
     @Override
@@ -67,16 +66,6 @@ public class ClientService implements UserDetailsService {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    private String loadEmailTemplateFromResource(String fileName) {
-        try {
-            Resource resource = new ClassPathResource(fileName);
-            return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }
     }
 
     public User findClientById(Long id){
@@ -118,8 +107,8 @@ public class ClientService implements UserDetailsService {
         }
     }
 
-    public int enableClient(String email) {
-        return clientRepository.enableClient(email);
+    public void enableClient(String email) {
+        clientRepository.enableClient(email);
     }
 
     public void resetClientPassword(User user, String newPassword) {
@@ -134,12 +123,17 @@ public class ClientService implements UserDetailsService {
             if (trainingClass != null) {
                 User user = clientRepository.findByEmail(authentication.getName()).orElse(null);
                 if (user != null) {
-                    EnrollmentTrainingClass enrollmentTrainingClass = enrollmentClassMapper.createEnrollmentForUser(trainingClass,user);
-                    enrollmentTrainingClassService.saveEnrollmentAction(enrollmentTrainingClass);
-                    String emailTemplate = loadEmailTemplateFromResource("enrollClassEmail.html");
-                    emailTemplate = emailTemplate.replace("${email}", authentication.getName());
-                    emailTemplate = emailTemplate.replace("{enrollClass}", trainingClass.getClassName());
-                    emailService.send(authentication.getName(), emailTemplate, "Thank you for joining the class");
+                    EnrollmentTrainingClass enrollmentTrainingClassForUser = enrollmentTrainingClassService.findEnrollmentByClassIdAndUserId(id, user.getId());
+                    if(enrollmentTrainingClassForUser == null) {
+                        EnrollmentTrainingClass enrollmentTrainingClass = enrollmentClassMapper.createEnrollmentForUser(trainingClass, user);
+                        enrollmentTrainingClassService.saveEnrollmentAction(enrollmentTrainingClass);
+                        String emailTemplate = utilMethods.loadEmailTemplateFromResource("enrollClassEmail.html");
+                        emailTemplate = emailTemplate.replace("${email}", authentication.getName());
+                        emailTemplate = emailTemplate.replace("{enrollClass}", trainingClass.getClassName());
+                        emailService.send(authentication.getName(), emailTemplate, "Thank you for joining the class");
+                    }else{
+                        throw new EntityExistsException("User already enrolled to this class");
+                    }
                 }else{
                     throw new EntityNotFoundException("User does not exist");
                 }

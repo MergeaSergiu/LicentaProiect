@@ -69,7 +69,7 @@ export class ReservationComponent implements OnInit{
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private registrationService: RegistrationService, private clientService: ClientService, private router: Router, private _responseBar: MatSnackBar ) {
+  constructor( private clientService: ClientService,  private _responseBar: MatSnackBar ) {
     const today = new Date();
     this.minDate = new Date(today.getFullYear(), today.getMonth(), 0); // Start of current month
     this.maxDate = new Date(today.getFullYear(), today.getMonth() + 2, 0); // End of next month
@@ -208,7 +208,7 @@ export class ReservationComponent implements OnInit{
           schedule.reserved = true;
         },
         error: (error) =>{
-            alert(error);
+          UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
         }
       });
 
