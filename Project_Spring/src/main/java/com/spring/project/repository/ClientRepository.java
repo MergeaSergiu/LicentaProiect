@@ -19,7 +19,7 @@ public interface ClientRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("UPDATE User a " +
             "SET a.enabled = TRUE WHERE a.email = ?1")
-    int enableClient(String email);
+    void enableClient(String email);
 
     @Query("SELECT c FROM User c WHERE c.role.name = 'TRAINER'")
     List<User> getAllTrainers();

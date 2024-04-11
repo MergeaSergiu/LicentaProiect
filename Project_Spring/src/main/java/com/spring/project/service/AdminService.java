@@ -19,28 +19,6 @@ public interface AdminService {
 
      List<TrainerResponse> getAllTrainers();
 
-     List<ReservationResponse> getAllReservations();
-
-     List<SubscriptionResponse> getAllSubscriptions();
-
-     void createSubscription(CreateSubscriptionRequest createSubscriptionRequest);
-
-     void updateSubscription(Long id, CreateSubscriptionRequest subscriptionRequest);
-
-     SubscriptionResponse getSubscriptionById(Long id);
-
-     void deleteSubscription(Long id);
-
-     List<TrainingClassResponse> getAllTrainingClasses();
-
-     TrainingClassResponse getTrainingClass(Long id);
-
-     TrainingClass createTrainingClass(TrainingClassRequest classRequest);
-
-    void updateTrainingClass(Long id, TrainingClassRequest trainingClassRequest);
-
-    void deleteTrainingClass(Long id);
-
      List<UserSubscriptionsDataResponse> getUserSubscriptionsData(Long id);
 
      List<UserSubscriptionsDataResponse> getUserSubscriptionsData();

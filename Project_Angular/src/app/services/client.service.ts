@@ -35,7 +35,7 @@ export class ClientService{
    }
 
    public getAllReservationsForClient(): Observable<ReservationResponse[]>{
-    return this.httpClient.get<ReservationResponse[]>(`${this.API_PATH}/users/reservations`)
+    return this.httpClient.get<ReservationResponse[]>(`${this.API_PATH}/reservations/user`)
    }
 
    public createReservation(reservationRequest: ReservationRequest):Observable<ReservationRequest>{

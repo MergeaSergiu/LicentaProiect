@@ -11,6 +11,7 @@ import com.spring.project.model.User;
 import com.spring.project.model.EnrollmentTrainingClass;
 import com.spring.project.model.TrainingClass;
 import com.spring.project.repository.ClientRepository;
+import com.spring.project.repository.TrainingClassRepository;
 import com.spring.project.service.ConfirmationTokenService;
 import com.spring.project.service.EnrollmentTrainingClassService;
 import com.spring.project.service.TrainingClassService;
@@ -45,13 +46,9 @@ public class ClientService implements UserDetailsService {
     private final static String CLIENT_NOT_FOUND_ERROR = "Client with email %s not found";
     private final ClientRepository clientRepository;
     private final ConfirmationTokenService confirmationTokenService;
-    private final TrainingClassService trainingClassService;
     private final EnrollmentTrainingClassService enrollmentTrainingClassService;
-    private final EmailServiceImpl emailService;
     private final StatusEnrollResponseMapper statusEnrollResponseMapper;
-    private final EnrollmentClassMapper enrollmentClassMapper;
     private final ConfirmationTokenMapper confirmationTokenMapper;
-    private final UtilMethods utilMethods;
 
 
     @Override
@@ -68,9 +65,6 @@ public class ClientService implements UserDetailsService {
         return new BCryptPasswordEncoder();
     }
 
-    public User findClientById(Long id){
-        return clientRepository.findById(id).orElse(null);
-    }
 
     public String signUpClient(User user) {
         boolean userExists = clientRepository.findByEmail(user.getEmail()).isPresent();
@@ -107,69 +101,9 @@ public class ClientService implements UserDetailsService {
         }
     }
 
-    public void enableClient(String email) {
-        clientRepository.enableClient(email);
-    }
-
     public void resetClientPassword(User user, String newPassword) {
         user.setPassword(passwordEncoder().encode(newPassword));
         clientRepository.save(user);
     }
-
-    public void enrollUserToTrainingClass(Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.isAuthenticated()) {
-            TrainingClass trainingClass = trainingClassService.findById(id);
-            if (trainingClass != null) {
-                User user = clientRepository.findByEmail(authentication.getName()).orElse(null);
-                if (user != null) {
-                    EnrollmentTrainingClass enrollmentTrainingClassForUser = enrollmentTrainingClassService.findEnrollmentByClassIdAndUserId(id, user.getId());
-                    if(enrollmentTrainingClassForUser == null) {
-                        EnrollmentTrainingClass enrollmentTrainingClass = enrollmentClassMapper.createEnrollmentForUser(trainingClass, user);
-                        enrollmentTrainingClassService.saveEnrollmentAction(enrollmentTrainingClass);
-                        String emailTemplate = utilMethods.loadEmailTemplateFromResource("enrollClassEmail.html");
-                        emailTemplate = emailTemplate.replace("${email}", authentication.getName());
-                        emailTemplate = emailTemplate.replace("{enrollClass}", trainingClass.getClassName());
-                        emailService.send(authentication.getName(), emailTemplate, "Thank you for joining the class");
-                    }else{
-                        throw new EntityExistsException("User already enrolled to this class");
-                    }
-                }else{
-                    throw new EntityNotFoundException("User does not exist");
-                }
-            }
-        }else {
-            throw new CustomExpiredJwtException("Session expired");
-        }
-    }
-
-    public StatusEnrollResponse checkEnrollmentStatus(Long trainingClassId){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.isAuthenticated()){
-                User user = clientRepository.findByEmail(authentication.getName()).orElse(null);
-                if(user != null) {
-                    List<EnrollmentTrainingClass> listEnrollments = enrollmentTrainingClassService.getClassesByUserId(user.getId());
-                    if (listEnrollments != null) {
-                        for (EnrollmentTrainingClass enrollment : listEnrollments) {
-                            if (enrollment.getTrainingClass().getId() == trainingClassId) {
-                                return statusEnrollResponseMapper.createStatusEnrollResponse("enrolled");
-                            }
-                        }
-                    }
-                    return statusEnrollResponseMapper.createStatusEnrollResponse("notEnrolled");
-                }
-        }
-        throw new CustomExpiredJwtException("Session expired");
-    }
-
-    public void unEnrollUserFromTrainingClass(Long classId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.isAuthenticated()) {
-            User user = clientRepository.findByEmail(authentication.getName()).orElse(null);
-                enrollmentTrainingClassService.deleteEnrollmentForUser(classId, user.getId());
-            } else {
-                throw new EntityNotFoundException("The training Class does not exist");
-            }
-        }
 
 }

@@ -9,23 +9,18 @@ import com.spring.project.mapper.UserMapper;
 import com.spring.project.model.User;
 import com.spring.project.model.Role;
 import com.spring.project.repository.ClientRepository;
-import com.spring.project.repository.RoleRepsitory;
+import com.spring.project.repository.RoleRepository;
 import com.spring.project.service.PasswordResetTokenService;
 import com.spring.project.service.RegistrationService;
 import com.spring.project.token.ConfirmationToken;
 import com.spring.project.token.PasswordResetToken;
 import com.spring.project.util.UtilMethods;
 import lombok.AllArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StreamUtils;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -43,7 +38,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final PasswordResetTokenServiceImpl passwordResetTokenServiceImpl;
     private final EmailSender emailSender;
     private final PasswordResetTokenService passwordResetTokenService;
-    private final RoleRepsitory roleRepsitory;
+    private final RoleRepository roleRepository;
     private final AuthenticationMapper authenticationMapper;
     private final PasswordResetMapper passwordResetMapper;
     private final UserMapper userMapper;
@@ -60,7 +55,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidCredentialsException("Password do not respect the criteria");
         }
 
-        Role role = roleRepsitory.findByName("USER");
+        Role role = roleRepository.findByName("USER");
 
         User user = userMapper.convertFromDto(request,role);
         String receivedToken = clientService.signUpClient(user);
@@ -137,7 +132,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new ConfirmAccountException("The request expired. Please create a new account");
         }
         confirmationTokenServiceImpl.setConfirmedAt(token);
-        clientService.enableClient(confirmationToken.getUser().getEmail());
+        clientRepository.enableClient(confirmationToken.getUser().getEmail());
         return "Account was confirmed. Please log in";
     }
 

@@ -18,7 +18,4 @@ public interface TrainingClassRepository extends JpaRepository<TrainingClass, Lo
 
     List<TrainingClass> findAllByTrainer_Id(Long id);
 
-    void deleteAllByTrainer_Id(Long id);
-
-
 }

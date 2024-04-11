@@ -1,5 +1,7 @@
 package com.spring.project.service;
 
+import com.spring.project.dto.CreateSubscriptionRequest;
+import com.spring.project.dto.SubscriptionResponse;
 import com.spring.project.model.Subscription;
 
 import java.util.List;
@@ -7,13 +9,14 @@ import java.util.Optional;
 
 public interface SubscriptionService {
 
-    void saveSubscription(Subscription createSubscriptionRequest);
+    void saveSubscription(CreateSubscriptionRequest createSubscriptionRequest);
 
-    List<Subscription> getAllSubscriptionPlans();
+    List<SubscriptionResponse> getAllSubscriptionPlans();
 
-    Optional<Subscription> findById(Long id);
+    SubscriptionResponse getSubscriptionById(Long id);
 
-    Subscription findBySubscriptionName(String subscriptionName);
+    void updateSubscription(Long id, CreateSubscriptionRequest subscriptionRequest);
+
 
     void deleteSubscription(Long id);
 }

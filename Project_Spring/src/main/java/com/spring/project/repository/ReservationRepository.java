@@ -1,5 +1,6 @@
 package com.spring.project.repository;
 
+import com.spring.project.dto.ReservationRequest;
 import com.spring.project.model.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

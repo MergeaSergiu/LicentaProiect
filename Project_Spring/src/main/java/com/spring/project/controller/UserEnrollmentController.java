@@ -2,10 +2,11 @@ package com.spring.project.controller;
 
 import com.spring.project.dto.StatusEnrollResponse;
 import com.spring.project.dto.TrainingClassResponse;
-import com.spring.project.service.UserAccountService;
+import com.spring.project.service.EnrollmentTrainingClassService;
 import com.spring.project.service.impl.ClientService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,32 +20,24 @@ import java.util.List;
 public class UserEnrollmentController {
 
     @Autowired
-    private final ClientService clientService;
+    private final EnrollmentTrainingClassService enrollmentTrainingClassService;
 
-    @Autowired
-    private final UserAccountService userAccountService;
 
     @PostMapping("/classes/{trainingClassId}")
-    public ResponseEntity<Void> enrollUserToTrainingClass(@PathVariable("trainingClassId") Long trainingClassId){
-        clientService.enrollUserToTrainingClass(trainingClassId);
+    public ResponseEntity<Void> enrollUserToTrainingClass(@PathVariable("trainingClassId") Long trainingClassId, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
+        enrollmentTrainingClassService.saveEnrollmentAction(trainingClassId, authorization);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/classes/{trainingClassId}")
-    public ResponseEntity<StatusEnrollResponse> checkEnrollmentStatus(@PathVariable ("trainingClassId") Long trainingClassId){
-        StatusEnrollResponse isEnrolled = clientService.checkEnrollmentStatus(trainingClassId);
-        return new ResponseEntity<>(isEnrolled, HttpStatus.OK);
-    }
-
     @GetMapping("/classes")
-    public ResponseEntity<List<TrainingClassResponse>> getEnrollClassesForUser(){
-        List<TrainingClassResponse> trainingClassResponseList = userAccountService.getEnrollClasses();
+    public ResponseEntity<List<TrainingClassResponse>> getEnrollClassesForUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
+        List<TrainingClassResponse> trainingClassResponseList = enrollmentTrainingClassService.getClassesForUser(authorization);
         return new ResponseEntity<>(trainingClassResponseList, HttpStatus.OK);
     }
 
     @DeleteMapping("/classes/{trainingClassId}")
-    public ResponseEntity<Void> UnenrollUserFromTrainingClass(@PathVariable("trainingClassId") Long trainingClassId){
-        clientService.unEnrollUserFromTrainingClass(trainingClassId);
+    public ResponseEntity<Void> UnEnrollUserFromTrainingClass(@PathVariable("trainingClassId") Long trainingClassId, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
+        enrollmentTrainingClassService.deleteEnrollmentForUser(trainingClassId,authorization);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

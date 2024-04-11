@@ -1,17 +1,16 @@
 package com.spring.project.service;
 
+import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.model.EnrollmentTrainingClass;
 
 import java.util.List;
 
 public interface EnrollmentTrainingClassService {
 
-    void saveEnrollmentAction(EnrollmentTrainingClass enrollmentTrainingClass);
+    void saveEnrollmentAction(Long trainingClassId, String authorization);
 
-    List<EnrollmentTrainingClass> getClassesByUserId(Long id);
+    List<TrainingClassResponse> getClassesForUser(String authorization);
 
-    EnrollmentTrainingClass findEnrollmentByClassIdAndUserId(Long trainingClassId, Long userId);
-    void deleteEnrollmentForUser(Long trainingClassId, Long clientId);
+    void deleteEnrollmentForUser(Long trainingClassId, String authorization);
 
-    void deleteAllEnrollsForTrainingClass(Long trainingClassId);
 }
