@@ -63,9 +63,6 @@ public enrollUserToTrainingClass(trainingClassId: number){
   return this.httpClient.post<any>(`${this.API_PATH}/users/classes/${trainingClassId}`, null)
 }
 
-public checkEnrollmentStatus(trainingClassId: number): Observable<StatusEnrollResponse>{
-    return this.httpClient.get<StatusEnrollResponse>(`${this.API_PATH}/users/classes/${trainingClassId}`)
-}
 
   public getUserTrainingClasses(): Observable<TrainingClassResponse[]>{
     return this.httpClient.get<TrainingClassResponse[]>(`${this.API_PATH}/users/classes`)

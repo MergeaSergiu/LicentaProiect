@@ -1,7 +1,5 @@
 package com.spring.project.service.impl;
 
-import com.spring.project.Exception.ClientNotFoundException;
-import com.spring.project.Exception.CustomExpiredJwtException;
 import com.spring.project.dto.TrainingClassRequest;
 import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.mapper.TrainingClassMapper;
@@ -15,8 +13,6 @@ import com.spring.project.util.UtilMethods;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -77,7 +73,7 @@ public class TrainingClassServiceImpl implements TrainingClassService {
         }
         User trainer = clientRepository.findById(Long.valueOf(trainingClassRequest.getTrainerId())).orElse(null);
         if(trainer == null){
-            throw new ClientNotFoundException("Trainer does not exist");
+            throw new EntityNotFoundException("Trainer does not exist");
         }
                 trainingClass.setClassName(trainingClassRequest.getClassName());
                 trainingClass.setIntensity(trainingClassRequest.getIntensity());

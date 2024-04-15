@@ -1,6 +1,5 @@
 package com.spring.project.service.impl;
 
-import com.spring.project.Exception.ClientNotFoundException;
 import com.spring.project.Exception.CreateReservationException;
 import com.spring.project.dto.ReservationRequest;
 import com.spring.project.dto.ReservationResponse;
@@ -12,6 +11,7 @@ import com.spring.project.repository.ClientRepository;
 import com.spring.project.repository.ReservationRepository;
 import com.spring.project.service.ReservationService;
 import com.spring.project.util.UtilMethods;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
@@ -32,7 +32,7 @@ public class ReservationServiceImpl implements ReservationService {
             String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
             User user = clientRepository.findByEmail(username).orElse(null);
             if (user == null) {
-                throw new ClientNotFoundException("User does not exist");
+                throw new EntityNotFoundException("User does not exist");
             }
             boolean existingReservation = reservationRepository.findAll().stream()
                     .anyMatch(reservation -> reservation.getReservationDate().toString().equals(reservationRequest.getLocalDate())
@@ -65,7 +65,7 @@ public class ReservationServiceImpl implements ReservationService {
         String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
         User user = clientRepository.findByEmail(username).orElse(null);
         if (user == null) {
-            throw new ClientNotFoundException("User does not exist");
+            throw new EntityNotFoundException("User does not exist");
         }
 
         return reservationRepository.findAllByUser_IdOrderByReservationDateAsc(user.getId()).stream().map(reservationMapper::convertToDto).collect(Collectors.toList());
@@ -76,13 +76,13 @@ public class ReservationServiceImpl implements ReservationService {
         String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
         User user = clientRepository.findByEmail(username).orElse(null);
         if (user == null) {
-            throw new ClientNotFoundException("User does not exist");
+            throw new EntityNotFoundException("User does not exist");
         }
             Reservation reservation = reservationRepository.findById(id).orElse(null);
             if(reservation == null) {
                 throw new CreateReservationException("Reservation does not exist");
             }
-            if(reservation.getReservationDate().isBefore(LocalDate.now()) || reservation.getReservationDate().isEqual(LocalDate.now())) {
+            if(reservation.getReservationDate().isAfter(LocalDate.now())) {
                 reservationRepository.deleteById(id);
                 String emailTemplate = utilMethods.loadEmailTemplateFromResource("deleteReservationEmail.html");
                 emailTemplate = emailTemplate.replace("${email}", username);
@@ -96,7 +96,7 @@ public class ReservationServiceImpl implements ReservationService {
     public void deleteReservationsForUser(Long id) {
         User user = clientRepository.findById(id).orElse(null);
         if(user == null){
-            throw new ClientNotFoundException("User does not exist");
+            throw new EntityNotFoundException("User does not exist");
         }
         reservationRepository.deleteAllByUser_Id(id);
     }

@@ -1,7 +1,6 @@
 package com.spring.project.controller;
 
 import com.spring.project.dto.*;
-import com.spring.project.service.ReservationService;
 import com.spring.project.service.TrainerService;
 import com.spring.project.service.UserAccountService;
 import lombok.AllArgsConstructor;
@@ -27,8 +26,8 @@ public class UserAccountController {
 
 
     @GetMapping("/profile")
-    public ResponseEntity<UserDataResponse> getUserProfileData(){
-        UserDataResponse userDataResponse = userAccountService.getUserProfileData();
+    public ResponseEntity<UserDataResponse> getUserProfileData(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
+        UserDataResponse userDataResponse = userAccountService.getUserProfileData(authorization);
         return new ResponseEntity<>(userDataResponse,HttpStatus.OK);
     }
     @GetMapping("/trainer/classes")

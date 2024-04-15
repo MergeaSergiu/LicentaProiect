@@ -1,9 +1,7 @@
 package com.spring.project.controller;
 
-import com.spring.project.dto.StatusEnrollResponse;
 import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.service.EnrollmentTrainingClassService;
-import com.spring.project.service.impl.ClientService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

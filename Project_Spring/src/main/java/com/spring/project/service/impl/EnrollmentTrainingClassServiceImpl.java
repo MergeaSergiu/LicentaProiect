@@ -96,7 +96,7 @@ public class EnrollmentTrainingClassServiceImpl implements EnrollmentTrainingCla
         if(trainingClass == null){
             throw new EntityNotFoundException("Training Class does not exist");
         }
-        enrollmentTrainingClassRepository.deleteByTrainingClassIdAndUserId(user.getId(), trainingClassId);
+        enrollmentTrainingClassRepository.deleteByTrainingClassIdAndUserId(trainingClassId,user.getId());
 
     }
 

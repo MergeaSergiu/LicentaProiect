@@ -2,8 +2,6 @@ package com.spring.project.controller;
 
 import com.spring.project.dto.TrainingClassRequest;
 import com.spring.project.dto.TrainingClassResponse;
-import com.spring.project.model.TrainingClass;
-import com.spring.project.service.AdminService;
 import com.spring.project.service.TrainingClassService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +17,6 @@ import java.util.List;
 @RequestMapping(path = "project/api/v1/classes")
 @AllArgsConstructor
 public class TrainingClassController {
-
-    @Autowired
-    private final AdminService adminService;
 
     @Autowired
     private final TrainingClassService trainingClassService;

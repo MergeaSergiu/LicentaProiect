@@ -15,6 +15,7 @@ import com.spring.project.service.RegistrationService;
 import com.spring.project.token.ConfirmationToken;
 import com.spring.project.token.PasswordResetToken;
 import com.spring.project.util.UtilMethods;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -80,9 +81,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new EmailNotAvailableException("Email does not respect the criteria");
         }
 
-        User user = clientService.findClientByEmail(resetPassEmailRequest.getEmail());
+        User user = clientRepository.findByEmail(resetPassEmailRequest.getEmail()).orElse(null);
         if(user == null){
-            throw new ResetPasswordException("There is no account with this email");
+            throw new EntityNotFoundException("There is no account with this email");
         }
 
         String resetToken = UUID.randomUUID().toString();
@@ -109,9 +110,12 @@ public class RegistrationServiceImpl implements RegistrationService {
                         authenticationRequest.getPassword()
                 )
         );
-        var client = clientRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow();
-        String jwt = jwtService.generateToken(client.getEmail(), client.getRole().getName());
-        String refreshJwt = jwtService.generateRefreshToken(client.getEmail(), client.getRole().getName());
+        User user = clientRepository.findByEmail(authenticationRequest.getEmail()).orElse(null);
+        if(user == null){
+            throw new EntityNotFoundException("User does not exist");
+        }
+        String jwt = jwtService.generateToken(user.getEmail(), user.getRole().getName());
+        String refreshJwt = jwtService.generateRefreshToken(user.getEmail(), user.getRole().getName());
         String userRole = jwtService.extractClientRole(jwt);
         return authenticationMapper.convertToDto(jwt,refreshJwt, userRole);
     }
@@ -120,7 +124,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenServiceImpl.getToken(token).orElse(null);
-
         if(confirmationToken == null){
             throw new ConfirmAccountException("Confirmation email is not available anymore");
         }
@@ -140,14 +143,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public String confirmPasswordResetToken(String token) {
         PasswordResetToken passwordResetToken =  passwordResetTokenServiceImpl.getToken(token).orElse(null);
-
         if(passwordResetToken == null){
             throw new ResetPasswordException("Confirmation email is not available anymore");
         }
         else if(passwordResetToken.getConfirmedAt() != null){
                 throw  new ResetPasswordException("Verification link was already confirmed");
         }
-
         LocalDateTime expiredAt = passwordResetToken.getExpiredAt();
         if(expiredAt.isBefore(LocalDateTime.now())){
             throw new ResetPasswordException("The request expired. Please create a new account.");
@@ -184,19 +185,18 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public AuthenticationResponse refreshToken(JwtRefreshToken jwtRefreshToken) {
-        final String clientEmail;
         String refreshJwt = jwtRefreshToken.getRefreshToken();
-        clientEmail = jwtService.extractClientUsername(refreshJwt);
-        if (clientEmail != null){
+        String clientEmail = jwtService.extractClientUsername(refreshJwt);
+        if(clientEmail == null){
+            throw new EntityNotFoundException("Token coul not be updated");
+        }
             var clientDetails = this.clientRepository.findByEmail(clientEmail).orElseThrow();
             if(jwtService.isTokenValid(refreshJwt, clientDetails)){
                 var accessToken = jwtService.generateToken(clientDetails.getEmail(), clientDetails.getRole().getName());
                 String userRole = jwtService.extractClientRole(accessToken);
                 return authenticationMapper.convertToDto(accessToken, refreshJwt, userRole);
             }else{
-                throw new CustomExpiredJwtException("Refresh Token expired");
+                throw new CustomExpiredTokenException("Session has expired");
             }
-        }
-        throw new CustomExpiredJwtException("Token could not be updated");
     }
 }

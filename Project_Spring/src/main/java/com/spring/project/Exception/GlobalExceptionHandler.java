@@ -2,6 +2,7 @@ package com.spring.project.Exception;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,15 +13,6 @@ import org.springframework.security.core.AuthenticationException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler(ClientNotFoundException.class)
-    public ResponseEntity<ErrorResponseContainer> handleClientNotFoundException(ClientNotFoundException ex) {
-        ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
-
-        errorResponseContainer.setHttpStatusCode(HttpStatus.NOT_FOUND.value());
-        errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<>(errorResponseContainer, HttpStatus.NOT_FOUND);
-    }
 
     @ExceptionHandler(CreateReservationException.class)
     public ResponseEntity<ErrorResponseContainer> handleCreateReservationException(CreateReservationException ex){
@@ -101,6 +93,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponseContainer, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(CustomExpiredTokenException.class)
+    public ResponseEntity<ErrorResponseContainer> handleCustomExpiredTokenException(CustomExpiredTokenException ex){
+        ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
+
+        errorResponseContainer.setHttpStatusCode(HttpStatus.FORBIDDEN.value());
+        errorResponseContainer.setErrorMessage(ex.getMessage());
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(ResetPasswordException.class)
     public ResponseEntity<ErrorResponseContainer> handleResetPasswordException(ResetPasswordException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
@@ -119,12 +120,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponseContainer, HttpStatus.GONE);
     }
 
-    @ExceptionHandler(CustomExpiredJwtException.class)
-    public ResponseEntity<ErrorResponseContainer> handleCustomExpiredJwtException(CustomExpiredJwtException ex){
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorResponseContainer> handleEntityNotFoundException(EntityNotFoundException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
 
-        errorResponseContainer.setHttpStatusCode(HttpStatus.UNAUTHORIZED.value());
+        errorResponseContainer.setHttpStatusCode(HttpStatus.NOT_FOUND.value());
         errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<>(errorResponseContainer, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.NOT_FOUND);
     }
+
 }
