@@ -9,6 +9,7 @@ import { UserDataResponse } from "../models/user-response.model";
 import { RoleRequest } from "../models/role-request.model";
 import { UserSubscriptionsDataResponse } from "../models/userSubscriptionData-response.model";
 import { UserSubscriptionRequest } from "../models/userSubscription-request.model";
+import { ReservationRequestByAdmin } from "../models/reservationByAdmin-request.model";
 
 
 @Injectable({
@@ -100,6 +101,9 @@ export class AdminService{
     return this.httpClient.post<any>(`${this.API_PATH}/users/subscriptions`, userSubscriptionRequest)
   }
 
-  
+  public addReservationForUser(reservationRequestByAdmin: ReservationRequestByAdmin){
+    return this.httpClient.post<ReservationRequestByAdmin>(`${this.API_PATH}/reservations/admin`, reservationRequestByAdmin)
+  }
+
 
 }

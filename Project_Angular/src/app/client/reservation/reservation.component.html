@@ -30,8 +30,7 @@
   </div>
   <div class="schedule-container" *ngIf="selectedDate">
     <ul>
-      <li *ngFor="let schedule of hourSchedulesBasketball">
-        
+      <li *ngFor="let schedule of hourSchedulesBasketball"> 
           <button class="button-reservation"
           matTooltip="Select the time slot"
           [disabled]="schedule.reserved"

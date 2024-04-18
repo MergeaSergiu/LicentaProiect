@@ -12,15 +12,12 @@ import lombok.*;
 @Setter
 public class RegistrationRequest {
 
-    @NotBlank(message = "The first name can not be blank")
+    @NotBlank
     private String firstName;
-
-    @NotBlank(message = "The last name can not be blank")
+    @NotBlank
     private String lastName;
-
-    @NotBlank(message = "The email can not be blank")
+    @NotBlank
     private String email;
-
-    @NotBlank(message = "The password can not be blank")
+    @NotBlank
     private String password;
 }

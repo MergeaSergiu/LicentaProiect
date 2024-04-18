@@ -1,26 +1,24 @@
 package com.spring.project.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import java.time.LocalDate;
-
 
 @Data
-@Builder
 @Getter
 @Setter
-public class ReservationRequest {
+@Builder
+public class ReservationRequestByAdmin {
 
+    @NotBlank
+    Long userId;
     @NotBlank
     String localDate;
     @NotBlank
     String hourSchedule;
     @NotBlank
     String court;
-    @NotNull
-    LocalDate currentDate;
 }

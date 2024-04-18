@@ -15,10 +15,7 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +31,7 @@ public class EnrollmentTrainingClassServiceImpl implements EnrollmentTrainingCla
     private final ClientRepository clientRepository;
     private final TrainingClassMapper trainingClassMapper;
     private final EnrollmentClassMapper enrollmentClassMapper;
-    private final EmailServiceImpl emailService;
+    private final EmailSenderImpl emailService;
 
 
     @Override

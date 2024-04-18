@@ -1,4 +1,5 @@
 <app-navbar-admin></app-navbar-admin>
+<div class="container">
 <div class="continer-table">
       <mat-form-field>
         <input matInput (keyup)="Filterchange($event)" placeholder="Enter text">
@@ -35,4 +36,51 @@
     </table>
     
     <mat-paginator #paginator1 [pageSizeOptions]="[5,8]" showFirstLastButtons></mat-paginator>
+</div>
+<div class="create-reservation-form">
+  
+  <form #authForm="ngForm" (ngSubmit)="onSubmitAddReservationForUser(authForm)">
+    <h2 class="title">Add a Reservation</h2>
+    <div mat-dialog-content>
+      <mat-form-field>
+        <mat-label>Select an User</mat-label>
+        <mat-select [(ngModel)]="selectedUserId" name="userId" ngModel required>
+            <mat-option *ngFor="let user of users" [value]="user.id">
+                {{user.firstName}} {{user.lastName}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <mat-label>Choose a date</mat-label>
+      <input matInput [matDatepicker]="picker" ngModel required name="selectedDate">
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <mat-label>Select a Court</mat-label>
+      <mat-select [(ngModel)]="selectedCourt" name="court" ngModel required>
+        <mat-option *ngFor="let court of courts" [value]="court">
+          {{court}}
+        </mat-option>
+      </mat-select>
+  </mat-form-field>
+  <br>
+  <mat-form-field>
+    <mat-label>Select a HourSchedule</mat-label>
+    <mat-select [(ngModel)]="selectedHourSchedule" name="hourSchedule" ngModel required>
+        <mat-option *ngFor="let hourSchedule of hourSchedules" [value]="hourSchedule">
+            {{hourSchedule}}
+        </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <br>
+    </div>
+    <div mat-dialog-actions>
+      <button type="submit" mat-raised-button color="primary" [disabled]="!authForm.valid">Save</button>
+  </div>
+  </form>
+</div>
 </div>

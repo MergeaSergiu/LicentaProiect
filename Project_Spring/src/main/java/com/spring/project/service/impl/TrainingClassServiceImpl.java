@@ -28,7 +28,7 @@ public class TrainingClassServiceImpl implements TrainingClassService {
     private final EnrollmentTrainingClassRepository enrollmentTrainingClassRepository;
     private final ClientRepository clientRepository;
     private final UtilMethods utilMethods;
-    private final EmailServiceImpl emailService;
+    private final EmailSenderImpl emailService;
 
     public void createTrainingClass(TrainingClassRequest trainingClassRequest, String authorization){
             String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);

@@ -2,6 +2,7 @@ package com.spring.project.service.impl;
 
 import com.spring.project.Exception.CreateReservationException;
 import com.spring.project.dto.ReservationRequest;
+import com.spring.project.dto.ReservationRequestByAdmin;
 import com.spring.project.dto.ReservationResponse;
 import com.spring.project.email.EmailSender;
 import com.spring.project.mapper.ReservationMapper;
@@ -55,6 +56,29 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public void saveReservationByAdmin(ReservationRequestByAdmin reservationRequestByAdmin) {
+        User user = clientRepository.findById(reservationRequestByAdmin.getUserId()).orElse(null);
+        if(user == null){
+            throw new EntityNotFoundException("User does not exist");
+        }
+        boolean existingReservation = reservationRepository.findAll().stream()
+                .anyMatch(reservation -> reservation.getReservationDate().toString().equals(reservationRequestByAdmin.getLocalDate())
+                        && reservation.getHourSchedule().equals(reservationRequestByAdmin.getHourSchedule())
+                        && reservation.getCourt().equals(reservationRequestByAdmin.getCourt()));
+        if(existingReservation){
+            throw new CreateReservationException("There is a reservation at the same moment created");
+        }
+
+        List<Reservation> reservationsForCurrentDayForUser = reservationRepository.findAllByUser_IdAndReservationMadeDate(user.getId(), LocalDate.now());
+        if(reservationsForCurrentDayForUser.size() >=3){
+            throw new CreateReservationException("User reached the limit of 3 reservations per day");
+        }
+
+        Reservation reservation = reservationMapper.convertDtoAdminReservation(reservationRequestByAdmin, user);
+        reservationRepository.save(reservation);
+    }
+
+    @Override
     public List<ReservationResponse> getAllReservations() {
         return reservationRepository.findAllByOrderByReservationDateAsc().stream()
                 .map(reservationMapper::convertToDto).collect(Collectors.toList());
@@ -70,7 +94,6 @@ public class ReservationServiceImpl implements ReservationService {
 
         return reservationRepository.findAllByUser_IdOrderByReservationDateAsc(user.getId()).stream().map(reservationMapper::convertToDto).collect(Collectors.toList());
     }
-
     @Override
     public void deleteReservation(Long id, String authorization) {
         String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);

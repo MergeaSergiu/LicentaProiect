@@ -31,7 +31,7 @@ public class SubscriptionsHistoryServiceImpl implements SubscriptionsHistoryServ
     private final SubscriptionHistoryRepository subscriptionHistoryRepository;
     private final SubscriptionHistoryMapper subscriptionHistoryMapper;
     private final UtilMethods utilMethods;
-    private final EmailServiceImpl emailService;
+    private final EmailSenderImpl emailService;
 
     @Override
     public SubscriptionsHistory addSubscriptionForUser(UserSubscriptionRequest userSubscriptionRequest) {

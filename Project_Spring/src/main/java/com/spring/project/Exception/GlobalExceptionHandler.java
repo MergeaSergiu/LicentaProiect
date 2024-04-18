@@ -42,6 +42,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponseContainer> handleIllegalArgumentException(IllegalArgumentException ex){
+        ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
+
+        errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
+        errorResponseContainer.setErrorMessage(ex.getMessage());
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(EmailNotAvailableException.class)
     public ResponseEntity<ErrorResponseContainer> handleEmailNotAvailableException(EmailNotAvailableException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();

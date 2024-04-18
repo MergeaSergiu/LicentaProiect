@@ -41,7 +41,7 @@ const appRoutes : Routes = [
     {path: 'reservations', component: ReservationdetailsComponent},
     {path: 'gym',component: GymdetailsComponent},
     {path: 'users', component: UserdetailsComponent},
-    { path: 'account', component: AccountComponent},
+    {path: 'account', component: AccountComponent},
     {path: 'subscriptionHistory', component: UserSubscriptionsComponent}
     ]},
     { path: 'trainer',

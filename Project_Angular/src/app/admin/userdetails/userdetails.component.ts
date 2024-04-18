@@ -74,7 +74,6 @@ export class UserdetailsComponent implements OnInit{
       this.router.navigate(['/admin/subscriptionHistory'], { queryParams: { userId: id } });
   } 
 
-
   public deleteUserData(id: number){
     this.adminService.deleteUser(id).subscribe({
       next: (response) =>{

@@ -1,6 +1,7 @@
 package com.spring.project.mapper;
 
 import com.spring.project.dto.ReservationRequest;
+import com.spring.project.dto.ReservationRequestByAdmin;
 import com.spring.project.dto.ReservationResponse;
 import com.spring.project.model.User;
 import com.spring.project.model.Reservation;
@@ -29,6 +30,16 @@ public class ReservationMapper {
                 .reservationDate(LocalDate.parse(reservationRequest.getLocalDate(), formatter))
                 .hourSchedule(reservationRequest.getHourSchedule())
                 .court(reservationRequest.getCourt())
+                .user(user)
+                .build();
+    }
+
+    public Reservation convertDtoAdminReservation(ReservationRequestByAdmin reservationRequestByAdmin, User user){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return Reservation.builder()
+                .reservationDate(LocalDate.parse(reservationRequestByAdmin.getLocalDate(), formatter))
+                .hourSchedule(reservationRequestByAdmin.getHourSchedule())
+                .court(reservationRequestByAdmin.getCourt())
                 .user(user)
                 .build();
     }
