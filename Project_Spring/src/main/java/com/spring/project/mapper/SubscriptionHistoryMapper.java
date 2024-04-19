@@ -17,7 +17,7 @@ public class SubscriptionHistoryMapper {
                 .subscriptionName(subscription.getSubscriptionName())
                 .subscriptionPrice(subscription.getSubscriptionPrice())
                 .subscriptionStartTime(LocalDate.now())
-                .subscriptionEndTime(LocalDate.now().plusDays(subscription.getSubscriptionTime()))
+                .subscriptionEndTime(LocalDate.now().plusDays(LocalDate.now().lengthOfMonth()))
                 .build();
     }
 

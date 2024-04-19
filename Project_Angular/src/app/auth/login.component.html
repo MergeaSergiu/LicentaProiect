@@ -1,22 +1,38 @@
+
 <div class="container">
-            <div class="title">Glad to have you back</div>
+    <span class="title">Log In</span>
                 <form #loginForm="ngForm" (ngSubmit)="onSubmitLogIn(loginForm)">
                     <div class="form-group">
-                        <label for="email">Email Address</label>
                         <input type="email" placeholder="Email"  id="email" class="form-control" ngModel name="email" required email/>
                     </div>
                     <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" placeholder="Password" id="password" class="form-control" ngModel name="password" required minlength="8"/>
+                        <input [type]="user.showPassword ? 'text' : 'password'" id="password" name="password" class="form-control" placeholder="Password" ngModel required password>
                     </div>
+                    <div style="color: rgb(0, 0, 0);">
+                        <input type="checkbox" [checked]="user.showPassword" (change)="user.showPassword=!user.showPassword">
+                        Show Password
+                    </div>
+                    <br>
                     <div class="buttons">
                         <button class="login-btn"  type="submit" [disabled]="!loginForm.valid">Log In</button>
-                        <button class="signup-btn" type="button" routerLink="/authentication">Switch to Sign Up</button>
-                        <button class="reset-btn"  type="button" routerLink="/recoverPass">Forgot your password?</button>
+                    </div>
+                    <div class="button-section2">
+                        <span class="text1"> Forgot your password?</span>
+                        <a class="reset-btn" routerLink="/recoverPass">Update your password</a>
+                        <br>
+                        <span class="text1"> Don't have an account?</span>
+                        <a class="reset-btn" routerLink="/authentication">Sign Up</a>
                     </div>
                 </form>
-                <div *ngIf="alertMessage" class="alert-message">
-                    {{alertMessage}}
-                </div>
     </div>
+    <div class="bottom-section">
+            <p><mat-icon>phone</mat-icon> +1234567890</p>
+            <p><mat-icon>schedule</mat-icon> 16-23(Gym + Courts)</p>
+            <p><mat-icon>alternate_email</mat-icon> sportarena.com</p>
+    </div>
+
+
+
+
+    
 

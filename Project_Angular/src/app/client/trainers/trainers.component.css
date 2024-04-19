@@ -1,18 +1,86 @@
-.trainers-table{
+
+.user-collaborations{
     margin-top: 65px;
     width: 60%;
     margin-left: auto;
     margin-right: auto;
 }
 
+.user-trainer {
+  border: 2px solid rgb(0, 0, 0);
+  position: relative;
+  width: 360px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  margin: 1.5em;
+  padding: 1em;
+  background: rgb(255, 255, 255);
+  position: relative;
+  color: rgb(0, 0, 0);
+  border-radius: 12px;
+}
+
 th{
-    background-color: black !important;
-    color: white;
+  background-color: black !important;
+  color: white;
+  color:#D5DDE5;;
+  background:#1b1e24;
+  border-bottom:4px solid #9ea7af;
+  border-right: 1px solid #343a45;
+  font-size:14px;
+  font-weight: 90;
+  padding:24px;
+  text-align:left;
+  vertical-align:middle;
   }
 
   .title{
-    background-color: transparent;
-    color: white;
-    font-size: 25px;
-    margin-top:5%;
+    background-color: rgb(109, 101, 101);
+    color: rgb(0, 0, 0);
+    font-size: 32px;
+    text-align: center;
+    margin-top:2%;
+    border: 2px solid black;
 }
+
+.user-trainer:hover{
+  background-color: rgb(209, 209, 209);
+}
+
+tr:hover {
+  background-color: rgb(209, 209, 209); /* Change background color on hover */
+}
+
+.trainer-list {
+  height: 200px; /* Set maximum height for the scrollable section */
+  width: 430px;
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+
+.text1{
+  font-size: 13px;
+   color: #444242;
+}
+
+.trainer-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.trainer-info {
+  flex: 1;
+}
+
+.trainers-container{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  border-radius: 20px;
+  background-color: transparent;
+}
+

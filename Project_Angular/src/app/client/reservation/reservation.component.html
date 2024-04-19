@@ -1,72 +1,97 @@
 <app-navbar></app-navbar>
-  <br>
-  <br>
-  <div class="container">
-    <div class="calendar-container">
-      <mat-card class="demo-inline-calendar-card">
-      <mat-calendar [(selected)]="selectedDate" [minDate]="minDate" [maxDate]="maxDate" (selectedChange)="onDateSelected($event)"></mat-calendar>
+<div class="container">
+  <div class="calendar-container">
+    <mat-card class="demo-inline-calendar-card">
+      <mat-calendar
+        [(selected)]="selectedDate"
+        [minDate]="minDate"
+        [maxDate]="maxDate"
+        (selectedChange)="onDateSelected($event)"
+        class="size-calender"
+      ></mat-calendar>
     </mat-card>
-    </div>
-    <div class="schedule-container" *ngIf="selectedDate">
-      <ul>
-        <li *ngFor="let schedule of hourSchedulesFootball"> <mat-card>
-          <mat-card [ngClass]="{'reserved-card': schedule.reserved}"></mat-card>
-          <button mat-raised-button matTooltip="Select the time slot" [disabled]="schedule.reserved" [color]="schedule.reserved ? '' : 'primary'" (click)="saveReservation(selectedDate, schedule, 'Fotball', schedule)">{{ schedule.time }}</button>
-        </mat-card> </li>
-      </ul>
-    </div>
-    <div class="schedule-container" *ngIf="selectedDate">
-      <ul>
-        <li *ngFor="let schedule of hourSchedulesBasketball"> <mat-card>
-          <mat-card [ngClass]="{'reserved-card': schedule.reserved}"></mat-card>
-          <button mat-raised-button matTooltip="Select the time slot" [disabled]="schedule.reserved" [color]="schedule.reserved ? '' : 'primary'" (click)="saveReservation(selectedDate, schedule, 'Basketball')">{{ schedule.time }}</button>
-        </mat-card> </li>
-      </ul>
-    </div>
-    <div class="schedule-container" *ngIf="selectedDate">
-      <ul>
-        <li *ngFor="let schedule of hourSchedulesTenis"> <mat-card>
-          <mat-card [ngClass]="{'reserved-card': schedule.reserved}"></mat-card>
-          <button mat-raised-button matTooltip="Select the time slot" [disabled]="schedule.reserved" [color]="schedule.reserved ? '' : 'primary'" (click)="saveReservation(selectedDate, schedule, 'Tenis')">{{ schedule.time }}</button>
-        </mat-card> </li>
-      </ul>
-    </div>
   </div>
-  <div *ngIf="successfullMessage" class="alert alert-success" role="alert">
-    {{successfullMessage}}
+  <div class="schedule-container" *ngIf="selectedDate">
+    <ul>
+      <li *ngFor="let schedule of hourSchedulesFootball">
+          <button class="button-reservation"
+          matTooltip="Select the time slot"
+          [disabled]="schedule.reserved"
+          [color]="schedule.reserved ? '' : 'primary'"
+          (click)="
+            saveReservation(selectedDate, schedule, 'FOOTBALL')
+          "
+        >
+          {{ schedule.time }}
+        </button>
+          
+      </li>
+    </ul>
   </div>
-   <div class="continer-table">
-    <mat-card>
-      <mat-form-field>
-        <input matInput (keyup)="Filterchange($event)" placeholder="Enter text">
-      </mat-form-field>
-      <table mat-table [dataSource]="dataSource">
-      <ng-container matColumnDef="Date">
-        <th mat-header-cell *matHeaderCellDef>Date</th>
-        <td mat-cell *matCellDef="let reservation" style="width: 3%;">{{ reservation.reservationDate }}</td>
-      </ng-container>
-      <ng-container matColumnDef="HourSchedule">
-        <th mat-header-cell *matHeaderCellDef>Time Slot</th>
-        <td mat-cell *matCellDef="let reservation" style="width: 3%;">{{ reservation.hourSchedule }}</td>
-      </ng-container>
-      <ng-container matColumnDef="Court">
-        <th mat-header-cell *matHeaderCellDef>Court</th>
-        <td mat-cell *matCellDef="let reservation" style="width: 3%;">{{ reservation.court }}</td>
-      </ng-container>
-      <ng-container matColumnDef="Delete">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let reservation" style="width: 3%;">
-            <button mat-icon-button matTooltip="Delete the reservation" color="warn" aria-label="Delete" (click)="deleteReservation(reservation.id)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-      </ng-container>
-    
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-    
-    <mat-paginator #paginator1 [pageSizeOptions]="[3]" showFirstLastButtons></mat-paginator>
-  </mat-card>
+  <div class="schedule-container" *ngIf="selectedDate">
+    <ul>
+      <li *ngFor="let schedule of hourSchedulesBasketball"> 
+          <button class="button-reservation"
+          matTooltip="Select the time slot"
+          [disabled]="schedule.reserved"
+          [color]="schedule.reserved ? '' : 'primary'"
+          (click)="
+            saveReservation(selectedDate, schedule, 'BASKETBALL')
+          "
+        >
+          {{ schedule.time }}
+        </button>
+      </li>
+    </ul>
+  </div>
+  <div class="schedule-container" *ngIf="selectedDate">
+    <ul>
+      <li *ngFor="let schedule of hourSchedulesTenis">
+          <button class="button-reservation"
+          matTooltip="Select the time slot"
+          [disabled]="schedule.reserved"
+          [color]="schedule.reserved ? '' : 'primary'"
+          (click)="saveReservation(selectedDate, schedule, 'TENNIS')"
+        >
+          {{ schedule.time }}
+      </button>
+       
+      </li>
+    </ul>
+  </div>
 </div>
 
+<div class="reservation-container">
+  <div class="reservation-list">
+    <ul>
+      <li *ngFor="let reservation of reservations" class="user-res">
+        <div class="reservation-info">
+          <span class="text1"
+            ><strong>Date:</strong> {{ reservation.reservationDate }},
+          </span>
+          <span class="text1"
+            ><strong>Time Slot:</strong> {{ reservation.hourSchedule }}</span
+          >
+          <br />
+          <span class="text1"
+            ><strong>Court:</strong> {{ reservation.court }}</span
+          >
+          <br />
+        </div>
+        <div class="delete-button">
+          <button
+            mat-icon-button
+            matTooltip="Delete the reservation"
+            color="warn"
+            aria-label="Delete"
+            (click)="deleteReservation(reservation.id)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<

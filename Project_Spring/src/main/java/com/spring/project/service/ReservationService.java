@@ -1,22 +1,22 @@
 package com.spring.project.service;
 
 import com.spring.project.dto.ReservationRequest;
+import com.spring.project.dto.ReservationRequestByAdmin;
 import com.spring.project.dto.ReservationResponse;
-import com.spring.project.model.Reservation;
 
 import java.util.List;
 
 public interface ReservationService {
 
-    void saveReservation(ReservationRequest reservationRequest);
+    void saveReservation(ReservationRequest reservationRequest, String authorization);
 
-    void sendEmails();
+    void saveReservationByAdmin(ReservationRequestByAdmin reservationRequestByAdmin);
 
-    List<Reservation> getAllReservations();
+    List<ReservationResponse> getAllReservations();
 
-    List<Reservation> getAllClientReservations(Long id);
+    List<ReservationResponse> getAllUserReservations(String authorization);
 
-    void deleteReservation(Long id);
+    void deleteReservation(Long id, String authorization);
 
     void deleteReservationsForUser(Long id);
 

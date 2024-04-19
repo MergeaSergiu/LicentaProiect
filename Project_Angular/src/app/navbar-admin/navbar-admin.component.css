@@ -1,3 +1,9 @@
 .spacer{
     flex: 1 1 auto
 }
+
+.mat-toolbar button {
+    border: 2px solid rgb(141, 135, 135);
+        margin-right: 5px; /* Adjust spacing between buttons */
+        background-color: rgb(19, 17, 17);
+    }

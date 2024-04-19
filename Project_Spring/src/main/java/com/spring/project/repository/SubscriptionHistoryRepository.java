@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface SubscriptionHistoryRepository extends JpaRepository<SubscriptionsHistory, Long> {
-    List<SubscriptionsHistory> findAll();
     @Query("SELECT sh FROM SubscriptionsHistory sh " +
             "WHERE sh.user.id = :userId " +
             "ORDER BY sh.subscriptionEndTime DESC")

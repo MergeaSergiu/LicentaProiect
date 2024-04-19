@@ -5,6 +5,8 @@ import com.spring.project.dto.SubscriptionResponse;
 import com.spring.project.model.Subscription;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 @Component
 public class SubscriptionMapper {
 
@@ -13,7 +15,7 @@ public class SubscriptionMapper {
                 .id(Math.toIntExact(subscription.getId()))
                 .subscriptionName(subscription.getSubscriptionName())
                 .subscriptionPrice(subscription.getSubscriptionPrice())
-                .subscriptionTime(subscription.getSubscriptionTime())
+                .subscriptionTime(LocalDate.now().lengthOfMonth())
                 .subscriptionDescription(subscription.getSubscriptionDescription())
                 .build();
     }
@@ -23,7 +25,6 @@ public class SubscriptionMapper {
                 .subscriptionName(subscriptionRequest.getSubscriptionName())
                 .subscriptionPrice(subscriptionRequest.getSubscriptionPrice())
                 .subscriptionName(subscriptionRequest.getSubscriptionName())
-                .subscriptionTime(subscriptionRequest.getSubscriptionTime())
                 .subscriptionDescription(subscriptionRequest.getSubscriptionDescription())
                 .build();
     }

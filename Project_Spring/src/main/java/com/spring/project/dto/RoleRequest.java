@@ -1,6 +1,7 @@
 package com.spring.project.dto;
 
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Data
@@ -11,5 +12,6 @@ import lombok.*;
 @Setter
 public class RoleRequest {
 
+    @NotNull
     Integer id;
 }

@@ -6,13 +6,10 @@ import com.spring.project.model.SubscriptionsHistory;
 import java.util.List;
 
 public interface UserAccountService {
-    List<ReservationResponse> getAllClientReservations();
 
-    List<TrainingClassResponse> getEnrollClasses();
+    void updateUserProfile(UpdateUserRequest updateUserRequest,String authorization);
 
-    void updateUserProfile(UpdateUserRequest updateUserRequest);
+    UserDataResponse getUserProfileData(String authorization);
 
-    UserDataResponse getUserProfileData();
-
-    boolean getUserActiveSubscriptions();
+    boolean getUserActiveSubscriptions(String authorization);
 }

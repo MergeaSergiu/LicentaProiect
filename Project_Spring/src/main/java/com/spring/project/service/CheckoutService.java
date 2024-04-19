@@ -7,7 +7,7 @@ import com.stripe.model.PaymentIntent;
 
 public interface CheckoutService {
 
-    PaymentIntent createPaymentIntent(PaymentRequest paymentRequest) throws StripeException;
+    PaymentIntent createPaymentIntent(PaymentRequest paymentRequest, String authorization) throws StripeException;
 
 
 }

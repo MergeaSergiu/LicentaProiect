@@ -8,6 +8,8 @@ import { PopupUpdateSubscriptionComponent } from '../../popup-update-subscriptio
 import { PopupCreateTrClassComponent } from '../../popup-create-tr-class/popup-create-tr-class.component';
 import { PopupEditTrClassComponent } from '../../popup-edit-tr-class/popup-edit-tr-class.component';
 import { TrainingClassResponse } from '../../models/trainingclass-response.model';
+import { UtilComponentComponent } from '../../util-component/util-component.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -22,7 +24,7 @@ export class GymdetailsComponent {
   selectedTrainingClass: TrainingClassResponse;
   trainingClassesData: TrainingClassResponse[] = [];
   trainingClassId: number;
-  constructor(private adminService: AdminService, private dialog: MatDialog) {}
+  constructor(private adminService: AdminService, private dialog: MatDialog, private _responseBar: MatSnackBar) {}
 
   ngOnInit(): void {
     this.fetchSubscriptions();
@@ -50,11 +52,11 @@ export class GymdetailsComponent {
   public deleteSubscription(id: number) {
     return this.adminService.deleteSubscription(id).subscribe({
       next: (response) => {
-        alert("Subscription was deleted");
+        UtilComponentComponent.openSnackBar("Subscription was deleted", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
         this.fetchSubscriptions();
       },
       error: (error) => {
-        alert(error);
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }
@@ -80,9 +82,9 @@ export class GymdetailsComponent {
     this.adminService.deleteTrainingClass(id).subscribe(
       response => {
         this.fetchAllTrainingClassData();
-        alert("TrainingClass was deleted");
         this.selectedTrainingClassId = null;
         this.selectedTrainingClass = null;
+        UtilComponentComponent.openSnackBar("Training class was deleted", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
       }
     )
   }

@@ -1,12 +1,11 @@
 
-<h2 mat-dialog-title>Payment Status</h2>
-<div mat-dialog-content>
+<div class="design">
     <div *ngIf="message === 'Payment successful!'">
         <mat-icon color="primary">check_circle</mat-icon>
         <span style="color: green;">{{message}}</span>
-      </div>
-      <div *ngIf="message !== 'Payment successful!'">
+    </div>
+    <div *ngIf="message !== 'Payment successful!'">
         <mat-icon color="warn">error</mat-icon>
-        <span style="color: red;">{{message}}</span>
-      </div>
+        <span style="color: red;">Your payment failed</span>
+    </div>
 </div>

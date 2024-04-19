@@ -1,6 +1,8 @@
 package com.spring.project.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -18,10 +20,12 @@ public class EnrollmentTrainingClass {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @NotNull
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "training_class_id")
+    @NotNull
     private TrainingClass trainingClass;
 
 }

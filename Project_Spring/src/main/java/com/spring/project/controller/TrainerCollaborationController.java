@@ -4,6 +4,7 @@ import com.spring.project.dto.TrainerCollaborationResponse;
 import com.spring.project.service.TrainerCollaborationService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,20 +21,20 @@ public class TrainerCollaborationController {
     private final TrainerCollaborationService trainerCollaborationService;
 
     @PostMapping("/{trainerId}")
-    public ResponseEntity<Void> sendCollabRequest(@PathVariable("trainerId") Long trainerId){
-        trainerCollaborationService.sendCollaborationRequest(trainerId);
+    public ResponseEntity<Void> sendCollabRequest(@PathVariable("trainerId") Long trainerId, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
+        trainerCollaborationService.sendCollaborationRequest(trainerId, authorization);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/trainers")
-    public ResponseEntity<List<TrainerCollaborationResponse>> getCollaborationsForTrainer(){
-        List<TrainerCollaborationResponse> trainerCollaborationResponses = trainerCollaborationService.getCollaborationForTrainer();
+    public ResponseEntity<List<TrainerCollaborationResponse>> getCollaborationsForTrainer(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
+        List<TrainerCollaborationResponse> trainerCollaborationResponses = trainerCollaborationService.getCollaborationForTrainer(authorization);
         return new ResponseEntity<>(trainerCollaborationResponses, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<TrainerCollaborationResponse>> getCollaborationForUser(){
-        List<TrainerCollaborationResponse> userCollaborationResponses = trainerCollaborationService.getCollaborationForUser();
+    public ResponseEntity<List<TrainerCollaborationResponse>> getCollaborationForUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
+        List<TrainerCollaborationResponse> userCollaborationResponses = trainerCollaborationService.getCollaborationForUser(authorization);
         return new ResponseEntity<>(userCollaborationResponses, HttpStatus.OK);
     }
 
@@ -44,8 +45,8 @@ public class TrainerCollaborationController {
     }
 
     @DeleteMapping("/trainers/{collaborationId}")
-    public ResponseEntity<Void> declineUserCollaboration(@PathVariable("collaborationId") Long collaborationId){
-        trainerCollaborationService.declineUserCollaboration(collaborationId);
+    public ResponseEntity<Void> declineUserCollaboration(@PathVariable("collaborationId") Long collaborationId, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
+        trainerCollaborationService.declineUserCollaboration(collaborationId, authorization);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

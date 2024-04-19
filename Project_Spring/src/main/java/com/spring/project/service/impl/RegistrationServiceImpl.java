@@ -9,22 +9,19 @@ import com.spring.project.mapper.UserMapper;
 import com.spring.project.model.User;
 import com.spring.project.model.Role;
 import com.spring.project.repository.ClientRepository;
-import com.spring.project.repository.RoleRepsitory;
+import com.spring.project.repository.RoleRepository;
 import com.spring.project.service.PasswordResetTokenService;
 import com.spring.project.service.RegistrationService;
 import com.spring.project.token.ConfirmationToken;
 import com.spring.project.token.PasswordResetToken;
+import com.spring.project.util.UtilMethods;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StreamUtils;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -42,20 +39,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final PasswordResetTokenServiceImpl passwordResetTokenServiceImpl;
     private final EmailSender emailSender;
     private final PasswordResetTokenService passwordResetTokenService;
-    private final RoleRepsitory roleRepsitory;
+    private final RoleRepository roleRepository;
     private final AuthenticationMapper authenticationMapper;
     private final PasswordResetMapper passwordResetMapper;
     private final UserMapper userMapper;
+    private final UtilMethods utilMethods;
 
-    private String loadEmailTemplateFromResource(String fileName) {
-        try {
-            Resource resource = new ClassPathResource(fileName);
-            return StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
+
     public RegistrationResponse register(RegistrationRequest request){
         boolean isValidEmail = emailValidator.test(request.getEmail());
         if(!isValidEmail){
@@ -66,13 +56,13 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidCredentialsException("Password do not respect the criteria");
         }
 
-        Role role = roleRepsitory.findByName("USER");
+        Role role = roleRepository.findByName("USER");
 
         User user = userMapper.convertFromDto(request,role);
         String receivedToken = clientService.signUpClient(user);
 
         String link = "http://localhost:8080/project/api/v1/auth/confirm?token=" + receivedToken;
-        String emailTemplate = loadEmailTemplateFromResource("confirmAccountEmail.html");
+        String emailTemplate = utilMethods.loadEmailTemplateFromResource("confirmAccountEmail.html");
         emailTemplate = emailTemplate.replace("${email}", request.getEmail());
         emailTemplate = emailTemplate.replace("${resetLink}",link);
 
@@ -91,9 +81,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new EmailNotAvailableException("Email does not respect the criteria");
         }
 
-        User user = clientService.findClientByEmail(resetPassEmailRequest.getEmail());
+        User user = clientRepository.findByEmail(resetPassEmailRequest.getEmail()).orElse(null);
         if(user == null){
-            throw new ResetPasswordException("There is no account with this email");
+            throw new EntityNotFoundException("There is no account with this email");
         }
 
         String resetToken = UUID.randomUUID().toString();
@@ -103,7 +93,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         );
         passwordResetTokenServiceImpl.savePasswordResetToken(passwordResetToken);
         String link = "http://localhost:8080/project/api/v1/auth/confirmResetToken?resetToken=" + resetToken;
-        String emailTemplate = loadEmailTemplateFromResource("resetPasswordEmail.html");
+        String emailTemplate = utilMethods.loadEmailTemplateFromResource("resetPasswordEmail.html");
         emailTemplate = emailTemplate.replace("${email}", resetPassEmailRequest.getEmail());
         emailTemplate = emailTemplate.replace("${resetLink}",link);
         emailSender.send(requestClientEmail, emailTemplate, "Reset your password");
@@ -120,9 +110,12 @@ public class RegistrationServiceImpl implements RegistrationService {
                         authenticationRequest.getPassword()
                 )
         );
-        var client = clientRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow();
-        String jwt = jwtService.generateToken(client.getEmail(), client.getRole().getName());
-        String refreshJwt = jwtService.generateRefreshToken(client.getEmail(), client.getRole().getName());
+        User user = clientRepository.findByEmail(authenticationRequest.getEmail()).orElse(null);
+        if(user == null){
+            throw new EntityNotFoundException("User does not exist");
+        }
+        String jwt = jwtService.generateToken(user.getEmail(), user.getRole().getName());
+        String refreshJwt = jwtService.generateRefreshToken(user.getEmail(), user.getRole().getName());
         String userRole = jwtService.extractClientRole(jwt);
         return authenticationMapper.convertToDto(jwt,refreshJwt, userRole);
     }
@@ -131,7 +124,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenServiceImpl.getToken(token).orElse(null);
-
         if(confirmationToken == null){
             throw new ConfirmAccountException("Confirmation email is not available anymore");
         }
@@ -143,7 +135,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new ConfirmAccountException("The request expired. Please create a new account");
         }
         confirmationTokenServiceImpl.setConfirmedAt(token);
-        clientService.enableClient(confirmationToken.getUser().getEmail());
+        clientRepository.enableClient(confirmationToken.getUser().getEmail());
         return "Account was confirmed. Please log in";
     }
 
@@ -151,14 +143,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public String confirmPasswordResetToken(String token) {
         PasswordResetToken passwordResetToken =  passwordResetTokenServiceImpl.getToken(token).orElse(null);
-
         if(passwordResetToken == null){
             throw new ResetPasswordException("Confirmation email is not available anymore");
         }
         else if(passwordResetToken.getConfirmedAt() != null){
                 throw  new ResetPasswordException("Verification link was already confirmed");
         }
-
         LocalDateTime expiredAt = passwordResetToken.getExpiredAt();
         if(expiredAt.isBefore(LocalDateTime.now())){
             throw new ResetPasswordException("The request expired. Please create a new account.");
@@ -185,7 +175,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if(!passwordResetRequest.getNewPassword().equals(passwordResetRequest.getConfirmedPassword())){
             throw new ResetPasswordException("Password are not matching. Please write again the passwords");
         }
-        if(passwordResetToken.getConfirmedAt() != null && user != null && passwordResetToken.getExpiredAt().compareTo(LocalDateTime.now()) > 0 ) {
+        if(user != null && passwordResetToken.getExpiredAt().isAfter(LocalDateTime.now())) {
             passwordResetToken.setAlreadyUsed(true);
             clientService.resetClientPassword(user, passwordResetRequest.getNewPassword());
             return passwordResetMapper.convertToDto("Password was updated. Please log in");
@@ -195,19 +185,18 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public AuthenticationResponse refreshToken(JwtRefreshToken jwtRefreshToken) {
-        final String clientEmail;
         String refreshJwt = jwtRefreshToken.getRefreshToken();
-        clientEmail = jwtService.extractClientUsername(refreshJwt);
-        if (clientEmail != null){
+        String clientEmail = jwtService.extractClientUsername(refreshJwt);
+        if(clientEmail == null){
+            throw new EntityNotFoundException("Token coul not be updated");
+        }
             var clientDetails = this.clientRepository.findByEmail(clientEmail).orElseThrow();
             if(jwtService.isTokenValid(refreshJwt, clientDetails)){
                 var accessToken = jwtService.generateToken(clientDetails.getEmail(), clientDetails.getRole().getName());
                 String userRole = jwtService.extractClientRole(accessToken);
                 return authenticationMapper.convertToDto(accessToken, refreshJwt, userRole);
             }else{
-                throw new CustomExpiredJwtException("Refresh Token expired");
+                throw new CustomExpiredTokenException("Session has expired");
             }
-        }
-        throw new CustomExpiredJwtException("Token could not be updated");
     }
 }

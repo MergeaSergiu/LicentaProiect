@@ -1,79 +1,152 @@
-
 <app-navbar></app-navbar>
 <div class="trainingClasses">
-    <div class="title">Discover our Training Classes</div>
-    
-    <div class="selector">
-        <mat-form-field>
-            <mat-label>Select a Training Class</mat-label>
-            <mat-select [(ngModel)]="selectedTrainingClassId" name="trainingClass" (selectionChange)="selectionChangeHandler($event)">
-                <mat-option *ngFor="let trainingClass of trainingClassesData" [value]="trainingClass.id">
-                    {{ trainingClass.className }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-    <div class="container">
-        <mat-card *ngIf="selectedTrainingClass" >
-            <div class="deletebutton">
-                <button mat-icon-button class="close-button" (click)="closeCard()">
-                    <mat-icon>close</mat-icon>
-                </button>
-            </div>
-          <div class="card">
-            <!-- Your card HTML structure here -->
-            <h3>{{ selectedTrainingClass.className }}</h3>
-            <p>Date: {{ selectedTrainingClass.localDate }} at {{selectedTrainingClass.startTime}}, duration {{selectedTrainingClass.duration}} mins</p>
-            <p>Intensity: {{selectedTrainingClass.intensity}}</p>
-            <p>Trainer: {{selectedTrainingClass.firstName}} {{selectedTrainingClass.lastName}}</p>
-            <div class="button-container">
-                <div class="button-container">
-                    <button class="button-drop" mat-raised-button color="primary" *ngIf="!isEnrolled" (click)="enrollUserToTrainingClass(selectedTrainingClass.id)">
-                      Enroll To Training Class
-                    </button>
-                    <button class="button-drop" mat-raised-button color="warn" *ngIf="isEnrolled" (click)="dropOutOfTrainingClass(selectedTrainingClass.id)">
-                      Drop out from class
-                    </button>
-                  </div>
-              </div>
-          </div>
-        </mat-card>
+  <div class="title-sub">
+    <h2>Discover our Training Classes</h2>
+  </div>
+
+  <div class="container">
+    <mat-card
+      *ngFor="let trainingClass of trainingClassesData"
+      class="trainingClass-card"
+    >
+    <mat-card-header class="card-title">
+        <h2 class="title">{{ trainingClass.className }}</h2>
+      </mat-card-header>
+      <div class="section">
+        <p>
+          Date
+          <br>
+          <span class="info">
+            {{ trainingClass.localDate }}, {{ trainingClass.startTime }}
+          </span>
+        </p>
       </div>
-      <div class="user-classes">
-        <mat-expansion-panel  (opened)="panelOpenState = true"
-            (closed)="panelOpenState = false">
-        <mat-expansion-panel-header>
+      <div class="divider"></div>
+      <div class="section">
+        <p>
+          Duration
+           <br>
+           <span class="info">
+            {{ trainingClass.duration }} mins
+          </span>
+        </p>
+      </div>
+        <div class="divider"></div>
+        <div class="section">
+          <p>
+            Intensity<br>
+          <span class="info">{{ trainingClass.intensity }}</span>
+        </p>
+        </div>
+        
+        <div class="divider"></div>
+        <div class="section">
+        <p>
+          Trainer<br>
+          <span class="info">
+            Trainer: {{ trainingClass.firstName }} {{ trainingClass.lastName }}
+          </span>
+        </p>
+      </div>
+        <div class="divider"></div>
+        <div class="section">
+          <button
+            class="button-drop"
+            mat-raised-button
+            color="primary"
+            *ngIf="!isEnrolled"
+            (click)="enrollUserToTrainingClass(trainingClass.id)"
+          >
+            Enroll To Training Class
+          </button>
+        </div>
+    </mat-card>
+  </div>
+
+  
+  <div class="user-classes">
+    <mat-expansion-panel
+      (opened)="panelOpenState = true"
+      (closed)="panelOpenState = false"
+    >
+      <mat-expansion-panel-header>
         <mat-panel-title class="titlepanel">
-        Your Training Classes
+          Your Training Classes
         </mat-panel-title>
-        </mat-expansion-panel-header>
-        <div *ngFor="let classData of userTrainingClassesData">
-        <div class="inputdata">
-        <p>{{ classData.className }} on {{ classData.localDate }} at {{classData.startTime}}</p>
+      </mat-expansion-panel-header>
+
+      <div *ngFor="let classData of userTrainingClassesData">
+        <div class="inner2">
+          <p class="info">
+            {{ classData.className }} on {{ classData.localDate }} at
+            {{ classData.startTime }}
+            <button
+              mat-icon-button
+              matTooltip="Drop out from class"
+              color="warn"
+              aria-label="Delete"
+              (click)="dropOutOfTrainingClass(classData.id)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </p>
         </div>
-        </div>
-        </mat-expansion-panel>
-    </div>
+      </div>
+    </mat-expansion-panel>
+  </div>
 </div>
 
 <div class="subscription-list">
-    <div class="title-subscription">Discover our Subscriptions</div>
-    <div class="subscriptions">
-        <mat-card *ngFor="let subscription of subscriptions" class="subscription-card">
-            <mat-card-header>
-                <mat-card-title>{{ subscription.subscriptionName }}</mat-card-title>
-                    <div class="price">{{ subscription.subscriptionPrice }} RON/month</div>
-                </mat-card-header>
-            <mat-card-content>{{subscription.subscriptionDescription}}</mat-card-content>
-            <mat-card-actions>
-            <button *ngIf="!hasActiveSubscription" mat-raised-button matTooltip="Pay using your card" color="primary" (click)="goToCheckoutPage(subscription.id)">Get your subscription</button>
-            <mat-icon>payment</mat-icon>
-            </mat-card-actions>
-        </mat-card>
+  <div class="title-sub">
+    <h2>Discover our Subscriptions</h2>
+  </div>
+  <div class="subscriptions">
+    <mat-card
+      *ngFor="let subscription of subscriptions"
+      class="subscription-card"
+    >
+      <mat-card-header class="card-title">
+        <h2 class="title">{{ subscription.subscriptionName }}</h2>
+      </mat-card-header>
+      <div class="section">
+        <p>
+          Preț
+          <br>
+        <span class="price-user">
+          {{ subscription.subscriptionPrice }} RON/ month
+        </span>
+      </p>
+      </div>
+      <div class="divider"></div>
+      <div class="section">
+      <p>
+        Descriere
         <br>
+        <span class="info">{{ subscription.subscriptionDescription }}
+      </span>
+      </p>
     </div>
+    <div class="divider"></div>
+    <div class="section">
+      <p>
+        Nr. zile
+        <br>
+        <span class="info"> {{subscription.subscriptionTime}} 
+        </span>
+      </p>
+    </div>
+      <div class="divider"></div>
+      <div class="section">
+        <button
+          *ngIf="!hasActiveSubscription"
+          mat-raised-button
+          matTooltip="Pay using your card"
+          color="primary"
+          (click)="goToCheckoutPage(subscription.id)"
+        >
+          <mat-icon>payment</mat-icon> Get your subscription
+        </button>
+    </div>
+    </mat-card>
+  </div>
 </div>
-
-
-
-    

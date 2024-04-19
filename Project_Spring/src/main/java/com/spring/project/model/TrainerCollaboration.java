@@ -1,6 +1,9 @@
 package com.spring.project.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -28,9 +31,11 @@ public class TrainerCollaboration {
 
     @ManyToOne
     @JoinColumn(name = "trainer_id")
+    @NotNull
     private User trainer;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @NotNull
     private User user;
 }

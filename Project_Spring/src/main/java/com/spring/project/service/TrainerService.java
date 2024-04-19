@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface TrainerService {
 
-    List<TrainingClassResponse> getTrainingClassesForTrainer();
+    List<TrainingClassResponse> getTrainingClassesForTrainer(String authorization);
 
 }

@@ -1,5 +1,6 @@
 package com.spring.project.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -11,6 +12,8 @@ import lombok.Setter;
 @Setter
 public class UserSubscriptionRequest {
 
+    @NotNull
     private final Integer subscriptionId;
+    @NotNull
     private final Integer userId;
 }

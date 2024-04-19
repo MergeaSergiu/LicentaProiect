@@ -11,10 +11,51 @@ th{
   background-color: black !important;
   color: white;
 }
+.container{
+      justify-content: center;
+    display: flex;
+	  align-items: flex-start;
+	  flex-wrap: wrap;
+}
 
 .continer-table  {
   margin-top: 65px;
   width: 60%;
-  margin-left: auto;
   margin-right: auto;
+}
+
+th{
+  background-color: black !important;
+  color: white;
+  color:#D5DDE5;;
+  background:#1b1e24;
+  border-bottom:4px solid #9ea7af;
+  border-right: 1px solid #343a45;
+  font-size:14px;
+  font-weight: 90;
+  padding:24px;
+  text-align:left;
+  vertical-align:middle;
+}
+
+.title{
+  font-weight: bold;
+  font-size: 1.25rem;
+  color: rgb(5, 5, 5);
+  margin-top: 15px;
+    
+}
+
+tr:hover {
+    background-color: rgb(209, 209, 209); /* Change background color on hover */
+}
+
+.create-reservation-form{
+  display: flex;
+  background-color: rgb(92, 90, 90);
+  border: 2px solid rgb(255, 255, 255);
+  height: 430px;
+  width: 320px;
+  border-radius: 10px;
+  margin-top: 10%;
 }

@@ -3,6 +3,8 @@ import { ClientService } from '../services/client.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { CollaborationResponse } from '../models/collaboration-response.model';
+import { UtilComponentComponent } from '../util-component/util-component.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-trainer',
@@ -11,7 +13,7 @@ import { CollaborationResponse } from '../models/collaboration-response.model';
 })
 export class TrainerComponent implements OnInit{
   
-  constructor(private clientService: ClientService){}
+  constructor(private clientService: ClientService, private _responseBar: MatSnackBar){}
   
   collaborations: CollaborationResponse[];
   displayedColumns: string[] = ['User Name', 'Status'];
@@ -40,6 +42,7 @@ export class TrainerComponent implements OnInit{
   public acceptRequest(collaborationId: number) {
     this.clientService.acceptRequestForCollaboration(collaborationId).subscribe({
       next: (response: any) => {
+          UtilComponentComponent.openSnackBar("You accepted the request", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
           this.getCollaborationForTrainer();
       }
     })
@@ -49,6 +52,7 @@ export class TrainerComponent implements OnInit{
     this.clientService.declineRequestForCollaboration(collaborationId).subscribe({
       next: (response: any) => {
         this.getCollaborationForTrainer();
+        UtilComponentComponent.openSnackBar("You declined the request", this._responseBar, UtilComponentComponent.SnackbarStates.Default);
       }
     })
   }
@@ -56,6 +60,7 @@ export class TrainerComponent implements OnInit{
   public finishCollaboration(collaborationId: number){
     this.clientService.finishCollaborationWithUser(collaborationId).subscribe({
       next: (response) => {
+        UtilComponentComponent.openSnackBar("You set the collaboration as finish", this._responseBar, UtilComponentComponent.SnackbarStates.Default);
         this.getCollaborationForTrainer();
       }
     })

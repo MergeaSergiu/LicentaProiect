@@ -46,7 +46,6 @@ export class PopupUpdateSubscriptionComponent {
     const subscriptionData: SubscriptionRequest = {
       subscriptionName: form.value.subscriptionName,
       subscriptionPrice: form.value.subscriptionPrice,
-      subscriptionTime: form.value.subscriptionTime,
       subscriptionDescription: form.value.subscriptionDescription
   };
  this.adminService.updateSubscriptionData(this.inputData.id, subscriptionData).subscribe({

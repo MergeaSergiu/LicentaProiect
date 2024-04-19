@@ -19,9 +19,6 @@ public class CreateSubscriptionRequest {
     @NotNull(message = "You need to add a price")
     private Double subscriptionPrice;
 
-    @NotNull(message = "You need to add a time")
-    private Integer subscriptionTime;
-
     @NotNull
     @NotBlank(message = "Subscription Description can not be blank")
     private String subscriptionDescription;

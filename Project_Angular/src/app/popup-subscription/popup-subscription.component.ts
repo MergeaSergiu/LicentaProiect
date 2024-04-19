@@ -23,14 +23,13 @@ export class PopupSubscriptionComponent {
     const subscriptionData: SubscriptionRequest = {
       subscriptionName: form.value.subscriptionName,
       subscriptionPrice: form.value.subscriptionPrice,
-      subscriptionTime: form.value.subscriptionTime,
       subscriptionDescription: form.value.subscriptionDescription
   };
  this.adminService.createSubscription(subscriptionData).subscribe({
   next: (response) =>{
     this.closePopUp();
 }, error: (any) =>{
-  alert("Can not create a reservation");
+  alert("Can not create a subscription");
     }
   });
  }

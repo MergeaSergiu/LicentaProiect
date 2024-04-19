@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
-    private static String SECRET_KEY = "3ydqfkokUNlvGpjJL1CwHXPNbL+HjG0PF6VElzLhbabLmDAAYzUPKpXjTi+bn4kd";
+    private static final String SECRET_KEY = "3ydqfkokUNlvGpjJL1CwHXPNbL+HjG0PF6VElzLhbabLmDAAYzUPKpXjTi+bn4kd";
 
     @Value("${application.security.jwt.expiration}")
     private long jwtExpiration;

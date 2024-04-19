@@ -4,11 +4,30 @@
 /*@import '~@angular/material/prebuilt-themes/indigo-pink.css'; */
 
 body {
-    /*background-image: url("assets/background3.jpg");*/
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: 100% 100%;
-    margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
-    background-color: rgb(42, 47, 52);
-
+    font-family: "Poppins", sans-serif;
+    background-color: rgb(223, 223, 223);
 }
+
+.app-notification-error {
+    --mdc-snackbar-container-color: red;
+    --mat-snack-bar-button-color: black;
+    --mdc-snackbar-supporting-text-color: rgb(0, 0, 0);
+    text-align: center;
+}
+  
+  .app-notification-success {
+    --mdc-snackbar-container-color: rgb(50, 189, 50);
+    --mat-snack-bar-button-color: black;
+    --mdc-snackbar-supporting-text-color: rgb(0, 0, 0);
+    text-align: center;
+  }
+
+  .app-notification-default{
+    --mdc-snackbar-container-color: rgb(57, 120, 227);
+    --mat-snack-bar-button-color: black;
+    --mdc-snackbar-supporting-text-color: rgb(0, 0, 0);;
+  }
+

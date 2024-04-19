@@ -5,13 +5,11 @@ import com.spring.project.service.TrainerService;
 import com.spring.project.service.UserAccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,32 +23,28 @@ public class UserAccountController {
 
     @Autowired
     private final TrainerService trainerService;
-    @GetMapping("/reservations")
-    public ResponseEntity<List<ReservationResponse>> getReservationHistory(){
-        List<ReservationResponse> reservations = userAccountService.getAllClientReservations();
-        return new ResponseEntity<>(reservations, HttpStatus.OK);
-    }
+
 
     @GetMapping("/profile")
-    public ResponseEntity<UserDataResponse> getUserProfileData(){
-        UserDataResponse userDataResponse = userAccountService.getUserProfileData();
+    public ResponseEntity<UserDataResponse> getUserProfileData(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
+        UserDataResponse userDataResponse = userAccountService.getUserProfileData(authorization);
         return new ResponseEntity<>(userDataResponse,HttpStatus.OK);
     }
     @GetMapping("/trainer/classes")
-    public ResponseEntity<List<TrainingClassResponse>> getTrainingClasses(){
-        List<TrainingClassResponse> trainingClassesForTrainer = trainerService.getTrainingClassesForTrainer();
+    public ResponseEntity<List<TrainingClassResponse>> getTrainingClasses(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
+        List<TrainingClassResponse> trainingClassesForTrainer = trainerService.getTrainingClassesForTrainer(authorization);
         return new ResponseEntity<>(trainingClassesForTrainer, HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateUserProfile(@RequestBody UpdateUserRequest updateUserRequest){
-        userAccountService.updateUserProfile(updateUserRequest);
+    public ResponseEntity<Void> updateUserProfile(@RequestBody UpdateUserRequest updateUserRequest, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
+        userAccountService.updateUserProfile(updateUserRequest, authorization);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/activeSubscriptions")
-    public ResponseEntity<?> getUserActiveSubscriptions(){
-        boolean hasActiveSubscription = userAccountService.getUserActiveSubscriptions();
+    public ResponseEntity<?> getUserActiveSubscriptions(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
+        boolean hasActiveSubscription = userAccountService.getUserActiveSubscriptions(authorization);
         return ResponseEntity.ok().body("{\"hasActiveSubscription\": " + hasActiveSubscription + "}");
     }
 

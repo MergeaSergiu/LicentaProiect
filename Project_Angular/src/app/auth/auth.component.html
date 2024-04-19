@@ -1,33 +1,32 @@
 
 <div class="container">
-    <div class="title">Create an account</div>
+    <span class="title">Sign Up</span>
         <form #authForm="ngForm" (ngSubmit)="onSubmitSignUp(authForm)">
             <div class="form-group">
-                <label for="firstName">First Name</label>
                 <input type="text" placeholder="First Name"id="firstName" class="form-control" ngModel name="firstName" required/>
             </div>
             <div class="form-group">
-                <label for="lastName">Last Name</label>
                 <input type="text" placeholder="Last Name" id="lastName" class="form-control" ngModel name="lastName" required/>
             </div>
             <div class="form-group">
-                <label for="email">Email</label>
                 <input type="email" id="email" placeholder="Email" class="form-control" ngModel name="email" required email/>
             </div>
             <div class="form-group">
-                <label for="password">Password</label><mat-icon matTooltip="8 characters.1 upercase, 1 lowercase, 1 cipher">help_outline</mat-icon>
                 <input type="password" placeholder="Password" id="password" class="form-control" ngModel name="password" required minlength="8"/>
             </div>
+            <br>
             <div class="buttons">
                 <button class="signup-btn" type="submit"  [disabled]="!authForm.valid">Sign Up</button>
-                <button class="login-btn"  type="button" routerLink="/login">Switch to Log In</button>
-                <button class="reset-btn"  type="button" routerLink="/recoverPass">Forgot your Password</button>
+                <button class="login-btn"  type="button" routerLink="/login">Switch to Log In</button> 
             </div>
-            <div *ngIf="alertMessage" class="alert-message">
-                    {{alertMessage}}
-            </div>
-            <div *ngIf="succesfullMessage" class="success-message">
-                 {{succesfullMessage}}
+            <div class="button-section2">
+                <span class="text1"> Forgot your password?</span>
+                <a class="reset-btn" routerLink="/recoverPass">Update your password</a>
             </div>
         </form>
+</div>
+<div class="bottom-section">
+    <p><mat-icon>phone</mat-icon> +1234567890</p>
+    <p><mat-icon>schedule</mat-icon> 16-23</p>
+    <p><mat-icon>alternate_email</mat-icon> sportarena.com</p>
 </div>

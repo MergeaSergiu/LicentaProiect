@@ -51,6 +51,7 @@ import { PopupAddSubForUserComponent } from './popup-add-sub-for-user/popup-add-
 import { CheckoutComponent } from './checkout/checkout.component';
 import { PopupSuccessComponent } from './popup-success/popup-success.component';
 import { TrainersComponent } from './client/trainers/trainers.component';
+import { UtilComponentComponent } from './util-component/util-component.component';
 
 @NgModule({
   declarations: [
@@ -79,7 +80,8 @@ import { TrainersComponent } from './client/trainers/trainers.component';
     PopupAddSubForUserComponent,
     CheckoutComponent,
     PopupSuccessComponent,
-    TrainersComponent
+    TrainersComponent,
+    UtilComponentComponent
   ],
   imports: [
     BrowserModule,
