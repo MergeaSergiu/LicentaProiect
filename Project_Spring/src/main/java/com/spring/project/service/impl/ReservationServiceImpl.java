@@ -6,6 +6,7 @@ import com.spring.project.dto.ReservationRequestByAdmin;
 import com.spring.project.dto.ReservationResponse;
 import com.spring.project.email.EmailSender;
 import com.spring.project.mapper.ReservationMapper;
+import com.spring.project.model.Court;
 import com.spring.project.model.User;
 import com.spring.project.model.Reservation;
 import com.spring.project.repository.ClientRepository;
@@ -36,7 +37,7 @@ public class ReservationServiceImpl implements ReservationService {
                 throw new EntityNotFoundException("User does not exist");
             }
             boolean existingReservation = reservationRepository.findAll().stream()
-                    .anyMatch(reservation -> reservation.getReservationDate().toString().equals(reservationRequest.getLocalDate())
+                    .anyMatch(reservation -> reservation.getReservationDate().toString().equals(reservationRequest.getLocalDate().toString())
                             && reservation.getHourSchedule().equals(reservationRequest.getHourSchedule())
                             && reservation.getCourt().equals(reservationRequest.getCourt()));
             if(existingReservation){
@@ -126,7 +127,8 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<ReservationResponse> getReservationsByCourt(String court) {
-            return reservationRepository.findByCourt(court).stream()
+        Court courtEnum = Court.valueOf(court);
+        return reservationRepository.findByCourt(courtEnum).stream()
                     .map(reservationMapper::convertToDto).collect(Collectors.toList());
     }
 

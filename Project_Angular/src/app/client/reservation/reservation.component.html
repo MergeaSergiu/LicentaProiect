@@ -19,7 +19,7 @@
           [disabled]="schedule.reserved"
           [color]="schedule.reserved ? '' : 'primary'"
           (click)="
-            saveReservation(selectedDate, schedule, 'Fotball', schedule)
+            saveReservation(selectedDate, schedule, 'FOOTBALL')
           "
         >
           {{ schedule.time }}
@@ -36,7 +36,7 @@
           [disabled]="schedule.reserved"
           [color]="schedule.reserved ? '' : 'primary'"
           (click)="
-            saveReservation(selectedDate, schedule, 'Basketball', schedule)
+            saveReservation(selectedDate, schedule, 'BASKETBALL')
           "
         >
           {{ schedule.time }}
@@ -51,7 +51,7 @@
           matTooltip="Select the time slot"
           [disabled]="schedule.reserved"
           [color]="schedule.reserved ? '' : 'primary'"
-          (click)="saveReservation(selectedDate, schedule, 'Tenis')"
+          (click)="saveReservation(selectedDate, schedule, 'TENNIS')"
         >
           {{ schedule.time }}
       </button>

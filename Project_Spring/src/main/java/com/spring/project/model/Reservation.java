@@ -28,8 +28,7 @@ public class Reservation {
     @NotBlank
     private String hourSchedule;
 
-    @NotBlank
-    private String court;
+    Court court;
 
     @Temporal(TemporalType.DATE)
     @CreationTimestamp

@@ -108,7 +108,7 @@ export class ReservationComponent implements OnInit{
   }
 
     fetchFootballReservations():void{
-      this.clientService.getReservations('Fotball').subscribe(
+      this.clientService.getReservations('FOOTBALL').subscribe(
         (response: ReservationResponse[]) => {
           this.reservationsFotball = response;
         },
@@ -119,7 +119,7 @@ export class ReservationComponent implements OnInit{
     }
 
     fetchFootballBasketball():void{
-      this.clientService.getReservations('Basketball').subscribe(
+      this.clientService.getReservations('BASKETBALL').subscribe(
         (response: ReservationResponse[]) => {
           this.reservationsBasketball = response;
         },
@@ -130,7 +130,7 @@ export class ReservationComponent implements OnInit{
     }
 
     fetchFootballTenis():void{
-      this.clientService.getReservations('Tenis').subscribe(
+      this.clientService.getReservations('TENNIS').subscribe(
         (response: ReservationResponse[]) => {
           this.reservationsTenis = response;
         },
@@ -175,7 +175,7 @@ export class ReservationComponent implements OnInit{
       });
     }
 
-    saveReservation(date: Date, schedule: HourSchedule, court: string ){
+    saveReservation(date: Date, schedule: HourSchedule, court: string){
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-indexed
       const day = date.getDate().toString().padStart(2, '0');
