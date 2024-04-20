@@ -53,7 +53,7 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
                     emailTemplateTrainer = emailTemplateTrainer.replace("${userName}", user.getFirstName() + " " + user.getLastName());
                     emailSender.send(trainer.getEmail(), emailTemplateTrainer, "Collaboration Request");
                     String emailTemplateUser = utilMethods.loadEmailTemplateFromResource("collabRequestSent.html");
-                    emailTemplateUser = emailTemplateUser.replace("${email}", username);
+                    emailTemplateUser = emailTemplateUser.replace("${user}", user.getFirstName()+" " + user.getLastName());
                     emailTemplateUser = emailTemplateUser.replace("${trainerName}", trainer.getFirstName() + " " + trainer.getLastName());
                     emailSender.send(username, emailTemplateUser, "Collaboration Request");
                 }else{

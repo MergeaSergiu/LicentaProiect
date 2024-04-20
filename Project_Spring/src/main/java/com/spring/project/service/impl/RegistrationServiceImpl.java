@@ -63,7 +63,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         String link = "http://localhost:8080/project/api/v1/auth/confirm?token=" + receivedToken;
         String emailTemplate = utilMethods.loadEmailTemplateFromResource("confirmAccountEmail.html");
-        emailTemplate = emailTemplate.replace("${email}", request.getEmail());
+        emailTemplate = emailTemplate.replace("${user}", user.getFirstName()+" " + user.getLastName());
         emailTemplate = emailTemplate.replace("${resetLink}",link);
 
         emailSender.send(request.getEmail(), emailTemplate,"activate your account");
@@ -94,7 +94,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         passwordResetTokenServiceImpl.savePasswordResetToken(passwordResetToken);
         String link = "http://localhost:8080/project/api/v1/auth/confirmResetToken?resetToken=" + resetToken;
         String emailTemplate = utilMethods.loadEmailTemplateFromResource("resetPasswordEmail.html");
-        emailTemplate = emailTemplate.replace("${email}", resetPassEmailRequest.getEmail());
+        emailTemplate = emailTemplate.replace("${user}", user.getFirstName()+" " + user.getLastName());
         emailTemplate = emailTemplate.replace("${resetLink}",link);
         emailSender.send(requestClientEmail, emailTemplate, "Reset your password");
         return SendResetPassEmailResponse.builder()
@@ -190,13 +190,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if(clientEmail == null){
             throw new EntityNotFoundException("Token coul not be updated");
         }
-            var clientDetails = this.clientRepository.findByEmail(clientEmail).orElseThrow();
-            if(jwtService.isTokenValid(refreshJwt, clientDetails)){
-                var accessToken = jwtService.generateToken(clientDetails.getEmail(), clientDetails.getRole().getName());
-                String userRole = jwtService.extractClientRole(accessToken);
-                return authenticationMapper.convertToDto(accessToken, refreshJwt, userRole);
-            }else{
-                throw new CustomExpiredTokenException("Session has expired");
-            }
+        var clientDetails = this.clientRepository.findByEmail(clientEmail).orElseThrow();
+        if(jwtService.isTokenValid(refreshJwt, clientDetails)){
+            var accessToken = jwtService.generateToken(clientDetails.getEmail(), clientDetails.getRole().getName());
+            String userRole = jwtService.extractClientRole(accessToken);
+            return authenticationMapper.convertToDto(accessToken, refreshJwt, userRole);
+        }else{
+            throw new CustomExpiredTokenException("Session has expired");
+        }
     }
 }

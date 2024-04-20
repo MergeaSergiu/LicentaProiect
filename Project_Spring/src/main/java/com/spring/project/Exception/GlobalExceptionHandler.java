@@ -138,4 +138,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponseContainer, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponseContainer> handleIllegalStateException(IllegalStateException ex){
+        ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
+
+        errorResponseContainer.setHttpStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        errorResponseContainer.setErrorMessage(ex.getMessage());
+        return new ResponseEntity<>(errorResponseContainer, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

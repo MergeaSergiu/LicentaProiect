@@ -50,8 +50,9 @@ public class ReservationServiceImpl implements ReservationService {
             Reservation reservation = reservationMapper.convertFromDto(reservationRequest, user);
             reservationRepository.save(reservation);
             String emailTemplate = utilMethods.loadEmailTemplateFromResource("reservationResponseEmail.html");
-            emailTemplate = emailTemplate.replace("${email}", username);
+            emailTemplate = emailTemplate.replace("${user}", user.getFirstName()+" " + user.getLastName());
             emailTemplate = emailTemplate.replace("${hourSchedule}", reservationRequest.getHourSchedule());
+            emailTemplate = emailTemplate.replace("${court}", reservationRequest.getCourt());
             emailTemplate = emailTemplate.replace("${dateTime}", reservationRequest.getLocalDate());
             emailSender.send(username, emailTemplate, "Thank you for your reservation");
     }
@@ -92,7 +93,6 @@ public class ReservationServiceImpl implements ReservationService {
         if (user == null) {
             throw new EntityNotFoundException("User does not exist");
         }
-
         return reservationRepository.findAllByUser_IdOrderByReservationDateAsc(user.getId()).stream().map(reservationMapper::convertToDto).collect(Collectors.toList());
     }
     @Override
@@ -109,7 +109,7 @@ public class ReservationServiceImpl implements ReservationService {
             if(reservation.getReservationDate().isAfter(LocalDate.now())) {
                 reservationRepository.deleteById(id);
                 String emailTemplate = utilMethods.loadEmailTemplateFromResource("deleteReservationEmail.html");
-                emailTemplate = emailTemplate.replace("${email}", username);
+                emailTemplate = emailTemplate.replace("${user}", user.getFirstName()+" " + user.getLastName());
                 emailSender.send(username, emailTemplate, "Reservation was deleted");
             } else {
                 throw new CreateReservationException("Reservation can not be deleted");

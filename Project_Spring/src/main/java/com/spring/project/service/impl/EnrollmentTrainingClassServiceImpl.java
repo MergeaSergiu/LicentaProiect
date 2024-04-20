@@ -54,8 +54,8 @@ public class EnrollmentTrainingClassServiceImpl implements EnrollmentTrainingCla
                 EnrollmentTrainingClass enrollmentTrainingClass = enrollmentClassMapper.createEnrollmentForUser(trainingClass, user);
                 enrollmentTrainingClassRepository.save(enrollmentTrainingClass);
                 String emailTemplate = utilMethods.loadEmailTemplateFromResource("enrollClassEmail.html");
-                emailTemplate = emailTemplate.replace("${email}", username);
-                emailTemplate = emailTemplate.replace("{enrollClass}", trainingClass.getClassName());
+                emailTemplate = emailTemplate.replace("${user}", user.getFirstName()+" " + user.getLastName());
+                emailTemplate = emailTemplate.replace("${enrollClass}", trainingClass.getClassName());
                 emailService.send(username, emailTemplate, "Thank you for joining the class");
         }
 

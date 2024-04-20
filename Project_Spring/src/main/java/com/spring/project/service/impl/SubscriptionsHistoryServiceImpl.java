@@ -95,7 +95,7 @@ public class SubscriptionsHistoryServiceImpl implements SubscriptionsHistoryServ
                 SubscriptionsHistory subscriptionsHistory = subscriptionHistoryMapper.convertFromDto(user,subscription);
                 subscriptionHistoryRepository.save(subscriptionsHistory);
                 String emailTemplate = utilMethods.loadEmailTemplateFromResource("paymentResponse.html");
-                emailTemplate = emailTemplate.replace("${email}", username);
+                emailTemplate = emailTemplate.replace("${user}", user.getFirstName()+" " + user.getLastName());
                 emailTemplate = emailTemplate.replace("${subscription}", subscription.getSubscriptionName());
                 emailTemplate = emailTemplate.replace("${price}", subscription.getSubscriptionPrice().toString());
                 emailTemplate = emailTemplate.replace("${date}", LocalDateTime.now().format(formatter));

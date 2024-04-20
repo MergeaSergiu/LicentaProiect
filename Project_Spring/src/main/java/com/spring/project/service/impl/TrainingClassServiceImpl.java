@@ -32,6 +32,11 @@ public class TrainingClassServiceImpl implements TrainingClassService {
 
     public void createTrainingClass(TrainingClassRequest trainingClassRequest, String authorization){
             String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
+            User user = clientRepository.findByEmail(username).orElse(null);
+            if(user == null){
+                throw new EntityNotFoundException("User does not exist");
+            }
+
             User trainer = clientRepository.findById(Long.valueOf(trainingClassRequest.getTrainerId())).orElse(null);
             if(trainer == null){
                 throw new EntityNotFoundException("Trainer does not exist");
@@ -39,7 +44,7 @@ public class TrainingClassServiceImpl implements TrainingClassService {
             TrainingClass trainingClass = trainingClassMapper.convertFromDto(trainingClassRequest, trainer);
             trainingClassRepository.save(trainingClass);
             String emailTemplate = utilMethods.loadEmailTemplateFromResource("trainingClassCreated.html");
-            emailTemplate = emailTemplate.replace("${email}", username);
+            emailTemplate = emailTemplate.replace("${user}", user.getFirstName()+" "+ user.getLastName());
             emailTemplate = emailTemplate.replace("${trainingClass}", trainingClassRequest.getClassName());
             emailService.send(username, emailTemplate, "Training class was created");
     }
