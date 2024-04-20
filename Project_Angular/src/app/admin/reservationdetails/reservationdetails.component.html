@@ -80,6 +80,7 @@
     </div>
     <div mat-dialog-actions>
       <button type="submit" mat-raised-button color="primary" [disabled]="!authForm.valid">Save</button>
+      <button type="button" mat-raised-button color="warn" (click)="deleteUserData(authForm)">Clear Data</button>
   </div>
   </form>
 </div>

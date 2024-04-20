@@ -55,9 +55,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if(!isValidPassword){
             throw new InvalidCredentialsException("Password do not respect the criteria");
         }
-
         Role role = roleRepository.findByName("USER");
-
         User user = userMapper.convertFromDto(request,role);
         String receivedToken = clientService.signUpClient(user);
 

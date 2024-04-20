@@ -9,6 +9,7 @@ import { UserDataResponse } from '../../models/user-response.model';
 import { NgForm } from '@angular/forms';
 import { ReservationRequestByAdmin } from '../../models/reservationByAdmin-request.model';
 import { error } from 'console';
+import { CourtDetailsResponse } from '../../models/court-details-response.model';
 
 @Component({
   selector: 'app-reservationdetails',
@@ -21,6 +22,9 @@ export class ReservationdetailsComponent implements OnInit {
   users: UserDataResponse[];
   selectedUserId: number; 
   selectedHourSchedule: string;
+  FootballDetails: CourtDetailsResponse;
+  BasketballDetails: CourtDetailsResponse;
+  TennisDetails: CourtDetailsResponse;
   selectedCourt: string;
   displayedColumns: string[] = ['Date', 'HourSchedule', 'Email', 'Court', 'Delete'];
   dataSource: MatTableDataSource<any>;
@@ -28,11 +32,12 @@ export class ReservationdetailsComponent implements OnInit {
   constructor(private adminService: AdminService, private clientService: ClientService, private _responseBar: MatSnackBar) { }
 
   hourSchedules: string[] = ['16-17', '17-18', '18-19', '19-20', '20-21', '21-22', '22-23'];
-  courts: string[] = ['Tenis', 'Fotball', 'Basketball'];
+  courts: string[] = ['TENNIS', 'FOOTBALL', 'BASKETBALL'];
   
   ngOnInit(): void {
     this.fetchAllReservations();
     this.fetchAllUsers();
+    this.getTimeSlotForFootball(this.courts[1]);
   }
 
   Filterchange(data: Event) {
@@ -92,9 +97,41 @@ export class ReservationdetailsComponent implements OnInit {
     };
     this.adminService.addReservationForUser(reservationRequest).subscribe({
       next: (response) => {
+        this.fetchAllReservations();
         UtilComponentComponent.openSnackBar("Your reservation was created", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
       }, error: (error) => {
         UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+      }
+    })
+  }
+
+  deleteUserData(form:NgForm){
+      form.resetForm(); // Reset the form
+  }
+
+
+  getTimeSlotForFootball(court: string){
+    this.adminService.getTimeSlots(court).subscribe({
+      next: (response) => {
+        console.log(response);
+      },error:(error) =>{
+        console.log(error);
+      }
+    })
+  }
+
+  getTimeSlotForBasketball(court: string){
+    this.adminService.getTimeSlots(court).subscribe({
+      next: (response) => {
+          
+      }
+    })
+  }
+
+  getTimeSlotForTennis(court: string){
+    this.adminService.getTimeSlots(court).subscribe({
+      next: (response) => {
+          
       }
     })
   }

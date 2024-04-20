@@ -1,7 +1,10 @@
 package com.spring.project.service.impl;
 
 import com.spring.project.dto.PaymentRequest;
+import com.spring.project.model.User;
+import com.spring.project.repository.ClientRepository;
 import com.spring.project.service.CheckoutService;
+import com.spring.project.service.UserAccountService;
 import com.spring.project.util.UtilMethods;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -10,6 +13,8 @@ import com.stripe.model.PaymentIntent;
 
 import com.stripe.param.CustomerCreateParams;
 import com.stripe.param.PaymentIntentCreateParams;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +23,13 @@ import org.springframework.stereotype.Service;
 public class CheckoutServiceImpl implements CheckoutService {
 
     private final UtilMethods utilMethods;
+    private final UserAccountService userAccountService;
+    private final ClientRepository clientRepository;
 
- public CheckoutServiceImpl(UtilMethods utilMethods, @Value("${stripe.key.secret}") String secretKey){
+ public CheckoutServiceImpl(UtilMethods utilMethods, UserAccountService userAccountService, @Value("${stripe.key.secret}") String secretKey, ClientRepository clientRepository){
      this.utilMethods = utilMethods;
+     this.userAccountService = userAccountService;
+     this.clientRepository = clientRepository;
      Stripe.apiKey = secretKey;
  }
 
@@ -28,6 +37,14 @@ public class CheckoutServiceImpl implements CheckoutService {
     public PaymentIntent createPaymentIntent(PaymentRequest paymentRequest, String authorization) throws StripeException {
 
             String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
+            User user = clientRepository.findByEmail(username).orElse(null);
+            if(user == null){
+                throw new EntityNotFoundException("User does not exist");
+            }
+            boolean hasActiveSubscription = userAccountService.getUserActiveSubscriptions(authorization);
+            if(hasActiveSubscription){
+                throw new EntityExistsException("User has an active subscription. We can not proceed the payment");
+            }
             CustomerCreateParams CustomerParams = CustomerCreateParams.builder()
                     .setName(paymentRequest.getCardHolderName())
                     .setEmail(username)

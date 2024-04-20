@@ -37,9 +37,9 @@ public class ReservationServiceImpl implements ReservationService {
                 throw new EntityNotFoundException("User does not exist");
             }
             boolean existingReservation = reservationRepository.findAll().stream()
-                    .anyMatch(reservation -> reservation.getReservationDate().toString().equals(reservationRequest.getLocalDate().toString())
+                    .anyMatch(reservation -> reservation.getReservationDate().toString().equals(reservationRequest.getLocalDate())
                             && reservation.getHourSchedule().equals(reservationRequest.getHourSchedule())
-                            && reservation.getCourt().equals(reservationRequest.getCourt()));
+                            && reservation.getCourt().equals(Court.valueOf(reservationRequest.getCourt())));
             if(existingReservation){
                 throw new CreateReservationException("There is a reservation at the same moment created");
             }
@@ -66,7 +66,7 @@ public class ReservationServiceImpl implements ReservationService {
         boolean existingReservation = reservationRepository.findAll().stream()
                 .anyMatch(reservation -> reservation.getReservationDate().toString().equals(reservationRequestByAdmin.getLocalDate())
                         && reservation.getHourSchedule().equals(reservationRequestByAdmin.getHourSchedule())
-                        && reservation.getCourt().equals(reservationRequestByAdmin.getCourt()));
+                        && reservation.getCourt().equals(Court.valueOf(reservationRequestByAdmin.getCourt())));
         if(existingReservation){
             throw new CreateReservationException("There is a reservation at the same moment created");
         }
@@ -106,14 +106,13 @@ public class ReservationServiceImpl implements ReservationService {
             if(reservation == null) {
                 throw new CreateReservationException("Reservation does not exist");
             }
-            if(reservation.getReservationDate().isAfter(LocalDate.now())) {
-                reservationRepository.deleteById(id);
-                String emailTemplate = utilMethods.loadEmailTemplateFromResource("deleteReservationEmail.html");
-                emailTemplate = emailTemplate.replace("${user}", user.getFirstName()+" " + user.getLastName());
-                emailSender.send(username, emailTemplate, "Reservation was deleted");
-            } else {
-                throw new CreateReservationException("Reservation can not be deleted");
+            if(reservation.getReservationDate().isBefore(LocalDate.now())){
+                throw new CreateReservationException("Reservation is in the past.");
             }
+            reservationRepository.deleteById(id);
+            String emailTemplate = utilMethods.loadEmailTemplateFromResource("deleteReservationEmail.html");
+            emailTemplate = emailTemplate.replace("${user}", user.getFirstName()+" " + user.getLastName());
+            emailSender.send(username, emailTemplate, "Reservation was deleted");
     }
 
     @Override

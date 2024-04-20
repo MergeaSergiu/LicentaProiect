@@ -43,7 +43,7 @@ public class ClientService implements UserDetailsService {
             confirmationTokenService.saveConfirmationToken(confirmationToken);
             return token;
         }
-            if (userAlreadyExist.getEnabled()) {
+        if (userAlreadyExist.getEnabled() != null) {
                 throw new EntityExistsException("Account already exist");
             }else {
                 String encodedPassword = passwordEncoder.encode(user.getPassword());

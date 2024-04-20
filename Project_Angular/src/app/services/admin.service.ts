@@ -10,6 +10,7 @@ import { RoleRequest } from "../models/role-request.model";
 import { UserSubscriptionsDataResponse } from "../models/userSubscriptionData-response.model";
 import { UserSubscriptionRequest } from "../models/userSubscription-request.model";
 import { ReservationRequestByAdmin } from "../models/reservationByAdmin-request.model";
+import { CourtDetailsResponse } from "../models/court-details-response.model";
 
 
 @Injectable({
@@ -47,6 +48,10 @@ export class AdminService{
 
   public getSubscriptionById(subscriptionId: number) {
     return this.httpClient.get(`${this.API_PATH}/subscriptions/${subscriptionId}`)
+  }
+
+  public getTimeSlots(court: string): Observable<any>{
+    return this.httpClient.get<CourtDetailsResponse>(`${this.API_PATH}/details/${court}`)
   }
 
   public updateSubscriptionData(subscriptionId:number, subscriptionRequest: SubscriptionRequest){

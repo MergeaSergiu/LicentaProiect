@@ -44,6 +44,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/project/api/v1/reservations/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/project/api/v1/subscriptions/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/project/api/v1/classes/**").hasAnyRole("USER","ADMIN","TRAINER")
+                                .requestMatchers("/project/api/v1/details/**").hasAnyRole("USER","ADMIN")
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

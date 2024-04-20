@@ -1,15 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { RegistrationService } from '../../services/registration.service';
 import { ClientService } from '../../services/client.service';
-import { Router } from '@angular/router';
 import { ReservationResponse } from '../../models/reservation-response.model';
-import { DateAdapter } from '@angular/material/core';
 import { ReservationRequest } from '../../models/reservation-request.model';
-import { DatePipe } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatSnackBar} from '@angular/material/snack-bar';
 import { UtilComponentComponent } from '../../util-component/util-component.component';
+import { error } from 'console';
+import { AdminService } from '../../services/admin.service';
 
 
 interface HourSchedule {
@@ -27,37 +25,10 @@ export class ReservationComponent implements OnInit{
   reservationsTenis: ReservationResponse[] = [];
   reservationsBasketball: ReservationResponse[] = [];
   reservationsFotball: ReservationResponse[] = [];
-
   selectedDate: Date | null;
-  hourSchedulesFootball: HourSchedule[] = [
-    {time:'16-17', reserved: false},
-    {time:'17-18', reserved: false},
-    {time:'18-19', reserved: false},
-    {time:'19-20', reserved: false},
-    {time:'20-21', reserved: false},
-    {time:'21-22', reserved: false},
-    {time:'22-23', reserved: false}
-  ];
-
-  hourSchedulesBasketball: HourSchedule[] = [
-    {time:'16-17', reserved: false},
-    {time:'17-18', reserved: false},
-    {time:'18-19', reserved: false},
-    {time:'19-20', reserved: false},
-    {time:'20-21', reserved: false},
-    {time:'21-22', reserved: false},
-    {time:'22-23', reserved: false}
-  ];
-
-  hourSchedulesTenis: HourSchedule[] = [
-    {time:'16-17', reserved: false},
-    {time:'17-18', reserved: false},
-    {time:'18-19', reserved: false},
-    {time:'19-20', reserved: false},
-    {time:'20-21', reserved: false},
-    {time:'21-22', reserved: false},
-    {time:'22-23', reserved: false},
-  ];
+  hourSchedulesFootball: HourSchedule[] = [];
+  hourSchedulesBasketball: HourSchedule[] = [];
+  hourSchedulesTenis: HourSchedule[] = [];
 
   minDate: Date;
   maxDate: Date;
@@ -69,7 +40,7 @@ export class ReservationComponent implements OnInit{
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor( private clientService: ClientService,  private _responseBar: MatSnackBar ) {
+  constructor( private clientService: ClientService,  private _responseBar: MatSnackBar, private adminService: AdminService ) {
     const today = new Date();
     this.minDate = new Date(today.getFullYear(), today.getMonth(), 0); // Start of current month
     this.maxDate = new Date(today.getFullYear(), today.getMonth() + 2, 0); // End of next month
@@ -81,11 +52,15 @@ export class ReservationComponent implements OnInit{
     this.dataSource.filter=value;
   }
 
-  ngOnInit(): void{
-    this.fetchReservationsForClient();
-    this.fetchFootballReservations();
-    this.fetchFootballBasketball();
-    this.fetchFootballTenis();
+  async ngOnInit(): Promise<void>{
+    await this.fetchCourtDetails('FOOTBALL');
+    await this.fetchCourtDetails('BASKETBALL');
+    await this.fetchCourtDetails('TENNIS');
+    await this.fetchReservationsForClient();
+    await this.fetchFootballReservations();
+    await this.fetchFootballBasketball();
+    await this.fetchFootballTenis();
+
   }
 
   public fetchReservationsForClient(){
@@ -98,11 +73,38 @@ export class ReservationComponent implements OnInit{
       });
   }
 
+  public fetchCourtDetails(court: string){
+    this.adminService.getTimeSlots(court).subscribe({
+      next: (response) => {
+        console.log(response);
+          const startTime = response.startTime;
+          const endTime = response.endTime;
+
+          const hourSlots: HourSchedule[] = [];
+          for (let i = startTime; i < endTime; i++) {
+            const timeSlot = `${i}-${i + 1}`; // Example: '16-17'
+            const hourSlot: HourSchedule = { time: timeSlot, reserved: false };
+            hourSlots.push(hourSlot);
+          }
+
+          if (court === 'FOOTBALL') {
+            this.hourSchedulesFootball = hourSlots;
+          } else if (court === 'TENNIS') {
+            this.hourSchedulesBasketball = hourSlots;
+          } else if (court === 'BASKETBALL') {
+            this.hourSchedulesTenis = hourSlots;
+          }
+      }
+    })
+  }
+
   public deleteReservation(id: number){
       this.clientService.deleteReservation(id).subscribe({
         next:(response:any) =>{
           this.fetchReservationsForClient();
-          UtilComponentComponent.openSnackBar("Your reservation was deleted", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+          UtilComponentComponent.openSnackBar("Your reservation was deleted", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
+        },error:(error) =>{
+          UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
         }
       })
   }
@@ -141,7 +143,6 @@ export class ReservationComponent implements OnInit{
     }
 
     onDateSelected(selectedDate: Date): void {
-      console.log(selectedDate);
       this.updateHourSchedules(selectedDate);
     }
 
@@ -193,7 +194,7 @@ export class ReservationComponent implements OnInit{
 
       if (date1 < date2) {
         UtilComponentComponent.openSnackBar("Reservation can not be in the past", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
-        return; // Stop further execution
+        return;
       }
 
       const registrationRequest: ReservationRequest = {
