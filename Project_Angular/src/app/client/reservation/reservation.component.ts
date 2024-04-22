@@ -6,7 +6,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar} from '@angular/material/snack-bar';
 import { UtilComponentComponent } from '../../util-component/util-component.component';
-import { error } from 'console';
 import { AdminService } from '../../services/admin.service';
 
 
@@ -44,7 +43,6 @@ export class ReservationComponent implements OnInit{
     const today = new Date();
     this.minDate = new Date(today.getFullYear(), today.getMonth(), 0); // Start of current month
     this.maxDate = new Date(today.getFullYear(), today.getMonth() + 2, 0); // End of next month
-    this.fetchReservationsForClient();
   }
 
   Filterchange(data:Event){
@@ -53,14 +51,13 @@ export class ReservationComponent implements OnInit{
   }
 
   async ngOnInit(): Promise<void>{
-    await this.fetchCourtDetails('FOOTBALL');
-    await this.fetchCourtDetails('BASKETBALL');
-    await this.fetchCourtDetails('TENNIS');
-    await this.fetchReservationsForClient();
-    await this.fetchFootballReservations();
-    await this.fetchFootballBasketball();
-    await this.fetchFootballTenis();
-
+    this.fetchCourtDetails('FOOTBALL');
+    this.fetchCourtDetails('BASKETBALL');
+    this.fetchCourtDetails('TENNIS');
+    this.fetchReservationsForClient();
+    this.fetchFootballReservations();
+    this.fetchFootballBasketball();
+    this.fetchFootballTenis();
   }
 
   public fetchReservationsForClient(){
@@ -110,36 +107,36 @@ export class ReservationComponent implements OnInit{
   }
 
     fetchFootballReservations():void{
-      this.clientService.getReservations('FOOTBALL').subscribe(
-        (response: ReservationResponse[]) => {
+      this.clientService.getReservations('FOOTBALL').subscribe({
+        next: (response: ReservationResponse[]) => {
           this.reservationsFotball = response;
         },
-        error => {
-          console.log('Error fetching reservations:', error);
+        error: () => {
+          UtilComponentComponent.openSnackBar("Error fetching reservations", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
         }
-      )
+        })
     }
 
     fetchFootballBasketball():void{
-      this.clientService.getReservations('BASKETBALL').subscribe(
-        (response: ReservationResponse[]) => {
+      this.clientService.getReservations('BASKETBALL').subscribe({
+        next: (response: ReservationResponse[]) => {
           this.reservationsBasketball = response;
         },
-        error => {
-          console.log('Error fetching reservations:', error);
+        error: () => {
+          UtilComponentComponent.openSnackBar("Error fetching reservations", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
         }
-      )
+    })
     }
 
     fetchFootballTenis():void{
-      this.clientService.getReservations('TENNIS').subscribe(
-        (response: ReservationResponse[]) => {
+      this.clientService.getReservations('TENNIS').subscribe({
+        next: (response: ReservationResponse[]) => {
           this.reservationsTenis = response;
         },
-        error => {
-          console.log('Error fetching reservations:', error);
+        error: () => {
+          UtilComponentComponent.openSnackBar("Error fetching reservations", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
         }
-      )
+    })
     }
 
     onDateSelected(selectedDate: Date): void {

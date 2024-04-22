@@ -6,6 +6,7 @@ import com.spring.project.dto.ReservationResponse;
 import com.spring.project.model.Court;
 import com.spring.project.model.User;
 import com.spring.project.model.Reservation;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -16,30 +17,35 @@ import java.time.format.DateTimeFormatter;
 public class ReservationMapper {
 
     public ReservationResponse convertToDto(Reservation reservation){
+        String hourSchedule = reservation.getStartTime() + "-" + reservation.getEndTime();
         return ReservationResponse.builder()
                 .id(Math.toIntExact(reservation.getId()))
                 .reservationDate(reservation.getReservationDate().toString())
-                .hourSchedule(reservation.getHourSchedule())
+                .hourSchedule(hourSchedule)
                 .court(reservation.getCourt().toString())
                 .clientEmail(reservation.getUser().getEmail())
                 .build();
     }
 
-    public Reservation convertFromDto(ReservationRequest reservationRequest, User user){
+    public Reservation convertFromDto(ReservationRequest reservationRequest, User user, Integer startTime, Integer endTime){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         return Reservation.builder()
                 .reservationDate(LocalDate.parse(reservationRequest.getLocalDate(), formatter))
-                .hourSchedule(reservationRequest.getHourSchedule())
+                .startTime(startTime)
+                .endTime(endTime)
                 .court(Court.valueOf(reservationRequest.getCourt()))
                 .user(user)
                 .build();
     }
 
-    public Reservation convertDtoAdminReservation(ReservationRequestByAdmin reservationRequestByAdmin, User user){
+    public Reservation convertDtoAdminReservation(ReservationRequestByAdmin reservationRequestByAdmin, User user, Integer startTime, Integer endTime){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         return Reservation.builder()
                 .reservationDate(LocalDate.parse(reservationRequestByAdmin.getLocalDate(), formatter))
-                .hourSchedule(reservationRequestByAdmin.getHourSchedule())
+                .startTime(startTime)
+                .endTime(endTime)
                 .court(Court.valueOf(reservationRequestByAdmin.getCourt()))
                 .user(user)
                 .build();

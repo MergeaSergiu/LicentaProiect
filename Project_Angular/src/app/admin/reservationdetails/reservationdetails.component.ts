@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { AdminService } from '../../services/admin.service';
@@ -8,8 +8,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserDataResponse } from '../../models/user-response.model';
 import { NgForm } from '@angular/forms';
 import { ReservationRequestByAdmin } from '../../models/reservationByAdmin-request.model';
-import { error } from 'console';
 import { CourtDetailsResponse } from '../../models/court-details-response.model';
+
+interface HourSchedule {
+  time: string;
+  reserved: boolean;
+}
 
 @Component({
   selector: 'app-reservationdetails',
@@ -22,28 +26,35 @@ export class ReservationdetailsComponent implements OnInit {
   users: UserDataResponse[];
   selectedUserId: number; 
   selectedHourSchedule: string;
-  FootballDetails: CourtDetailsResponse;
-  BasketballDetails: CourtDetailsResponse;
-  TennisDetails: CourtDetailsResponse;
+  courtDetails: CourtDetailsResponse[];
   selectedCourt: string;
   displayedColumns: string[] = ['Date', 'HourSchedule', 'Email', 'Court', 'Delete'];
+  hourSchedules: HourSchedule[] = [];
+  inEditMode = false;
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor(private adminService: AdminService, private clientService: ClientService, private _responseBar: MatSnackBar) { }
-
-  hourSchedules: string[] = ['16-17', '17-18', '18-19', '19-20', '20-21', '21-22', '22-23'];
   courts: string[] = ['TENNIS', 'FOOTBALL', 'BASKETBALL'];
   
   ngOnInit(): void {
     this.fetchAllReservations();
     this.fetchAllUsers();
-    this.getTimeSlotForFootball(this.courts[1]);
+    this.getTimeSlotForCourts();
+  }
+
+  toggleEditMode(): void {
+    this.inEditMode = true;
+  }
+
+  cancelEdit(): void {
+    this.inEditMode = false;
   }
 
   Filterchange(data: Event) {
     const value = (data.target as HTMLInputElement).value;
     this.dataSource.filter = value;
   }
+
 
   public fetchAllUsers() {
     return this.adminService.getAllUsers().subscribe({
@@ -96,7 +107,7 @@ export class ReservationdetailsComponent implements OnInit {
       hourSchedule: form.value.hourSchedule
     };
     this.adminService.addReservationForUser(reservationRequest).subscribe({
-      next: (response) => {
+      next: () => {
         this.fetchAllReservations();
         UtilComponentComponent.openSnackBar("Your reservation was created", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
       }, error: (error) => {
@@ -106,32 +117,27 @@ export class ReservationdetailsComponent implements OnInit {
   }
 
   deleteUserData(form:NgForm){
-      form.resetForm(); // Reset the form
+      form.resetForm();
   }
 
 
-  getTimeSlotForFootball(court: string){
-    this.adminService.getTimeSlots(court).subscribe({
+  getTimeSlotForCourts(){
+    this.adminService.getCourtsDetails().subscribe({
       next: (response) => {
-        console.log(response);
+          this.courtDetails = response;
       },error:(error) =>{
-        console.log(error);
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }
 
-  getTimeSlotForBasketball(court: string){
-    this.adminService.getTimeSlots(court).subscribe({
-      next: (response) => {
-          
-      }
-    })
-  }
-
-  getTimeSlotForTennis(court: string){
-    this.adminService.getTimeSlots(court).subscribe({
-      next: (response) => {
-          
+  saveCourtDetails(courtId: number, startTime: number, endTime: number){
+    this.adminService.updateCourtDetails(courtId, startTime, endTime).subscribe({
+      next: () => {
+        UtilComponentComponent.openSnackBar("TimeSlots were updated", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
+        this.getTimeSlotForCourts();
+      }, error: (error) =>{
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }

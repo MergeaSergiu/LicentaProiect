@@ -47,6 +47,19 @@ th{
     
 }
 
+.court input{
+  background-color: rgb(184, 144, 35);
+  color: black;
+  border: 2px solid rgb(106, 93, 93);
+  border-radius: 10px;
+  outline: none;
+  width: 35%;
+}
+
+.courtDetails{
+  margin-top: 10px;
+}
+
 tr:hover {
     background-color: rgb(209, 209, 209); /* Change background color on hover */
 }

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CourtDetailsResponse {
 
+    Long id;
     String court;
     Integer startTime;
     Integer endTime;

@@ -69,12 +69,8 @@
   </mat-form-field>
   <br>
   <mat-form-field>
-    <mat-label>Select a HourSchedule</mat-label>
-    <mat-select [(ngModel)]="selectedHourSchedule" name="hourSchedule" ngModel required>
-        <mat-option *ngFor="let hourSchedule of hourSchedules" [value]="hourSchedule">
-            {{hourSchedule}}
-        </mat-option>
-    </mat-select>
+    <mat-label>Time Slots (e.g., 17-18)</mat-label>
+    <input matInput [(ngModel)]="selectedHourSchedule" name="hourSchedule" type="text" required>
   </mat-form-field>
   <br>
     </div>
@@ -84,4 +80,33 @@
   </div>
   </form>
 </div>
+</div>
+<br>
+<div class="courtDetails">
+  <div class="courtDetail">
+      <mat-card *ngFor="let courtDetail of courtDetails" class="court">
+        <mat-card-header class="card-title">
+          <h2 class="title">{{ courtDetail.court }}</h2>
+        </mat-card-header>
+        <div *ngIf="!inEditMode" class="edit-mode-container">
+          <p>
+            StartTime
+            <br>
+          <span>
+            <input type="text" [ngModel]="courtDetail?.startTime" (ngModelChange)="courtDetail.startTime = $event">
+          </span>
+          </p>
+          <p>
+            EndTime
+            <br>
+            <span>
+              <input type="text" [ngModel]="courtDetail?.endTime" (ngModelChange)="courtDetail.endTime = $event">
+            </span>
+          </p>
+          <div class="buttons">
+            <button type="button" class="button-edit" (click)="saveCourtDetails(courtDetail.id, courtDetail.startTime, courtDetail.endTime) ">Save Details</button>
+            </div>
+        </div>
+      </mat-card>
+  </div>
 </div>

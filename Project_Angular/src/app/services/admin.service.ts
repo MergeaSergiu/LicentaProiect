@@ -54,6 +54,17 @@ export class AdminService{
     return this.httpClient.get<CourtDetailsResponse>(`${this.API_PATH}/details/${court}`)
   }
 
+  public updateCourtDetails(courtId: number, startTime: number, endTime: number){
+    return this.httpClient.put(`${this.API_PATH}/details/${courtId}`, {}, {params: {
+      startTime: startTime.toString(),
+      endTime: endTime.toString()
+    }})
+  }
+
+  public getCourtsDetails(): Observable<any>{
+    return this.httpClient.get<CourtDetailsResponse[]>(`${this.API_PATH}/details`)
+  }
+
   public updateSubscriptionData(subscriptionId:number, subscriptionRequest: SubscriptionRequest){
     return this.httpClient.put(`${this.API_PATH}/subscriptions/${subscriptionId}`, subscriptionRequest)
   }

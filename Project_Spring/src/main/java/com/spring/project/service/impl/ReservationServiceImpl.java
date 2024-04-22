@@ -7,9 +7,11 @@ import com.spring.project.dto.ReservationResponse;
 import com.spring.project.email.EmailSender;
 import com.spring.project.mapper.ReservationMapper;
 import com.spring.project.model.Court;
+import com.spring.project.model.CourtDetails;
 import com.spring.project.model.User;
 import com.spring.project.model.Reservation;
 import com.spring.project.repository.ClientRepository;
+import com.spring.project.repository.CourtDetailsRepository;
 import com.spring.project.repository.ReservationRepository;
 import com.spring.project.service.ReservationService;
 import com.spring.project.util.UtilMethods;
@@ -29,6 +31,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationMapper reservationMapper;
     private final ClientRepository clientRepository;
     private final UtilMethods utilMethods;
+    private final CourtDetailsRepository courtDetailsRepository;
 
     public void saveReservation(ReservationRequest reservationRequest, String authorization) {
             String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
@@ -36,10 +39,31 @@ public class ReservationServiceImpl implements ReservationService {
             if (user == null) {
                 throw new EntityNotFoundException("User does not exist");
             }
+
+            Court court = Court.valueOf(reservationRequest.getCourt());
+            CourtDetails courtDetails = courtDetailsRepository.findByCourt(court);
+            if(courtDetails == null) throw new EntityNotFoundException("Court does not exist");
+
+            String[] parts = reservationRequest.getHourSchedule().split("-");
+            Integer startTime = Integer.parseInt(parts[0]);
+            Integer endTime = Integer.parseInt(parts[1]);
+
+            if(startTime.compareTo(courtDetails.getStartTime()) <0 || endTime.compareTo(courtDetails.getEndTime()) >0){
+                throw new EntityNotFoundException("Time slots are outside the court time slots");
+            }
+
+            if(startTime.compareTo(endTime) >=0){
+            throw new EntityNotFoundException("Start time is before the end Time");
+            }
+            if(endTime - startTime > 1){
+            throw new EntityNotFoundException("You can not make reservation for more than 1 hour");
+            }
+
             boolean existingReservation = reservationRepository.findAll().stream()
                     .anyMatch(reservation -> reservation.getReservationDate().toString().equals(reservationRequest.getLocalDate())
-                            && reservation.getHourSchedule().equals(reservationRequest.getHourSchedule())
-                            && reservation.getCourt().equals(Court.valueOf(reservationRequest.getCourt())));
+                            && (reservation.getStartTime().compareTo(startTime)) == 0
+                            && reservation.getCourt().equals(court));
+
             if(existingReservation){
                 throw new CreateReservationException("There is a reservation at the same moment created");
             }
@@ -47,7 +71,7 @@ public class ReservationServiceImpl implements ReservationService {
             if(reservationsForCurrentDayForUser.size() >=3){
                 throw new CreateReservationException("You reached the reservations limit per day");
             }
-            Reservation reservation = reservationMapper.convertFromDto(reservationRequest, user);
+            Reservation reservation = reservationMapper.convertFromDto(reservationRequest, user, startTime, endTime);
             reservationRepository.save(reservation);
             String emailTemplate = utilMethods.loadEmailTemplateFromResource("reservationResponseEmail.html");
             emailTemplate = emailTemplate.replace("${user}", user.getFirstName()+" " + user.getLastName());
@@ -63,9 +87,29 @@ public class ReservationServiceImpl implements ReservationService {
         if(user == null){
             throw new EntityNotFoundException("User does not exist");
         }
+
+        Court court = Court.valueOf(reservationRequestByAdmin.getCourt());
+        CourtDetails courtDetails = courtDetailsRepository.findByCourt(court);
+        if(courtDetails == null) throw new EntityNotFoundException("Court does not exist");
+
+        String[] parts = reservationRequestByAdmin.getHourSchedule().split("-");
+        Integer startTime = Integer.parseInt(parts[0]);
+        Integer endTime = Integer.parseInt(parts[1]);
+
+        if(startTime.compareTo(courtDetails.getStartTime()) <0 || endTime.compareTo(courtDetails.getEndTime()) >0){
+            throw new EntityNotFoundException("Choose other timeSlots");
+        }
+
+        if(startTime.compareTo(endTime) >=0){
+            throw new EntityNotFoundException("Start time is before the end Time");
+        }
+        if(endTime - startTime > 1){
+            throw new EntityNotFoundException("You can not make reservation for more than 1 hour");
+        }
+
         boolean existingReservation = reservationRepository.findAll().stream()
                 .anyMatch(reservation -> reservation.getReservationDate().toString().equals(reservationRequestByAdmin.getLocalDate())
-                        && reservation.getHourSchedule().equals(reservationRequestByAdmin.getHourSchedule())
+                        && (reservation.getStartTime().compareTo(Integer.parseInt(reservationRequestByAdmin.getHourSchedule().split("-")[0])) == 0)
                         && reservation.getCourt().equals(Court.valueOf(reservationRequestByAdmin.getCourt())));
         if(existingReservation){
             throw new CreateReservationException("There is a reservation at the same moment created");
@@ -76,7 +120,7 @@ public class ReservationServiceImpl implements ReservationService {
             throw new CreateReservationException("User reached the limit of 3 reservations per day");
         }
 
-        Reservation reservation = reservationMapper.convertDtoAdminReservation(reservationRequestByAdmin, user);
+        Reservation reservation = reservationMapper.convertDtoAdminReservation(reservationRequestByAdmin, user,startTime,endTime);
         reservationRepository.save(reservation);
     }
 
