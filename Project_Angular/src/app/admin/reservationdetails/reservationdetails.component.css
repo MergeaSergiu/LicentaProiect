@@ -11,11 +11,12 @@ th{
   background-color: black !important;
   color: white;
 }
+
 .container{
-      justify-content: center;
-    display: flex;
-	  align-items: flex-start;
-	  flex-wrap: wrap;
+  justify-content: center;
+  display: flex;
+	align-items: flex-start;
+	flex-wrap: wrap;
 }
 
 .continer-table  {
@@ -24,10 +25,17 @@ th{
   margin-right: auto;
 }
 
+.card-title{
+  background-color: rgb(111, 202, 111);
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  justify-content: center;
+}
+
 th{
   background-color: black !important;
   color: white;
-  color:#D5DDE5;;
+  color:#D5DDE5;
   background:#1b1e24;
   border-bottom:4px solid #9ea7af;
   border-right: 1px solid #343a45;
@@ -38,13 +46,24 @@ th{
   vertical-align:middle;
 }
 
+.buttons{
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.form-title{
+  justify-content: center;
+  margin-bottom: 2%;
+}
+
+
 .title{
   font-weight: bold;
-  text-align: center;
   font-size: 1.25rem;
   color: rgb(5, 5, 5);
   margin-top: 15px;
-    
 }
 
 .court input{
@@ -56,20 +75,50 @@ th{
   width: 35%;
 }
 
+.edit-mode-container{
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.form-container{
+  text-align: center;
+}
+
+.divider2{
+  height: 2.0px;
+  width: 80%; 
+  background-color: hsl(0, 0%, 0%);
+  margin: 0px auto; 
+}
+
+.courtDetail{
+  margin-left: 10%;
+  width: 100%;
+}
+
 .courtDetails{
-  margin-top: 10px;
+  margin-top: 2%;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+	flex-direction: row;
+}
+
+.court{
+  border: 2px solid black;
+  border-radius: 15px;
 }
 
 tr:hover {
-    background-color: rgb(209, 209, 209); /* Change background color on hover */
+    background-color: rgb(209, 209, 209);
 }
 
 .create-reservation-form{
   display: flex;
   background-color: rgb(92, 90, 90);
   border: 2px solid rgb(255, 255, 255);
-  height: 430px;
-  width: 320px;
   border-radius: 10px;
   margin-top: 10%;
 }

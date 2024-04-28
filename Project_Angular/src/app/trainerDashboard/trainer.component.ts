@@ -16,7 +16,7 @@ export class TrainerComponent implements OnInit{
   constructor(private clientService: ClientService, private _responseBar: MatSnackBar){}
   
   collaborations: CollaborationResponse[];
-  displayedColumns: string[] = ['User Name', 'Status'];
+  displayedColumns: string[] = ['User Name','Status'];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -52,7 +52,7 @@ export class TrainerComponent implements OnInit{
     this.clientService.declineRequestForCollaboration(collaborationId).subscribe({
       next: (response: any) => {
         this.getCollaborationForTrainer();
-        UtilComponentComponent.openSnackBar("You declined the request", this._responseBar, UtilComponentComponent.SnackbarStates.Default);
+        UtilComponentComponent.openSnackBar("You declined the request", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }
@@ -60,7 +60,7 @@ export class TrainerComponent implements OnInit{
   public finishCollaboration(collaborationId: number){
     this.clientService.finishCollaborationWithUser(collaborationId).subscribe({
       next: (response) => {
-        UtilComponentComponent.openSnackBar("You set the collaboration as finish", this._responseBar, UtilComponentComponent.SnackbarStates.Default);
+        UtilComponentComponent.openSnackBar("You set the collaboration as finish", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
         this.getCollaborationForTrainer();
       }
     })

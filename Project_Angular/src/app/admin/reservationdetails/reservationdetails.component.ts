@@ -30,7 +30,6 @@ export class ReservationdetailsComponent implements OnInit {
   selectedCourt: string;
   displayedColumns: string[] = ['Date', 'HourSchedule', 'Email', 'Court', 'Delete'];
   hourSchedules: HourSchedule[] = [];
-  inEditMode = false;
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor(private adminService: AdminService, private clientService: ClientService, private _responseBar: MatSnackBar) { }
@@ -40,14 +39,6 @@ export class ReservationdetailsComponent implements OnInit {
     this.fetchAllReservations();
     this.fetchAllUsers();
     this.getTimeSlotForCourts();
-  }
-
-  toggleEditMode(): void {
-    this.inEditMode = true;
-  }
-
-  cancelEdit(): void {
-    this.inEditMode = false;
   }
 
   Filterchange(data: Event) {

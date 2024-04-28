@@ -57,7 +57,7 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
                     emailTemplateUser = emailTemplateUser.replace("${trainerName}", trainer.getFirstName() + " " + trainer.getLastName());
                     emailSender.send(username, emailTemplateUser, "Collaboration Request");
                 }else{
-                    throw new EntityExistsException("There is already an active reservation");
+                    throw new EntityExistsException("There is already an active collaboration");
                 }
 
     }

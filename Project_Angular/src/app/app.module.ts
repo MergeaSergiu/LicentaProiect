@@ -52,6 +52,8 @@ import { CheckoutComponent } from './checkout/checkout.component';
 import { PopupSuccessComponent } from './popup-success/popup-success.component';
 import { TrainersComponent } from './client/trainers/trainers.component';
 import { UtilComponentComponent } from './util-component/util-component.component';
+import { HomepageComponent } from './homepage/homepage.component';
+import { NavbarHomeComponent } from './navbar-home/navbar-home.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +83,9 @@ import { UtilComponentComponent } from './util-component/util-component.componen
     CheckoutComponent,
     PopupSuccessComponent,
     TrainersComponent,
-    UtilComponentComponent
+    UtilComponentComponent,
+    HomepageComponent,
+    NavbarHomeComponent
   ],
   imports: [
     BrowserModule,

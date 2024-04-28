@@ -14,30 +14,27 @@
   <div class="schedule-container" *ngIf="selectedDate">
     <ul>
       <li *ngFor="let schedule of hourSchedulesFootball">
-          <button class="button-reservation"
+        <button
+          class="button-reservation"
           matTooltip="Select the time slot"
           [disabled]="schedule.reserved"
           [color]="schedule.reserved ? '' : 'primary'"
-          (click)="
-            saveReservation(selectedDate, schedule, 'FOOTBALL')
-          "
+          (click)="saveReservation(selectedDate, schedule, 'FOOTBALL')"
         >
           {{ schedule.time }}
         </button>
-          
       </li>
     </ul>
   </div>
   <div class="schedule-container" *ngIf="selectedDate">
     <ul>
-      <li *ngFor="let schedule of hourSchedulesBasketball"> 
-          <button class="button-reservation"
+      <li *ngFor="let schedule of hourSchedulesBasketball">
+        <button
+          class="button-reservation"
           matTooltip="Select the time slot"
           [disabled]="schedule.reserved"
           [color]="schedule.reserved ? '' : 'primary'"
-          (click)="
-            saveReservation(selectedDate, schedule, 'BASKETBALL')
-          "
+          (click)="saveReservation(selectedDate, schedule, 'BASKETBALL')"
         >
           {{ schedule.time }}
         </button>
@@ -47,20 +44,20 @@
   <div class="schedule-container" *ngIf="selectedDate">
     <ul>
       <li *ngFor="let schedule of hourSchedulesTenis">
-          <button class="button-reservation"
+        <button
+          class="button-reservation"
           matTooltip="Select the time slot"
           [disabled]="schedule.reserved"
           [color]="schedule.reserved ? '' : 'primary'"
           (click)="saveReservation(selectedDate, schedule, 'TENNIS')"
         >
           {{ schedule.time }}
-      </button>
-       
+        </button>
       </li>
     </ul>
   </div>
 </div>
-
+<div class="divider2"></div>
 <div class="reservation-container">
   <div class="reservation-list">
     <ul>
@@ -93,5 +90,3 @@
     </ul>
   </div>
 </div>
-
-<

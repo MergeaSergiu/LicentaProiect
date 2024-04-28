@@ -64,14 +64,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseContainer> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
 
-        String errors = ex.getBindingResult().getFieldErrors()
-                .stream()
-                .map(error -> error.getDefaultMessage())
-                .findFirst()  // Get the first error message
-                .orElse("Unknown validation error");
-
         errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
-        errorResponseContainer.setErrorMessage(errors);
+        errorResponseContainer.setErrorMessage("Can not process the request.One field may be invalid.");
         return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
     }
 

@@ -1,12 +1,10 @@
 .container{
     border: 2px solid;
-    position: absolute;
-    top: 43%;
-    left: 50%;
+    position: relative;
     width: 360px;
     height: 520px;
-    transform: translate(-50%, -50%);
     background: white;
+    margin-top: 3%;
     border-radius: 10px;
     font-family: Arial, sans-serif;
     box-sizing: border-box;

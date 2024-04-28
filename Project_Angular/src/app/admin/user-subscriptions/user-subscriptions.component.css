@@ -1,40 +1,55 @@
-.subs-table{
-    margin-top: 10%;
-    width: 60%;
-    margin-left: auto;
-    margin-right: auto;
-    position: relative;
+
+.sub-container{
+  position: relative;
 }
 
-th{
-  background-color: black !important;
-  color: white;
-  color:#D5DDE5;;
-  background:#1b1e24;
-  border-bottom:4px solid #9ea7af;
-  border-right: 1px solid #343a45;
-  font-size:14px;
-  font-weight: 90;
-  padding:24px;
-  text-align:left;
-  vertical-align:middle;
-  }
+.subs-container {
+  justify-content: center;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 7%;
+}
+
+
+.user-sub {
+  border: 3px solid rgb(0, 0, 0);
+  position: relative;
+  width: 360px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  margin: 1em;
+  padding: 1em;
+  background: rgb(255, 255, 255);
+  position: relative;
+  color: rgb(0, 0, 0);
+  border-radius: 5px;
+}
+
+.subscriptions-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.active-subscription {
+  background-color: rgb(159, 201, 159); /* Change to your desired background color for active subscriptions */
+}
+
+.subscription-info {
+  flex: 1;
+}
 
  .createSub {
-    position: absolute;
-    top:15%;
-/* Adjust top position as needed */
-    right: 420px; /* Adjust right position as needed */
+    margin-top: 3%;
+    margin-bottom: 7%;
+    position: relative;
+    text-align: center;
   }
 
-  .subs-table .active-subscription {
-    background-color: rgb(127, 188, 127); /* Change to your desired background color for active subscriptions */
+  .text1{
+    font-size: 14px;
+     color: #444242;
   }
   
-  .subs-table tr:not(.active-subscription) {
-    background-color: rgb(213, 116, 116); /* Change to your desired background color for inactive subscriptions */
-  }
-
-  tr:hover {
-    background-color: rgb(209, 209, 209); /* Change background color on hover */
-}

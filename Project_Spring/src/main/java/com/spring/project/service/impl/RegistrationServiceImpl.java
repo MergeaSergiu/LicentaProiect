@@ -186,7 +186,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         String refreshJwt = jwtRefreshToken.getRefreshToken();
         String clientEmail = jwtService.extractClientUsername(refreshJwt);
         if(clientEmail == null){
-            throw new EntityNotFoundException("Token coul not be updated");
+            throw new EntityNotFoundException("Token could not be updated");
         }
         var clientDetails = this.clientRepository.findByEmail(clientEmail).orElseThrow();
         if(jwtService.isTokenValid(refreshJwt, clientDetails)){

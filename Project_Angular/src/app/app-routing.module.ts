@@ -16,12 +16,14 @@ import { UserdetailsComponent } from "./admin/userdetails/userdetails.component"
 import { UserSubscriptionsComponent } from "./admin/user-subscriptions/user-subscriptions.component";
 import { CheckoutComponent } from "./checkout/checkout.component";
 import { TrainersComponent } from "./client/trainers/trainers.component";
+import { HomepageComponent } from "./homepage/homepage.component";
 
 const appRoutes : Routes = [
-    { path: '', redirectTo: '/login', pathMatch: 'full'},
+    { path: '', redirectTo: '/home', pathMatch: 'full'},
     { path: 'authentication', component: AuthenticationComponent},
     { path: 'login', component: LoginComponent},
     { path: 'recoverPass', component: RecoverPasswordComponent},
+    { path: 'home', component: HomepageComponent},
     { path: 'client',
     canActivate: [authGuard],
     data: {roles: 'USER'},

@@ -87,7 +87,7 @@ export class GymComponent implements OnInit{
       next: (response) =>{
         this.fetchTrainingClassData(classId);
         this.fetchUserTrainingClassesData();
-        UtilComponentComponent.openSnackBar("You have drop out from training Class", this._responseBar, UtilComponentComponent.SnackbarStates.Default);
+        UtilComponentComponent.openSnackBar("You have drop out from training Class", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }

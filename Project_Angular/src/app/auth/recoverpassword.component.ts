@@ -3,8 +3,9 @@ import { NgForm } from "@angular/forms";
 import { RegistrationService } from "../services/registration.service";
 import { ResetPasswordRequest } from "../models/resetPass-request.model";
 import { UpdatePasswordRequest } from "../models/updatePassword-request.model";
-import { MatSnackBar, MatSnackBarConfig } from "@angular/material/snack-bar";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { UtilComponentComponent } from "../util-component/util-component.component";
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'app-recoverPass',
@@ -16,11 +17,10 @@ export class RecoverPasswordComponent {
     alertMessageResetEmail: string;
     alertMessageUpdatePassword: string;
     resetPasswordFormSubmitted = false;
-    constructor(private registrationService: RegistrationService, private _responseBar: MatSnackBar) {
+    constructor(private registrationService: RegistrationService, private _responseBar: MatSnackBar, private router: Router) {
     }
 
     ngOnInit(): void {
-        // Determine which form was last submitted and set the flag accordingly
         const lastSubmittedForm = localStorage.getItem('lastSubmittedForm');
         if (lastSubmittedForm === 'resetPasswordForm') {
             this.resetPasswordFormSubmitted = false;
@@ -38,6 +38,7 @@ export class RecoverPasswordComponent {
                 this.registrationService.setResetPassToken(response.token);
                 this.resetPasswordFormSubmitted = true;
                 localStorage.setItem('lastSubmittedForm', 'updatePasswordForm');
+                UtilComponentComponent.openSnackBar("Confirm the request in the email", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
             }, error: (errorMessage) => {
                 UtilComponentComponent.openSnackBar(errorMessage, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
                 this.resetPasswordFormSubmitted = false;
@@ -57,7 +58,9 @@ export class RecoverPasswordComponent {
         console.log(updatePasswordRequest);
         this.registrationService.updatePassword(updatePasswordRequest).subscribe({
             next: (response: any) => {
-                UtilComponentComponent.openSnackBar(response, this._responseBar, UtilComponentComponent.SnackbarStates.Success);
+                UtilComponentComponent.openSnackBar(response.passwordResetResponse, this._responseBar, UtilComponentComponent.SnackbarStates.Success);
+                this.registrationService.clear();
+                this.router.navigate(['/login']);
             }, error: (errorMessage) => {
                 UtilComponentComponent.openSnackBar(errorMessage, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
             }

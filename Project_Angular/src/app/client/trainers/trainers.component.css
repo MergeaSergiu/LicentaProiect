@@ -1,10 +1,81 @@
-
 .user-collaborations{
-    margin-top: 65px;
+    margin-top: 5%;                                                                                                                                                                                                                                                                                                                                                                                                                                       
     width: 60%;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 15%;
 }
+
+.user-res {
+  border: 3px solid rgb(0, 0, 0);
+  position: relative;
+  width: 400px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  margin: 1em;
+  padding: 1em;
+  background: rgb(255, 255, 255);
+  position: relative;
+  color: rgb(0, 0, 0);
+  border-radius: 5px;
+}
+
+
+.reservation-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  margin-bottom: 7%;
+}
+
+.text1{
+  font-size: 13px;
+   color: #444242;
+}
+
+.reservation-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.divider{
+  height: 0.5px;
+  width: 60%; 
+  background-color: #b3b0b0;
+  margin: 0px auto; 
+}
+
+.info{
+  color: black;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.section{
+  padding: 10px 0;
+  text-align: center;
+  color: #918f8f;  
+}
+
+.info{
+  color: black;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+
+.trainer-card{
+  width: 25%;
+  height: 20%;
+  margin: 8px;
+  margin-bottom: 20px;
+  border: 2px solid black;
+  border-radius: 15px;
+}
+
 
 .user-trainer {
   border: 2px solid rgb(0, 0, 0);
@@ -36,12 +107,10 @@ th{
   }
 
   .title{
-    background-color: rgb(109, 101, 101);
     color: rgb(0, 0, 0);
     font-size: 32px;
     text-align: center;
     margin-top:2%;
-    border: 2px solid black;
 }
 
 .user-trainer:hover{
@@ -56,6 +125,13 @@ tr:hover {
   height: 200px; /* Set maximum height for the scrollable section */
   width: 430px;
   overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.divider2{
+  height: 2.0px;
+  width: 80%; 
+  background-color: #000000;
+  margin: 0px auto; 
 }
 
 
@@ -80,7 +156,8 @@ tr:hover {
   justify-content: center;
   align-items: center;
   margin-top: 40px;
-  border-radius: 20px;
+  border-radius: 10px;
+  margin-bottom: 5%;
   background-color: transparent;
 }
 

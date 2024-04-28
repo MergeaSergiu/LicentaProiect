@@ -11,9 +11,6 @@ import { UtilComponentComponent } from "../util-component/util-component.compone
     styleUrls: ['./auth.component.css']
 })
 export class AuthenticationComponent {
-    isAdmin: boolean;
-    alertMessage: string;
-    succesfullMessage: string;
     password: string = '';
     hide: boolean = true;
 

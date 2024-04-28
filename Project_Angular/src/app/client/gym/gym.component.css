@@ -1,12 +1,8 @@
 
-
   .mat-expansion-panel {
-    /* Set width */
-    width: 24%; /* Set the desired width, for example, 100% of the parent container */
+    width: 24%;
     margin-left: 10px;
     position: relative;
-  
-    /* Set background color */
     background-color: grey;
     color: White;
   }
@@ -29,16 +25,24 @@
 
 
   .user-classes{
+    margin-top: 3%;
     border-radius: 2px solid black;
     justify-content: center;
     display: flex;
 	  align-items: flex-start;
 	  flex-wrap: wrap;
+    margin-bottom: 200px;
   }
 
   .subscription-list{
     position: relative;
-    margin-top: 300px;
+  }
+
+  .divider2{
+    height: 2.0px;
+    width: 80%; 
+    background-color: hsl(0, 0%, 0%);
+    margin: 0px auto; 
   }
 
   .container{
@@ -51,7 +55,7 @@
   .trainingClass-card{
     margin: 8px;
     width: 280px;
-    height: 480px;
+    height: 520px;
     border: 2px solid black;
     border-radius: 15px;
   }
@@ -81,7 +85,7 @@
   .info{
     color: black;
     font-size: 16px;
-     font-weight: 700;
+    font-weight: 700;
   }
 
   .section{
@@ -89,7 +93,6 @@
     text-align: center;
     color: #918f8f;  
   }
-
 
   .inner2 {
 		background-color: rgb(255, 255, 255);
@@ -118,15 +121,12 @@
     font-weight: bold;
     font-size: 1.25rem;
     color: rgb(5, 5, 5);
-    margin-top: 15px;
-      
+    margin-top: 20%;
   }
 
 
   .title-sub{
-    border-bottom: 3px solid white;
-    color: white;
-    background-color: black;
+    color: rgb(0, 0, 0);
     text-align: center;
     margin-bottom: 10px;
     margin-top: 10px;
