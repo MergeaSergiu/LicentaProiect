@@ -1,19 +1,27 @@
-/* calendar.component.css */
-
-/* calendar.component.css */
-
-  
 .demo-inline-calendar-card {
   width: 280px;
 }
 
+.calendar-container{
+ margin-right: 20%;
+ margin-left: 12%;
+}
 
-.calendar-container {
-  flex: 1;
+.schedules-list ul{
+  list-style-type: none;
+}
+
+.title{
+  border: 1px solid white;
+  border-radius: 6px;
+  background-color: grey;
+  text-align: center;
 }
 
 .schedule-container {
   flex: 0 0 180px;
+  margin-right: 2%;
+  text-align: center;
 }
 
 button{
@@ -26,7 +34,7 @@ button{
 }
 
 .button-reservation{
-    background: #162f72;
+    background: #1553af;
     color: #ffffff;
     border-radius: 8px;
     border: 1px solid rgb(255, 255, 255);
@@ -40,12 +48,9 @@ button{
 }
 
 button:disabled{
-  background-color: rgb(169, 89, 89); /* Reduce the opacity to visually indicate that the button is disabled */
+  background-color: rgb(200, 47, 47);
   cursor: not-allowed;
-}
-
-button:disabled{
-  opacity: 0.5; /* Reduce the opacity to visually indicate that the button is disabled */
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -63,7 +68,7 @@ button:disabled{
 .user-res {
   border: 3px solid rgb(0, 0, 0);
   position: relative;
-  width: 360px;
+  width: 380px;
   height: 80px;
   display: flex;
   align-items: center;
@@ -78,10 +83,6 @@ button:disabled{
 
 .container{
   display: flex;
-  background-color: rgb(92, 90, 90);
-  border: 2px solid rgb(255, 255, 255);
-  height: 420px;
-  border-radius: 10px;
   margin-top: 5%;
   margin-bottom: 5%;
 }
@@ -97,7 +98,7 @@ button:disabled{
 .divider2{
   height: 2.0px;
   width: 80%; 
-  background-color: black;
+  background-color: rgb(255, 255, 255);
   margin: 0px auto; 
 }
 

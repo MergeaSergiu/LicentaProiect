@@ -8,11 +8,26 @@
         <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="User Name">
         <th mat-header-cell *matHeaderCellDef>Client Name</th>
-        <td mat-cell *matCellDef="let collaboration" style="width: 5%;">{{ collaboration.firstName }} {{collaboration.lastName}}</td>
+        <td mat-cell *matCellDef="let collaboration" style="width: 6%;">{{ collaboration.firstName }} {{collaboration.lastName}}</td>
         </ng-container>
         <ng-container matColumnDef="Status">
             <th mat-header-cell *matHeaderCellDef>Status</th>
-            <td mat-cell *matCellDef="let collaboration" style="width: 5%;">
+            <td mat-cell *matCellDef="let collaboration" style="width: 3%;">
+                <ng-container *ngIf="collaboration.collaborationStatus == 'PENDING'">
+                    <span>Pending response</span>
+                </ng-container>
+                <ng-container *ngIf="collaboration.collaborationStatus == 'ACCEPTED'">>
+                    <span>Acceped</span>
+                </ng-container>
+                <ng-container *ngIf="collaboration.collaborationStatus == 'ENDED'">
+                    <span>Ended</span>
+                </ng-container>
+
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="Period">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let collaboration" style="width: 7%;">
                 <ng-container *ngIf="collaboration.collaborationStatus == 'PENDING'">
                     <button mat-raised-button color="primary" (click)="acceptRequest(collaboration.collaborationId)">Accept</button>
                     <button mat-raised-button color="warn" (click)="declineRequest(collaboration.collaborationId)">Decline</button>
@@ -23,11 +38,8 @@
                     <span>Start Date: {{collaboration.startTime}}</span>
                 </ng-container>
                 <ng-container *ngIf="collaboration.collaborationStatus == 'ENDED'">
-                    <span>Finish</span>
-                    <br>
                     <span>From: {{collaboration.startTime}} to {{collaboration.endTime}}</span>
                 </ng-container>
-
             </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

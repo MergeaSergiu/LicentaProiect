@@ -122,18 +122,14 @@
         <br />
       </div>
       <div class="buttons">
-        <button
+        <button class="button-edit"
           type="submit"
-          mat-raised-button
-          color="primary"
           [disabled]="!authForm.valid"
         >
           Save
         </button>
-        <button
+        <button class="button-clear"
           type="button"
-          mat-raised-button
-          color="warn"
           (click)="deleteUserData(authForm)"
         >
           Clear Data
@@ -177,9 +173,7 @@
     <div class="buttons">
       <button
         type="button"
-        mat-raised-button
         matTooltip="Edit data"
-        color="primary"
         class="button-edit"
         (click)="
           saveCourtDetails(

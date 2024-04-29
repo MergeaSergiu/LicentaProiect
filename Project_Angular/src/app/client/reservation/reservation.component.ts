@@ -76,10 +76,9 @@ export class ReservationComponent implements OnInit{
         console.log(response);
           const startTime = response.startTime;
           const endTime = response.endTime;
-
           const hourSlots: HourSchedule[] = [];
           for (let i = startTime; i < endTime; i++) {
-            const timeSlot = `${i}-${i + 1}`; // Example: '16-17'
+            const timeSlot = `${i}-${i + 1}`;
             const hourSlot: HourSchedule = { time: timeSlot, reserved: false };
             hourSlots.push(hourSlot);
           }
@@ -87,9 +86,9 @@ export class ReservationComponent implements OnInit{
           if (court === 'FOOTBALL') {
             this.hourSchedulesFootball = hourSlots;
           } else if (court === 'TENNIS') {
-            this.hourSchedulesBasketball = hourSlots;
-          } else if (court === 'BASKETBALL') {
             this.hourSchedulesTenis = hourSlots;
+          } else if (court === 'BASKETBALL') {
+            this.hourSchedulesBasketball = hourSlots;
           }
       }
     })

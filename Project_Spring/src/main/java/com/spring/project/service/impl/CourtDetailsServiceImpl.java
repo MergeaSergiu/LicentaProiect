@@ -51,7 +51,7 @@ public class CourtDetailsServiceImpl implements CourtDetailsService {
             throw new EntityNotFoundException("Wrong timeSlots used.");
         }
 
-//        reservationRepository.deleteAll
+        reservationRepository.deleteAllReservationBasedOnStartAndEndTime(startTime, endTime);
 
         courtDetails.setStartTime(startTime);
         courtDetails.setEndTime(endTime);

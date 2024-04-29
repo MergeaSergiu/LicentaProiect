@@ -12,18 +12,6 @@
     width: 80%;
   }
 
-  .inputdata{
-    background-color: rgb(200, 150, 0);
-    color: black;
-    border: 2px solid black;
-    border-radius: 10px;
-    outline: none;
-    width: 80%;
-    font-weight: bold;
-    text-align: center;
-  }
-
-
   .user-classes{
     margin-top: 3%;
     border-radius: 2px solid black;
@@ -41,7 +29,7 @@
   .divider2{
     height: 2.0px;
     width: 80%; 
-    background-color: hsl(0, 0%, 0%);
+    background-color: hsl(0, 0%, 100%);
     margin: 0px auto; 
   }
 
@@ -56,8 +44,8 @@
     margin: 8px;
     width: 280px;
     height: 520px;
-    border: 2px solid black;
-    border-radius: 15px;
+    margin-bottom: 20px;
+    border: 2px solid rgb(255, 255, 255);
   }
 
   .subscriptions{
@@ -72,8 +60,7 @@
     width: 250px;
     height: 460px;
     margin-bottom: 20px;
-    border: 2px solid black;
-    border-radius: 15px;
+    border: 2px solid rgb(255, 255, 255);
   }
 
   .price-user{
@@ -104,9 +91,7 @@
 	}
 
   .card-title{
-    background-color: rgb(111, 202, 111);
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+    background-color: rgb(117, 154, 196);
     justify-content: center;
   }
 
@@ -117,19 +102,25 @@
     margin: 0px auto; 
 }
 
-  .title{
-    font-weight: bold;
-    font-size: 1.25rem;
-    color: rgb(5, 5, 5);
-    margin-top: 20%;
-  }
+.button-edit{
+  background: #263ca9;
+  color: #ffffff;
+  border-radius: 5px;
+  width: 160px;
+  padding: 6px;
+  margin-right: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 2px solid rgb(255, 255, 255);
+}
 
 
   .title-sub{
-    color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
     text-align: center;
-    margin-bottom: 10px;
-    margin-top: 10px;
+    margin-bottom: 2%;
+    margin-top: 2%;
   }
 
 

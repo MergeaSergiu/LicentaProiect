@@ -22,7 +22,7 @@
         <p>
           Preț
           <br />
-          <span class="price-user">
+          <span class="info">
             {{ subscription.subscriptionPrice }} RON/ month
           </span>
         </p>
@@ -45,18 +45,14 @@
       </div>
       <div class="divider"></div>
       <div class="section">
-        <button
-          mat-raised-button
+        <button class="button-edit"
           matTooltip="Update the subscription data"
-          color="primary"
           (click)="OpenEditTrainingClassPopUp(selectedTrainingClass.id)"
         >
           Edit
         </button>
-        <button
-          mat-raised-button
+        <button class="button-clear"
           matTooltip="Delete the trainingClass"
-          color="warn"
           aria-label="Delete"
           (click)="deleteTrainingClass(selectedTrainingClass.id)"
         >
@@ -124,8 +120,8 @@
       </div>
       <div class="divider"></div>
       <div class="section">
-        <button mat-raised-button matTooltip="Update the training class data" color="primary" (click)="OpenEditTrainingClassPopUp(trainingClass.id)">Edit</button> 
-        <button mat-raised-button matTooltip="Delete the trainingClass" color="warn" aria-label="Delete" (click)="deleteTrainingClass(trainingClass.id)">Delete</button>
+        <button class="button-edit"  matTooltip="Update the training class data" (click)="OpenEditTrainingClassPopUp(trainingClass.id)">Edit</button> 
+        <button class="button-clear" matTooltip="Delete the trainingClass" aria-label="Delete" (click)="deleteTrainingClass(trainingClass.id)">Delete</button>
       </div>
     </mat-card>
   </div>

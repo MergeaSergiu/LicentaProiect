@@ -12,6 +12,10 @@
     </mat-card>
   </div>
   <div class="schedule-container" *ngIf="selectedDate">
+    <p class="title">
+      Football
+    </p>
+    <div class="reservation-list">
     <ul>
       <li *ngFor="let schedule of hourSchedulesFootball">
         <button
@@ -26,9 +30,14 @@
       </li>
     </ul>
   </div>
+  </div>
   <div class="schedule-container" *ngIf="selectedDate">
+    <p class="title">
+      Basketball
+    </p>
+    <div class="reservation-list">
     <ul>
-      <li *ngFor="let schedule of hourSchedulesBasketball">
+      <li *ngFor="let schedule of hourSchedulesBasketball"  >
         <button
           class="button-reservation"
           matTooltip="Select the time slot"
@@ -41,7 +50,12 @@
       </li>
     </ul>
   </div>
+</div>
   <div class="schedule-container" *ngIf="selectedDate">
+    <p class="title">
+      Tennis
+    </p>
+    <div class="reservation-list">
     <ul>
       <li *ngFor="let schedule of hourSchedulesTenis">
         <button
@@ -56,6 +70,7 @@
       </li>
     </ul>
   </div>
+</div>
 </div>
 <div class="divider2"></div>
 <div class="reservation-container">

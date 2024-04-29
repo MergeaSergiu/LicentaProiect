@@ -16,7 +16,7 @@ export class TrainerComponent implements OnInit{
   constructor(private clientService: ClientService, private _responseBar: MatSnackBar){}
   
   collaborations: CollaborationResponse[];
-  displayedColumns: string[] = ['User Name','Status'];
+  displayedColumns: string[] = ['User Name','Status','Period'];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -60,7 +60,7 @@ export class TrainerComponent implements OnInit{
   public finishCollaboration(collaborationId: number){
     this.clientService.finishCollaborationWithUser(collaborationId).subscribe({
       next: (response) => {
-        UtilComponentComponent.openSnackBar("You set the collaboration as finish", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+        UtilComponentComponent.openSnackBar("You set the collaboration as finished", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
         this.getCollaborationForTrainer();
       }
     })

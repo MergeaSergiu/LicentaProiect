@@ -17,6 +17,7 @@ th{
   display: flex;
 	align-items: flex-start;
 	flex-wrap: wrap;
+  margin-bottom: 3%;
 }
 
 .continer-table  {
@@ -26,9 +27,7 @@ th{
 }
 
 .card-title{
-  background-color: rgb(111, 202, 111);
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
+  background-color: rgb(117, 154, 196);
   justify-content: center;
 }
 
@@ -58,7 +57,6 @@ th{
   margin-bottom: 2%;
 }
 
-
 .title{
   font-weight: bold;
   font-size: 1.25rem;
@@ -70,9 +68,13 @@ th{
   background-color: rgb(184, 144, 35);
   color: black;
   border: 2px solid rgb(106, 93, 93);
-  border-radius: 10px;
+  border-radius: 7px;
   outline: none;
   width: 35%;
+}
+
+.edit-mode-container input{
+  text-align: center;
 }
 
 .edit-mode-container{
@@ -89,7 +91,7 @@ th{
 .divider2{
   height: 2.0px;
   width: 80%; 
-  background-color: hsl(0, 0%, 0%);
+  background-color: white;
   margin: 0px auto; 
 }
 
@@ -104,11 +106,44 @@ th{
   justify-content: center;
   display: flex;
 	flex-direction: row;
+
+}
+
+.button-edit{
+  background: #263ca9;
+  color: #ffffff;
+  border-radius: 5px;
+  width: 140px;
+  padding: 4px;
+  margin-right: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 2px solid rgb(255, 255, 255);
+}
+
+.button-edit:disabled{
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+
+
+.button-clear{
+  background: #d42d2d;
+  color: #ffffff;
+  border-radius: 5px;
+  width: 140px;
+  padding: 4px;
+  margin-right: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 2px solid rgb(255, 255, 255);
 }
 
 .court{
-  border: 2px solid black;
-  border-radius: 15px;
+  border: 2px solid rgb(255, 255, 255);
 }
 
 tr:hover {

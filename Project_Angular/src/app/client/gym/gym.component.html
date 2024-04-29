@@ -40,11 +40,9 @@
     </div>
       <div class="divider"></div>
       <div class="section">
-        <button
+        <button class="button-edit"
           *ngIf="!hasActiveSubscription"
-          mat-raised-button
           matTooltip="Pay using your card"
-          color="primary"
           (click)="goToCheckoutPage(subscription.id)"
         >
           <mat-icon>payment</mat-icon> Get your subscription
@@ -108,9 +106,7 @@
         <div class="divider"></div>
         <div class="section">
           <button
-            class="button-drop"
-            mat-raised-button
-            color="primary"
+            class="button-edit"
             *ngIf="!isEnrolled"
             (click)="enrollUserToTrainingClass(trainingClass.id)"
           >

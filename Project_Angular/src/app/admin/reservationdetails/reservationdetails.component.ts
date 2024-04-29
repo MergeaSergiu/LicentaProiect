@@ -81,7 +81,7 @@ export class ReservationdetailsComponent implements OnInit {
 
   getCurrentDate(): Date {
     const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to zero
+    currentDate.setHours(0, 0, 0, 0);
     return currentDate;
   }
 
@@ -89,7 +89,6 @@ export class ReservationdetailsComponent implements OnInit {
     const year = form.value.selectedDate.getFullYear();
     const month = (form.value.selectedDate.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-indexed
     const day = form.value.selectedDate.getDate().toString().padStart(2, '0');
-    // Format the date as 'yyyy-mm-dd'
     const formattedDate = `${year}-${month}-${day}`;
     const reservationRequest: ReservationRequestByAdmin = {
       userId: form.value.userId,
@@ -132,7 +131,4 @@ export class ReservationdetailsComponent implements OnInit {
       }
     })
   }
-
-
-
 }

@@ -23,7 +23,7 @@
   .divider2{
     height: 2.0px;
     width: 80%; 
-    background-color: hsl(0, 0%, 0%);
+    background-color: hsl(0, 0%, 100%);
     margin: 0px auto; 
   }
 
@@ -37,8 +37,33 @@
     margin: 8px;
     width: 280px;
     height: 520px;
-    border: 2px solid black;
-    border-radius: 15px;
+    border: 2px solid rgb(255, 255, 255);
+  }
+
+  .button-edit{
+    background: #263ca9;
+    color: #ffffff;
+    border-radius: 5px;
+    width: 140px;
+    padding: 4px;
+    margin-right: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 2px solid rgb(255, 255, 255);
+  }
+  
+  .button-clear{
+    background: #d42d2d;
+    color: #ffffff;
+    border-radius: 5px;
+    width: 140px;
+    padding: 4px;
+    margin-right: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 2px solid rgb(255, 255, 255);
   }
 
   .divider{
@@ -73,9 +98,7 @@
   }
 
   .card-title{
-    background-color: rgb(111, 202, 111);
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+    background-color: rgb(117, 154, 196);
     justify-content: center;
   }
 
@@ -92,8 +115,7 @@
     width: 250px;
     height: 460px;
     margin-bottom: 20px;
-    border: 2px solid black;
-    border-radius: 15px;
+    border: 2px solid rgb(255, 255, 255);
   }
 
   .createSub{
@@ -108,22 +130,13 @@
     position: relative;
   }
 
-  .selector{
-    position: absolute;
-    margin-top: 60px;
-    top: 60px; /* Adjust top position as needed */
-    right: 10px;
-  }
-
   .training-data{
     position: absolute;
     margin-top: 90px;
-    top: 100px; /* Adjust top position as needed */
+    top: 100px;
     right: 5px;
   }
-
-
-
+  
   .createTrainingClass{
     margin-top: 2%;
     justify-content: center;
@@ -131,12 +144,6 @@
 	  align-items: flex-start;
 	  flex-wrap: wrap;
 }
-
-  .mat-form-field {
-    flex: 1; /* Take up remaining space */
-    max-width: 200px; /* Limit the maximum width */
-    margin-right: 20px; /* Add some spacing between the elements */
-  }
 
   .subscription-list{
     position: relative;
@@ -149,7 +156,7 @@
   .deletebutton{
     position: absolute;
     margin-top: 0px;
-    top: 5px; /* Adjust top position as needed */
+    top: 5px;
     right: 5px;
   }
 
