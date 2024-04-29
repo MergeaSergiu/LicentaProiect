@@ -56,6 +56,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidCredentialsException("Password do not respect the criteria");
         }
         Role role = roleRepository.findByName("USER");
+        if(role == null){
+            throw new EntityNotFoundException("Can not create an user account");
+        }
         User user = userMapper.convertFromDto(request,role);
         String receivedToken = clientService.signUpClient(user);
 
@@ -64,7 +67,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         emailTemplate = emailTemplate.replace("${user}", user.getFirstName()+" " + user.getLastName());
         emailTemplate = emailTemplate.replace("${resetLink}",link);
 
-        emailSender.send(request.getEmail(), emailTemplate,"activate your account");
+        emailSender.send(request.getEmail(), emailTemplate,"Activate your account");
         return RegistrationResponse
                 .builder()
                 .registrationResponse("Account was created successfully. You need to activate it.")
@@ -123,18 +126,18 @@ public class RegistrationServiceImpl implements RegistrationService {
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenServiceImpl.getToken(token).orElse(null);
         if(confirmationToken == null){
-            throw new ConfirmAccountException("Confirmation email is not available anymore");
+            throw new ConfirmAccountException("Confirmation email is not available anymore. Request another one.");
         }
         else if(confirmationToken.getConfirmedAt() != null){
-            throw new ConfirmAccountException("Account was already confirmed");
+            throw new ConfirmAccountException("Your account was already confirmed");
         }
         LocalDateTime expiredAt = confirmationToken.getExpiredAt();
         if(expiredAt.isBefore(LocalDateTime.now())){
-            throw new ConfirmAccountException("The request expired. Please create a new account");
+            throw new ConfirmAccountException("The request has expired. Please create a new account");
         }
         confirmationTokenServiceImpl.setConfirmedAt(token);
         clientRepository.enableClient(confirmationToken.getUser().getEmail());
-        return "Account was confirmed. Please log in";
+        return "Your account is now confirmed. Please log in";
     }
 
     @Transactional

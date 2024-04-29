@@ -30,7 +30,6 @@ export class TrainersComponent implements OnInit{
   getUserCollaboration(){
     this.clientService.getCollaborationsForUser().subscribe({
         next: (response) => {
-          console.log(response);
             this.userCollaborations = response;
             this.dataSource2 = new MatTableDataSource<any>(this.userCollaborations);
             this.dataSource2.paginator = this.paginator2;
@@ -42,7 +41,6 @@ export class TrainersComponent implements OnInit{
   public fetchAllTrainers(){
     this.adminService.getAllTrainers().subscribe({
       next: (response) => {
-        console.log(response);
         this.trainers = response;
       }
     })

@@ -5,6 +5,8 @@ import { NgForm } from '@angular/forms';
 import { TrainerDataResponse } from '../models/trainers-response.model';
 import { TrainingClassResponse } from '../models/trainingclass-response.model';
 import { TrainingClassRequest } from '../models/trainingclass-request.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UtilComponentComponent } from '../util-component/util-component.component';
 
 @Component({
   selector: 'app-popup-edit-tr-class',
@@ -19,7 +21,7 @@ export class PopupEditTrClassComponent {
   inputData: any;
   selectedTrainerId: number;
   trainersData: TrainerDataResponse[];
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private matDialog: MatDialogRef<PopupEditTrClassComponent>, private adminService: AdminService){}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private matDialog: MatDialogRef<PopupEditTrClassComponent>, private adminService: AdminService, private _responseBar: MatSnackBar){}
 
   closePopUp(){
     this.matDialog.close();
@@ -70,8 +72,8 @@ export class PopupEditTrClassComponent {
   this.adminService.updateTrainingClass(this.inputData.id, trainingClass).subscribe({
       next: (response) =>{
         this.closePopUp();
-      }, error : (any) =>{
-        alert("Can not update Training Class Data");
+      }, error : () =>{
+        UtilComponentComponent.openSnackBar("Can not update the training class", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     });
   }

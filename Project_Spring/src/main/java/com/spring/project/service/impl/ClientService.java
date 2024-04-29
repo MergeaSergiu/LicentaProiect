@@ -44,7 +44,7 @@ public class ClientService implements UserDetailsService {
             return token;
         }
         if (userAlreadyExist.getEnabled() != null) {
-                throw new EntityExistsException("Account already exist");
+                throw new EntityExistsException("An account with this email already exist");
             }else {
                 String encodedPassword = passwordEncoder.encode(user.getPassword());
                 userAlreadyExist.setFirstName(user.getFirstName());

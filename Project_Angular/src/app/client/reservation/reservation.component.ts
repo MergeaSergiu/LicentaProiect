@@ -73,7 +73,6 @@ export class ReservationComponent implements OnInit{
   public fetchCourtDetails(court: string){
     this.adminService.getTimeSlots(court).subscribe({
       next: (response) => {
-        console.log(response);
           const startTime = response.startTime;
           const endTime = response.endTime;
           const hourSlots: HourSchedule[] = [];
@@ -147,9 +146,7 @@ export class ReservationComponent implements OnInit{
       const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-indexed
       const day = selectedDate.getDate().toString().padStart(2, '0');
 
-      // Format the date as 'yyyy-mm-dd'
       const formattedDate = `${year}-${month}-${day}`;
-      //console.log(formattedDate);
       this.hourSchedulesFootball.forEach(schedule => {
         const isInReservation = this.reservationsFotball.some(reservation =>
           reservation.hourSchedule === schedule.time && reservation.reservationDate === formattedDate

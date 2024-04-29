@@ -28,7 +28,7 @@ export class ReservationdetailsComponent implements OnInit {
   selectedHourSchedule: string;
   courtDetails: CourtDetailsResponse[];
   selectedCourt: string;
-  displayedColumns: string[] = ['Date', 'HourSchedule', 'Email', 'Court', 'Delete'];
+  displayedColumns: string[] = ['Date', 'HourSchedule', 'User', 'Court', 'Delete'];
   hourSchedules: HourSchedule[] = [];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -87,7 +87,7 @@ export class ReservationdetailsComponent implements OnInit {
 
   onSubmitAddReservationForUser(form: NgForm) {
     const year = form.value.selectedDate.getFullYear();
-    const month = (form.value.selectedDate.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-indexed
+    const month = (form.value.selectedDate.getMonth() + 1).toString().padStart(2, '0');
     const day = form.value.selectedDate.getDate().toString().padStart(2, '0');
     const formattedDate = `${year}-${month}-${day}`;
     const reservationRequest: ReservationRequestByAdmin = {

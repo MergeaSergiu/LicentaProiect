@@ -3,7 +3,8 @@ import { FormBuilder, NgForm } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SubscriptionRequest } from '../models/subscription-request.model';
 import { AdminService } from '../services/admin.service';
-import { response } from 'express';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UtilComponentComponent } from '../util-component/util-component.component';
 
 @Component({
   selector: 'app-popup-subscription',
@@ -13,7 +14,7 @@ import { response } from 'express';
 export class PopupSubscriptionComponent {
 
   SubscriptionResponse:any;
-  constructor(private matDialog: MatDialogRef<PopupSubscriptionComponent>, private adminService: AdminService){}
+  constructor(private matDialog: MatDialogRef<PopupSubscriptionComponent>, private adminService: AdminService, private _responseBar: MatSnackBar){}
 
   closePopUp(){
     this.matDialog.close();
@@ -26,10 +27,10 @@ export class PopupSubscriptionComponent {
       subscriptionDescription: form.value.subscriptionDescription
   };
  this.adminService.createSubscription(subscriptionData).subscribe({
-  next: (response) =>{
+  next: () =>{
     this.closePopUp();
 }, error: (any) =>{
-  alert("Can not create a subscription");
+    UtilComponentComponent.openSnackBar("Can not create the subscription", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
     }
   });
  }

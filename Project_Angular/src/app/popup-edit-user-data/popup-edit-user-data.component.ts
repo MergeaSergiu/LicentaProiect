@@ -6,6 +6,8 @@ import { Role } from '../models/role.model';
 import { NgForm } from '@angular/forms';
 import { RoleRequest } from '../models/role-request.model';
 import { response } from 'express';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UtilComponentComponent } from '../util-component/util-component.component';
 
 @Component({
   selector: 'app-popup-edit-user-data',
@@ -24,7 +26,7 @@ export class PopupEditUserDataComponent {
     {id: 2, name: 'ADMIN'},
     {id: 3, name: 'TRAINER'}
   ];
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private matDialog: MatDialogRef<PopupEditUserDataComponent>, private adminService: AdminService){}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private matDialog: MatDialogRef<PopupEditUserDataComponent>, private adminService: AdminService,private _responseBar: MatSnackBar){}
 
   closePopUp(){
     this.matDialog.close();
@@ -56,8 +58,8 @@ export class PopupEditUserDataComponent {
     this.adminService.updateUserRole(this.inputData.id, roleRequest).subscribe({
       next: (response) =>{
         this.closePopUp();
-      }, error: (any) =>{
-        alert("Can not update User Role");
+      }, error: () =>{
+        UtilComponentComponent.openSnackBar("Can not update the role", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }});
       
   }

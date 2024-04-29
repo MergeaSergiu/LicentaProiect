@@ -26,7 +26,6 @@ export class ClientService{
    ngOnInit(){}
 
    handleError(error: HttpErrorResponse){
-    console.log(error);
     return throwError (() => (error.error.errorMessage));
    }
 

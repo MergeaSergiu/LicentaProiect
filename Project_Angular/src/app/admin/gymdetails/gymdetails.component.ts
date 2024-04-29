@@ -3,7 +3,6 @@ import { AdminService } from '../../services/admin.service';
 import { Router } from '@angular/router';
 import { PopupSubscriptionComponent } from '../../popup-subscription/popup-subscription.component';
 import { MatDialog } from '@angular/material/dialog';
-import { response } from 'express';
 import { PopupUpdateSubscriptionComponent } from '../../popup-update-subscription/popup-update-subscription.component';
 import { PopupCreateTrClassComponent } from '../../popup-create-tr-class/popup-create-tr-class.component';
 import { PopupEditTrClassComponent } from '../../popup-edit-tr-class/popup-edit-tr-class.component';
@@ -36,10 +35,6 @@ export class GymdetailsComponent {
     this.fetchTrainingClassData(this.selectedTrainingClassId);
   }
 
-  closeCard() {
-    this.selectedTrainingClassId = null;
-    this.selectedTrainingClass = null;
-}
 
   public fetchSubscriptions() {
     return this.adminService.getAllSubscriptions().subscribe({
@@ -72,7 +67,6 @@ export class GymdetailsComponent {
   public fetchAllTrainingClassData(){
     this.adminService.getTrainingClassesData().subscribe(
       response => {
-        console.log(response);
         this.trainingClassesData = response;
       }
     )
@@ -126,7 +120,6 @@ export class GymdetailsComponent {
     _popUpEditTrainingClass.afterClosed().subscribe(response =>{
       this.fetchTrainingClassData(id);
       this.fetchAllTrainingClassData();
-      this.closeCard();
     })
   }
 

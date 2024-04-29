@@ -47,7 +47,6 @@ export class GymComponent implements OnInit{
     this.adminService.getTrainingClassesData().subscribe({
       next: (response) => {
         this.trainingClassesData = response;
-        console.log(this.trainingClassesData);
       }
     })
   }
@@ -95,7 +94,6 @@ export class GymComponent implements OnInit{
   fetchSubscriptions(){
     return this.adminService.getAllSubscriptions().subscribe({
       next: (response) => {
-        console.log(response);
         this.subscriptions = response;
       }
     })

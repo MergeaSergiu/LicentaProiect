@@ -47,14 +47,14 @@
       <div class="section">
         <button class="button-edit"
           matTooltip="Update the subscription data"
-          (click)="OpenEditTrainingClassPopUp(selectedTrainingClass.id)"
+          (click)="OpenEditPopUp(subscription.id)"
         >
           Edit
         </button>
         <button class="button-clear"
           matTooltip="Delete the trainingClass"
           aria-label="Delete"
-          (click)="deleteTrainingClass(selectedTrainingClass.id)"
+          (click)="deleteSubscription(subscription.id)"
         >
           Delete
         </button>

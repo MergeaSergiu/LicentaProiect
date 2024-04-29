@@ -45,7 +45,6 @@ export class RecoverPasswordComponent {
                 localStorage.setItem('lastSubmittedForm', 'resetPasswordForm');
             }
         });
-
         form.reset();
     }
 
@@ -55,7 +54,6 @@ export class RecoverPasswordComponent {
             confirmedPassword: form.value.confirmedPassword,
             token: this.registrationService.getResetPassToken()
         }
-        console.log(updatePasswordRequest);
         this.registrationService.updatePassword(updatePasswordRequest).subscribe({
             next: (response: any) => {
                 UtilComponentComponent.openSnackBar(response.passwordResetResponse, this._responseBar, UtilComponentComponent.SnackbarStates.Success);

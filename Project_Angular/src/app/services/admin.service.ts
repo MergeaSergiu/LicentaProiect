@@ -26,7 +26,6 @@ export class AdminService{
    ngOnInit(){}
 
    handleError(error: HttpErrorResponse){
-    console.log(error);
     return throwError (() => (error.error.errorMessage));
    }
 

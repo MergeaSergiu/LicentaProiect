@@ -3,6 +3,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AdminService } from '../services/admin.service';
 import { SubscriptionRequest } from '../models/subscription-request.model';
 import { NgForm } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UtilComponentComponent } from '../util-component/util-component.component';
 
 @Component({
   selector: 'app-popup-update-subscription',
@@ -12,7 +14,7 @@ import { NgForm } from '@angular/forms';
 export class PopupUpdateSubscriptionComponent {
 
   @ViewChild('authForm') authForm: NgForm;
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any,private matDialog: MatDialogRef<PopupUpdateSubscriptionComponent>, private adminService: AdminService){}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any,private matDialog: MatDialogRef<PopupUpdateSubscriptionComponent>, private adminService: AdminService, private _responseBar: MatSnackBar){}
   editData: any;
   inputData: any;
   
@@ -51,8 +53,8 @@ export class PopupUpdateSubscriptionComponent {
  this.adminService.updateSubscriptionData(this.inputData.id, subscriptionData).subscribe({
   next: (response) =>{
    this.closePopUp();
- }, error: (any) =>{
-  alert("Can not create a reservation");
+ }, error: () =>{
+  UtilComponentComponent.openSnackBar("Can not update the data", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
     }
   });
  }

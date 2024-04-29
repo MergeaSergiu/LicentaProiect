@@ -150,6 +150,10 @@ tr:hover {
     background-color: rgb(209, 209, 209);
 }
 
+.buttons{
+  margin-bottom: 5%;
+}
+
 .create-reservation-form{
   display: flex;
   background-color: rgb(92, 90, 90);
