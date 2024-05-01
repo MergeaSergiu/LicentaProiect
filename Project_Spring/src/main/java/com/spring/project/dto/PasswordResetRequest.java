@@ -11,10 +11,10 @@ import lombok.*;
 @Getter
 public class PasswordResetRequest {
 
-    @NotBlank(message = "The password can not be blank")
+    @NotBlank
     private String newPassword;
 
-    @NotBlank(message = "The password can not be blank")
+    @NotBlank
     private String confirmedPassword;
 
     @JsonProperty("token")

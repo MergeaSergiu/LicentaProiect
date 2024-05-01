@@ -74,7 +74,7 @@ public class GlobalExceptionHandler {
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
 
         errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
-        errorResponseContainer.setErrorMessage(ex.getMessage());
+        errorResponseContainer.setErrorMessage("Can not process the request.One field may be invalid.");
         return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
     }
 

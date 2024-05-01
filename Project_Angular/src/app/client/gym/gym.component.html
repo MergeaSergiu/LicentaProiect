@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 <div class="subscription-list">
   <div class="title-sub">
-    <h2>Discover our Subscriptions</h2>
+    <h2>Subscriptions</h2>
   </div>
   <div class="subscriptions">
     <mat-card
@@ -13,7 +13,7 @@
       </mat-card-header>
       <div class="section">
         <p>
-          Preț
+          Price
           <br>
         <span class="info">
           {{ subscription.subscriptionPrice }} RON/ month
@@ -23,7 +23,7 @@
       <div class="divider"></div>
       <div class="section">
       <p>
-        Descriere
+        Description
         <br>
         <span class="info">{{ subscription.subscriptionDescription }}
       </span>
@@ -32,7 +32,7 @@
     <div class="divider"></div>
     <div class="section">
       <p>
-        Nr. zile
+        Nr. Days
         <br>
         <span class="info"> {{subscription.subscriptionTime}} 
         </span>
@@ -45,7 +45,7 @@
           matTooltip="Pay using your card"
           (click)="goToCheckoutPage(subscription.id)"
         >
-          <mat-icon>payment</mat-icon> Get your subscription
+        Get your subscription
         </button>
     </div>
     </mat-card>
@@ -57,7 +57,7 @@
 
 <div class="trainingClasses">
   <div class="title-sub">
-    <h2>Discover our Training Classes</h2>
+    <h2>Training Classes</h2>
   </div>
 
   <div class="container">

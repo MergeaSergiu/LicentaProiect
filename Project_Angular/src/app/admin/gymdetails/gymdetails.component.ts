@@ -9,6 +9,7 @@ import { PopupEditTrClassComponent } from '../../popup-edit-tr-class/popup-edit-
 import { TrainingClassResponse } from '../../models/trainingclass-response.model';
 import { UtilComponentComponent } from '../../util-component/util-component.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SubscriptionResponse } from '../../models/subscription-response.model';
 
 
 @Component({
@@ -18,10 +19,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class GymdetailsComponent {
 
-  subscriptions = [];
+  subscriptions : SubscriptionResponse[];
   selectedTrainingClassId: number;
   selectedTrainingClass: TrainingClassResponse;
-  trainingClassesData: TrainingClassResponse[] = [];
+  trainingClassesData: TrainingClassResponse[];
   trainingClassId: number;
   constructor(private adminService: AdminService, private dialog: MatDialog, private _responseBar: MatSnackBar) {}
 

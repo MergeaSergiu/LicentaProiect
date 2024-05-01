@@ -5,7 +5,7 @@ import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.mapper.TrainingClassMapper;
 import com.spring.project.model.TrainingClass;
 import com.spring.project.model.User;
-import com.spring.project.repository.ClientRepository;
+import com.spring.project.repository.UserRepository;
 import com.spring.project.repository.EnrollmentTrainingClassRepository;
 import com.spring.project.repository.TrainingClassRepository;
 import com.spring.project.service.TrainingClassService;
@@ -26,18 +26,18 @@ public class TrainingClassServiceImpl implements TrainingClassService {
     private final TrainingClassRepository trainingClassRepository;
     private final TrainingClassMapper trainingClassMapper;
     private final EnrollmentTrainingClassRepository enrollmentTrainingClassRepository;
-    private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
     private final UtilMethods utilMethods;
     private final EmailSenderImpl emailService;
 
     public void createTrainingClass(TrainingClassRequest trainingClassRequest, String authorization){
             String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-            User user = clientRepository.findByEmail(username).orElse(null);
+            User user = userRepository.findByEmail(username).orElse(null);
             if(user == null){
                 throw new EntityNotFoundException("User does not exist");
             }
 
-            User trainer = clientRepository.findById(Long.valueOf(trainingClassRequest.getTrainerId())).orElse(null);
+            User trainer = userRepository.findById(Long.valueOf(trainingClassRequest.getTrainerId())).orElse(null);
             if(trainer == null){
                 throw new EntityNotFoundException("Trainer does not exist");
             }
@@ -76,7 +76,7 @@ public class TrainingClassServiceImpl implements TrainingClassService {
         if(trainingClassRepository.getTrainingClassByName(trainingClassRequest.getClassName()) != null && !trainingClassRequest.getClassName().equals(trainingClass.getClassName())){
             throw new EntityExistsException("There is already already a class with this name");
         }
-        User trainer = clientRepository.findById(Long.valueOf(trainingClassRequest.getTrainerId())).orElse(null);
+        User trainer = userRepository.findById(Long.valueOf(trainingClassRequest.getTrainerId())).orElse(null);
         if(trainer == null){
             throw new EntityNotFoundException("Trainer does not exist");
         }
@@ -95,6 +95,10 @@ public class TrainingClassServiceImpl implements TrainingClassService {
                 .collect(Collectors.toList());
     }
     public List<TrainingClass> getTrainingClassesForTrainer(Long id) {
+        User trainer = userRepository.findById(id).orElse(null);
+        if(trainer == null){
+            throw new EntityNotFoundException("Trainer does not exist");
+        }
         return trainingClassRepository.findAllByTrainer_Id(id);
     }
 

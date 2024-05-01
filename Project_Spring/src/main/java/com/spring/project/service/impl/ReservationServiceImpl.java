@@ -10,7 +10,7 @@ import com.spring.project.model.Court;
 import com.spring.project.model.CourtDetails;
 import com.spring.project.model.User;
 import com.spring.project.model.Reservation;
-import com.spring.project.repository.ClientRepository;
+import com.spring.project.repository.UserRepository;
 import com.spring.project.repository.CourtDetailsRepository;
 import com.spring.project.repository.ReservationRepository;
 import com.spring.project.service.ReservationService;
@@ -19,6 +19,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,17 +30,21 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final EmailSender emailSender;
     private final ReservationMapper reservationMapper;
-    private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
     private final UtilMethods utilMethods;
     private final CourtDetailsRepository courtDetailsRepository;
 
     public void saveReservation(ReservationRequest reservationRequest, String authorization) {
             String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-            User user = clientRepository.findByEmail(username).orElse(null);
+            User user = userRepository.findByEmail(username).orElse(null);
             if (user == null) {
                 throw new EntityNotFoundException("User does not exist");
             }
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if(LocalDate.parse(reservationRequest.getLocalDate(), formatter).isBefore(LocalDate.now())){
+            throw new CreateReservationException("Can not create reservations in past");
+        }
             Court court = Court.valueOf(reservationRequest.getCourt());
             CourtDetails courtDetails = courtDetailsRepository.findByCourt(court);
             if(courtDetails == null) throw new EntityNotFoundException("Court does not exist");
@@ -49,14 +54,14 @@ public class ReservationServiceImpl implements ReservationService {
             Integer endTime = Integer.parseInt(parts[1]);
 
             if(startTime.compareTo(courtDetails.getStartTime()) <0 || endTime.compareTo(courtDetails.getEndTime()) >0){
-                throw new EntityNotFoundException("Time slots are outside the court time slots");
+                throw new CreateReservationException("Time slots are outside the court time slots");
             }
 
             if(startTime.compareTo(endTime) >=0){
-            throw new EntityNotFoundException("Start time is before the end Time");
+            throw new CreateReservationException("Start time is before the end Time");
             }
             if(endTime - startTime > 1){
-            throw new EntityNotFoundException("You can not make reservation for more than 1 hour");
+            throw new CreateReservationException("You can not make reservation for more than 1 hour");
             }
 
             boolean existingReservation = reservationRepository.findAll().stream()
@@ -83,9 +88,14 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public void saveReservationByAdmin(ReservationRequestByAdmin reservationRequestByAdmin) {
-        User user = clientRepository.findById(reservationRequestByAdmin.getUserId()).orElse(null);
+        User user = userRepository.findById(reservationRequestByAdmin.getUserId()).orElse(null);
         if(user == null){
             throw new EntityNotFoundException("User does not exist");
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if(LocalDate.parse(reservationRequestByAdmin.getLocalDate(), formatter).isBefore(LocalDate.now())){
+            throw new CreateReservationException("Can not create reservations in past");
         }
 
         Court court = Court.valueOf(reservationRequestByAdmin.getCourt());
@@ -133,7 +143,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<ReservationResponse> getAllUserReservations(String authorization) {
         String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-        User user = clientRepository.findByEmail(username).orElse(null);
+        User user = userRepository.findByEmail(username).orElse(null);
         if (user == null) {
             throw new EntityNotFoundException("User does not exist");
         }
@@ -142,7 +152,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void deleteReservation(Long id, String authorization) {
         String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-        User user = clientRepository.findByEmail(username).orElse(null);
+        User user = userRepository.findByEmail(username).orElse(null);
         if (user == null) {
             throw new EntityNotFoundException("User does not exist");
         }
@@ -161,7 +171,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public void deleteReservationsForUser(Long id) {
-        User user = clientRepository.findById(id).orElse(null);
+        User user = userRepository.findById(id).orElse(null);
         if(user == null){
             throw new EntityNotFoundException("User does not exist");
         }

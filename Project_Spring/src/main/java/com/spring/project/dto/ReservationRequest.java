@@ -16,11 +16,12 @@ import java.time.LocalDate;
 public class ReservationRequest {
 
     @NotBlank
-    String localDate;
+    private String localDate;
+
     @NotBlank
-    String hourSchedule;
+    private String hourSchedule;
+
     @NotBlank
-    String court;
-    @NotNull
-    LocalDate currentDate;
+    private String court;
+
 }

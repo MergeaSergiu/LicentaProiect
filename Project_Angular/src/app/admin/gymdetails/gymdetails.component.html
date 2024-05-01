@@ -1,10 +1,8 @@
 <app-navbar-admin></app-navbar-admin>
 <div class="subscription-list">
   <div class="createSub">
-    <button
-      mat-raised-button
+    <button class="button-edit"
       matTooltip="Create a new subscription"
-      color="primary"
       (click)="OpenCreatePopUp()"
     >
       Create Subscription (+)
@@ -20,7 +18,7 @@
       </mat-card-header>
       <div class="section">
         <p>
-          Preț
+          Price
           <br />
           <span class="info">
             {{ subscription.subscriptionPrice }} RON/ month
@@ -30,7 +28,7 @@
       <div class="divider"></div>
       <div class="section">
         <p>
-          Descriere
+          Description
           <br />
           <span class="info">{{ subscription.subscriptionDescription }} </span>
         </p>
@@ -38,7 +36,7 @@
       <div class="divider"></div>
       <div class="section">
         <p>
-          Nr. zile
+          Nr. Days
           <br />
           <span class="info"> {{ subscription.subscriptionTime }} </span>
         </p>
@@ -68,10 +66,8 @@
 
 <div class="trainingClasses">
   <div class="createTrainingClass">
-    <button
-      mat-raised-button
+    <button  class="button-edit"
       matTooltip="Create a new trainingClass"
-      color="primary"
       (click)="OpenCreateTrainingClassPopUp()"
     >
       Create TrainingClass (+)

@@ -1,6 +1,13 @@
-mat-card{
-    margin: 2%;
-    text-align: left;
+
+.mat-dialog-title {
+  text-align: center;
+  font-size: 10px;
+}
+
+.title{
+  margin-bottom: 1%;
+  font-size: 25px;
+  text-align: center;
 }
 
 .mat-mdc-form-field{
@@ -16,17 +23,3 @@ mat-card{
 button{
     margin: 2px;
 }
-
-.input-container {
-    display: flex;
-    align-items: center;
-  }
-  
-  .input-container label {
-    margin-right: 10px;
-    width: 70px;
-  }
-  
-  .input-container input {
-    width: 800px; /* Set the width of the inputs */
-  }

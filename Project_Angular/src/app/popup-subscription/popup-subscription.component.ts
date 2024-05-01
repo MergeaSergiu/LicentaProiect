@@ -29,7 +29,7 @@ export class PopupSubscriptionComponent {
  this.adminService.createSubscription(subscriptionData).subscribe({
   next: () =>{
     this.closePopUp();
-}, error: (any) =>{
+ }, error: () =>{
     UtilComponentComponent.openSnackBar("Can not create the subscription", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
     }
   });

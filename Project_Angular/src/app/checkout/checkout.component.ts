@@ -2,12 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { environment } from '../../environment';
 import { PaymentData } from '../models/payment-data.model';
 import { ClientService } from '../services/client.service';
-import { AdminService } from '../services/admin.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { PopupSuccessComponent } from '../popup-success/popup-success.component';
-import { error } from 'console';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UtilComponentComponent } from '../util-component/util-component.component';
 
@@ -27,7 +23,7 @@ export class CheckoutComponent implements OnInit {
   subscriptionForm: FormGroup;
   paymentData: PaymentData;
 
-  constructor(private formBuilder: FormBuilder, private dialog: MatDialog, private route: ActivatedRoute, private router: Router, private clientService: ClientService, private _responseBar: MatSnackBar) { }
+  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private clientService: ClientService, private _responseBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -79,31 +75,15 @@ export class CheckoutComponent implements OnInit {
             handleActions: false
           }).then((result: any) => {
             if (result.error) {
-              var _popUpMessage = this.dialog.open(PopupSuccessComponent, {
-                width: '50%',
-                enterAnimationDuration: '400ms',
-                exitAnimationDuration: '400ms',
-                data: {
-                  message: 'Payment failed!'
-                }
-              });
-              setTimeout(() => {
-                _popUpMessage.close();
-              }, 1200);
+              UtilComponentComponent.openSnackBar(result.error.message, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+              form.reset();
             } else {
               this.clientService.AddUserSubscriptionByCard(this.subscriptionId).subscribe({
                 next: (response: any) => {
-                  var _popUpMessage = this.dialog.open(PopupSuccessComponent, {
-                    enterAnimationDuration: '400ms',
-                    exitAnimationDuration: '400ms',
-                    data: {
-                      message: 'Payment successful!'
-                    }
-                  });
+                  UtilComponentComponent.openSnackBar("Payment was succesful", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
                   setTimeout(() => {
-                    _popUpMessage.close();
                     this.router.navigate(['/client/account']);
-                  }, 1000);
+                  }, 1200);
                 }, error: (error: any) => {
                   UtilComponentComponent.openSnackBar("We can not register your subscription", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
                 }

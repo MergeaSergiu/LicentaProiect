@@ -50,8 +50,6 @@ button{
 button:disabled{
   background-color: rgb(200, 47, 47);
   cursor: not-allowed;
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .delete-button {
@@ -62,8 +60,15 @@ button:disabled{
   width: 40px;
   height: 20px; 
   margin: 5px; 
-
 }
+
+.title-sub{
+  color: rgb(255, 255, 255);
+  text-align: center;
+  margin-bottom: 2%;
+  margin-top: 2%;
+}
+
 
 .user-res {
   border: 3px solid rgb(0, 0, 0);

@@ -8,7 +8,7 @@ import com.spring.project.mapper.PasswordResetMapper;
 import com.spring.project.mapper.UserMapper;
 import com.spring.project.model.User;
 import com.spring.project.model.Role;
-import com.spring.project.repository.ClientRepository;
+import com.spring.project.repository.UserRepository;
 import com.spring.project.repository.RoleRepository;
 import com.spring.project.service.PasswordResetTokenService;
 import com.spring.project.service.RegistrationService;
@@ -31,7 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private EmailValidator emailValidator;
     private PasswordValidator passwordValidator;
-    private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final ClientService clientService;
@@ -82,7 +82,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new EmailNotAvailableException("Email does not respect the criteria");
         }
 
-        User user = clientRepository.findByEmail(resetPassEmailRequest.getEmail()).orElse(null);
+        User user = userRepository.findByEmail(resetPassEmailRequest.getEmail()).orElse(null);
         if(user == null){
             throw new EntityNotFoundException("There is no account with this email");
         }
@@ -111,7 +111,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                         authenticationRequest.getPassword()
                 )
         );
-        User user = clientRepository.findByEmail(authenticationRequest.getEmail()).orElse(null);
+        User user = userRepository.findByEmail(authenticationRequest.getEmail()).orElse(null);
         if(user == null){
             throw new EntityNotFoundException("User does not exist");
         }
@@ -136,7 +136,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new ConfirmAccountException("The request has expired. Please create a new account");
         }
         confirmationTokenServiceImpl.setConfirmedAt(token);
-        clientRepository.enableClient(confirmationToken.getUser().getEmail());
+        userRepository.enableClient(confirmationToken.getUser().getEmail());
         return "Your account is now confirmed. Please log in";
     }
 
@@ -191,7 +191,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if(clientEmail == null){
             throw new EntityNotFoundException("Token could not be updated");
         }
-        var clientDetails = this.clientRepository.findByEmail(clientEmail).orElseThrow();
+        var clientDetails = this.userRepository.findByEmail(clientEmail).orElseThrow();
         if(jwtService.isTokenValid(refreshJwt, clientDetails)){
             var accessToken = jwtService.generateToken(clientDetails.getEmail(), clientDetails.getRole().getName());
             String userRole = jwtService.extractClientRole(accessToken);

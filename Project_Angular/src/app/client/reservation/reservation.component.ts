@@ -95,7 +95,7 @@ export class ReservationComponent implements OnInit{
 
   public deleteReservation(id: number){
       this.clientService.deleteReservation(id).subscribe({
-        next:(response:any) =>{
+        next:() =>{
           this.fetchReservationsForClient();
           UtilComponentComponent.openSnackBar("Your reservation was deleted", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
         },error:(error) =>{
@@ -197,7 +197,7 @@ export class ReservationComponent implements OnInit{
     };
 
       this.clientService.createReservation(registrationRequest).subscribe({
-        next: (response: any) =>{
+        next: () =>{
           UtilComponentComponent.openSnackBar("Your reservation was created", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
           schedule.reserved = true;
         },

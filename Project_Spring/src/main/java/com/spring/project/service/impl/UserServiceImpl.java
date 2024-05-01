@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
     private final SubscriptionHistoryRepository subscriptionHistoryRepository;
     private final ReservationService reservationService;
     private final TrainingClassService trainingClassService;
-    private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
     private final ConfirmationTokenService confirmationTokenService;
     private final PasswordResetTokenService passwordResetTokenService;
     private final RoleRepository roleRepository;
@@ -31,14 +31,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDataResponse> getAllClients() {
-            List<User> users = clientRepository.findAll();
+            List<User> users = userRepository.findAll();
               return users.stream()
                     .map(userDataMapper::convertToDto).collect(Collectors.toList());
     }
 
     @Override
     public UserDataResponse getUserData(Long id) {
-        User user = clientRepository.findById(id).orElse(null);
+        User user = userRepository.findById(id).orElse(null);
         if(user == null){
             throw new EntityNotFoundException("User does not exist");
         }
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-            User user = clientRepository.findById(id).orElse(null);
+            User user = userRepository.findById(id).orElse(null);
             if(user == null){
                 throw new EntityNotFoundException("User does not exist");
             }
@@ -68,12 +68,12 @@ public class UserServiceImpl implements UserService {
             }
         confirmationTokenService.deleteByclient_Id(id);
         passwordResetTokenService.deleteByclient_Id(id);
-        clientRepository.deleteById(id);
+        userRepository.deleteById(id);
     }
 
     @Override
     public void updateUserRole(Long id, RoleRequest roleRequest) {
-            User user = clientRepository.findById(id).orElse(null);
+            User user = userRepository.findById(id).orElse(null);
             if(user == null){
             throw new EntityNotFoundException("User does not exist");
             }
@@ -98,12 +98,12 @@ public class UserServiceImpl implements UserService {
                 trainerCollaborationRepository.deleteAllByTrainer_Id(id);
             }
             user.setRole(role);
-            clientRepository.save(user);
+            userRepository.save(user);
     }
 
     @Override
     public List<TrainerResponse> getAllTrainers() {
-        List<User> trainers = clientRepository.getAllTrainers();
+        List<User> trainers = userRepository.getAllTrainers();
         return trainers.stream()
                 .map(trainerDataMapper::convertToDto).collect(Collectors.toList());
     }

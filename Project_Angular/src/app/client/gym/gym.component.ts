@@ -5,6 +5,7 @@ import { ClientService } from '../../services/client.service';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { UtilComponentComponent } from '../../util-component/util-component.component';
+import { SubscriptionResponse } from '../../models/subscription-response.model';
 
 @Component({
   selector: 'app-gym',
@@ -14,7 +15,7 @@ import { UtilComponentComponent } from '../../util-component/util-component.comp
 export class GymComponent implements OnInit{
 
   selectedTrainingClass: TrainingClassResponse;
-  subscriptions = [];
+  subscriptions : SubscriptionResponse[];
   trainingClassesData: TrainingClassResponse[];
   userTrainingClassesData: TrainingClassResponse[];
   selectedTrainingClassId: number;

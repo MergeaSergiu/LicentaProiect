@@ -3,6 +3,12 @@ mat-card{
     text-align: left;
 }
 
+.title{
+    margin-bottom: 1%;
+    font-size: 25px;
+    text-align: center;
+  }
+
 .mat-mdc-form-field{
     width: 98%;
     margin: 1%;

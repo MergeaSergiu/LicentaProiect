@@ -104,7 +104,8 @@ flex-wrap: wrap;
     border: 2px solid rgb(106, 93, 93);
     border-radius: 10px;
     outline: none;
-    width: 35%;
+    width: 38%;
+    font-size: 15px;
 }
 
 .edit-mode-container {

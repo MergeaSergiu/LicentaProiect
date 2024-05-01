@@ -49,10 +49,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if(foundSubscriptionByName != null && !subscriptionRequest.getSubscriptionName().equals(currentSubscription.getSubscriptionName())){
             throw new EntityExistsException("A subscription with the same name exists already");
         }
-                currentSubscription.setSubscriptionName(subscriptionRequest.getSubscriptionName());
-                currentSubscription.setSubscriptionPrice(subscriptionRequest.getSubscriptionPrice());
-                currentSubscription.setSubscriptionDescription(subscriptionRequest.getSubscriptionDescription());
-                subscriptionRepository.save(currentSubscription);
+        currentSubscription.setSubscriptionName(subscriptionRequest.getSubscriptionName());
+        currentSubscription.setSubscriptionPrice(subscriptionRequest.getSubscriptionPrice());
+        currentSubscription.setSubscriptionDescription(subscriptionRequest.getSubscriptionDescription());
+        subscriptionRepository.save(currentSubscription);
     }
 
     public SubscriptionResponse getSubscriptionById(Long id){

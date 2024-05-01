@@ -13,13 +13,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateSubscriptionRequest {
 
-    @NotBlank(message = "Subscription Title can not be blank")
+    @NotBlank
     private String subscriptionName;
 
-    @NotNull(message = "You need to add a price")
+    @NotNull
     private Double subscriptionPrice;
 
-    @NotNull
-    @NotBlank(message = "Subscription Description can not be blank")
+    @NotBlank
     private String subscriptionDescription;
 }

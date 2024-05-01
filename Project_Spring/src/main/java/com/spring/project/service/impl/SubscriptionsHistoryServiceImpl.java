@@ -6,7 +6,7 @@ import com.spring.project.mapper.SubscriptionHistoryMapper;
 import com.spring.project.model.Subscription;
 import com.spring.project.model.SubscriptionsHistory;
 import com.spring.project.model.User;
-import com.spring.project.repository.ClientRepository;
+import com.spring.project.repository.UserRepository;
 import com.spring.project.repository.SubscriptionHistoryRepository;
 import com.spring.project.repository.SubscriptionRepository;
 import com.spring.project.service.SubscriptionsHistoryService;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class SubscriptionsHistoryServiceImpl implements SubscriptionsHistoryService {
 
-    private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final SubscriptionHistoryRepository subscriptionHistoryRepository;
     private final SubscriptionHistoryMapper subscriptionHistoryMapper;
@@ -35,7 +35,7 @@ public class SubscriptionsHistoryServiceImpl implements SubscriptionsHistoryServ
 
     @Override
     public SubscriptionsHistory addSubscriptionForUser(UserSubscriptionRequest userSubscriptionRequest) {
-        User user = clientRepository.findById(Long.valueOf(userSubscriptionRequest.getUserId())).orElse(null);
+        User user = userRepository.findById(Long.valueOf(userSubscriptionRequest.getUserId())).orElse(null);
         if(user == null){
             throw new EntityNotFoundException("User does not exist");
         }
@@ -55,7 +55,7 @@ public class SubscriptionsHistoryServiceImpl implements SubscriptionsHistoryServ
     @Override
     public List<UserSubscriptionsDataResponse> getLoggedInUserSubscriptions(String authorization) {
         String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-        User user = clientRepository.findByEmail(username).orElse(null);
+        User user = userRepository.findByEmail(username).orElse(null);
         if(user == null){
             throw new EntityNotFoundException("User does not exist");
         }
@@ -66,7 +66,7 @@ public class SubscriptionsHistoryServiceImpl implements SubscriptionsHistoryServ
 
     @Override
     public List<UserSubscriptionsDataResponse> getUserSubscriptions(Long id) {
-        User user = clientRepository.findById(id).orElse(null);
+        User user = userRepository.findById(id).orElse(null);
         if(user == null){
             throw new EntityNotFoundException("User does not exist");
         }
@@ -80,7 +80,7 @@ public class SubscriptionsHistoryServiceImpl implements SubscriptionsHistoryServ
     public void addSubscriptionForUserByCard(Long subscriptionId, String authorization) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-            User user = clientRepository.findByEmail(username).orElse(null);
+            User user = userRepository.findByEmail(username).orElse(null);
             if(user == null){
                 throw new EntityNotFoundException("User does not exist");
             }

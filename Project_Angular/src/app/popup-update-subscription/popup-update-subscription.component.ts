@@ -28,20 +28,18 @@ export class PopupUpdateSubscriptionComponent {
   }
 
   setPopUpData(id: number){
-    this.adminService.getSubscriptionById(id).subscribe(
-      response => {
-        
+    this.adminService.getSubscriptionById(id).subscribe({
+      next: (response) => {
         this.editData= response;
-      if (this.authForm) {
+        if (this.authForm) {
         this.authForm.form.patchValue({
           subscriptionName: this.editData.subscriptionName,
           subscriptionPrice: this.editData.subscriptionPrice,
-          subscriptionTime: this.editData.subscriptionTime,
           subscriptionDescription: this.editData.subscriptionDescription
         });
       }
       }
-    )
+  })
   }
 
   onSubmitUpdateSubscription(form: NgForm){
@@ -51,7 +49,7 @@ export class PopupUpdateSubscriptionComponent {
       subscriptionDescription: form.value.subscriptionDescription
   };
  this.adminService.updateSubscriptionData(this.inputData.id, subscriptionData).subscribe({
-  next: (response) =>{
+  next: () =>{
    this.closePopUp();
  }, error: () =>{
   UtilComponentComponent.openSnackBar("Can not update the data", this._responseBar, UtilComponentComponent.SnackbarStates.Error);

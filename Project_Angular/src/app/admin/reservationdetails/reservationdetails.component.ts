@@ -9,6 +9,7 @@ import { UserDataResponse } from '../../models/user-response.model';
 import { NgForm } from '@angular/forms';
 import { ReservationRequestByAdmin } from '../../models/reservationByAdmin-request.model';
 import { CourtDetailsResponse } from '../../models/court-details-response.model';
+import { ReservationResponse } from '../../models/reservation-response.model';
 
 interface HourSchedule {
   time: string;
@@ -22,7 +23,7 @@ interface HourSchedule {
 })
 export class ReservationdetailsComponent implements OnInit {
 
-  reservations = [];
+  reservations : ReservationResponse[];
   users: UserDataResponse[];
   selectedUserId: number; 
   selectedHourSchedule: string;

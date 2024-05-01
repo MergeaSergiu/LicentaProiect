@@ -6,7 +6,7 @@ import com.spring.project.mapper.TrainingClassMapper;
 import com.spring.project.model.EnrollmentTrainingClass;
 import com.spring.project.model.TrainingClass;
 import com.spring.project.model.User;
-import com.spring.project.repository.ClientRepository;
+import com.spring.project.repository.UserRepository;
 import com.spring.project.repository.EnrollmentTrainingClassRepository;
 import com.spring.project.repository.TrainingClassRepository;
 import com.spring.project.service.EnrollmentTrainingClassService;
@@ -28,7 +28,7 @@ public class EnrollmentTrainingClassServiceImpl implements EnrollmentTrainingCla
     private final EnrollmentTrainingClassRepository enrollmentTrainingClassRepository;
     private final UtilMethods utilMethods;
     private final TrainingClassRepository trainingClassRepository;
-    private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
     private final TrainingClassMapper trainingClassMapper;
     private final EnrollmentClassMapper enrollmentClassMapper;
     private final EmailSenderImpl emailService;
@@ -37,7 +37,7 @@ public class EnrollmentTrainingClassServiceImpl implements EnrollmentTrainingCla
     @Override
     public void saveEnrollmentAction(Long trainingClassId, String authorization){
             String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-            User user = clientRepository.findByEmail(username).orElse(null);
+            User user = userRepository.findByEmail(username).orElse(null);
             if(user == null){
             throw new EntityNotFoundException("User does not exist");
             }
@@ -63,7 +63,7 @@ public class EnrollmentTrainingClassServiceImpl implements EnrollmentTrainingCla
     @Override
     public List<TrainingClassResponse> getClassesForUser(String authorization) {
         String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-        User user = clientRepository.findByEmail(username).orElse(null);
+        User user = userRepository.findByEmail(username).orElse(null);
         if(user == null){
             throw new EntityNotFoundException("User does not exist");
         }
@@ -85,7 +85,7 @@ public class EnrollmentTrainingClassServiceImpl implements EnrollmentTrainingCla
     @Override
     public void deleteEnrollmentForUser(Long trainingClassId, String authorization) {
         String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-        User user = clientRepository.findByEmail(username).orElse(null);
+        User user = userRepository.findByEmail(username).orElse(null);
         if(user == null) {
             throw new EntityNotFoundException("User does not exist");
         }

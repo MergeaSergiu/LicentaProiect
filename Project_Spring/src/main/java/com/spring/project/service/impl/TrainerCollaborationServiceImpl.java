@@ -6,7 +6,7 @@ import com.spring.project.mapper.TrainerCollaborationMapper;
 import com.spring.project.model.CollaborationStatus;
 import com.spring.project.model.TrainerCollaboration;
 import com.spring.project.model.User;
-import com.spring.project.repository.ClientRepository;
+import com.spring.project.repository.UserRepository;
 import com.spring.project.repository.TrainerCollaborationRepository;
 import com.spring.project.service.TrainerCollaborationService;
 import com.spring.project.util.UtilMethods;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class TrainerCollaborationServiceImpl implements TrainerCollaborationService {
 
     private final TrainerCollaborationRepository trainerCollaborationRepository;
-    private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
     private final EmailSender emailSender;
     private final TrainerCollaborationMapper trainerCollaborationMapper;
     private final UtilMethods utilMethods;
@@ -35,11 +35,11 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
     @Override
     public void sendCollaborationRequest(Long trainerId, String authorization) {
             String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-            User user = clientRepository.findByEmail(username).orElse(null);
+            User user = userRepository.findByEmail(username).orElse(null);
             if(user == null){
                 throw new EntityNotFoundException("User does not exist");
             }
-            User trainer = clientRepository.findById(trainerId).orElse(null);
+            User trainer = userRepository.findById(trainerId).orElse(null);
             if(trainer == null){
                 throw new EntityNotFoundException("Trainer does not exist");
             }
@@ -65,7 +65,7 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
     @Override
     public List<TrainerCollaborationResponse> getCollaborationForTrainer(String authorization) {
             String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-            User currentTrainer = clientRepository.findByEmail(username).orElse(null);
+            User currentTrainer = userRepository.findByEmail(username).orElse(null);
             if(currentTrainer == null){
                 throw new EntityNotFoundException("Trainer does not exist");
             }
@@ -100,7 +100,7 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
     @Override
     public void declineUserCollaboration(Long collaborationId, String authorization) {
             String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-            User user = clientRepository.findByEmail(username).orElse(null);
+            User user = userRepository.findByEmail(username).orElse(null);
             if(user == null) {
                 throw new EntityNotFoundException("User does not exist");
             }
@@ -131,7 +131,7 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
     @Override
     public List<TrainerCollaborationResponse> getCollaborationForUser(String authorization) {
             String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-            User currentUser = clientRepository.findByEmail(username).orElse(null);
+            User currentUser = userRepository.findByEmail(username).orElse(null);
             if(currentUser == null){
                 throw new EntityNotFoundException("User does not exist");
             }

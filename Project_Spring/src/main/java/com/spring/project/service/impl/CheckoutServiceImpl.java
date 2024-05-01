@@ -2,7 +2,7 @@ package com.spring.project.service.impl;
 
 import com.spring.project.dto.PaymentRequest;
 import com.spring.project.model.User;
-import com.spring.project.repository.ClientRepository;
+import com.spring.project.repository.UserRepository;
 import com.spring.project.service.CheckoutService;
 import com.spring.project.service.UserAccountService;
 import com.spring.project.util.UtilMethods;
@@ -24,12 +24,12 @@ public class CheckoutServiceImpl implements CheckoutService {
 
     private final UtilMethods utilMethods;
     private final UserAccountService userAccountService;
-    private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
 
- public CheckoutServiceImpl(UtilMethods utilMethods, UserAccountService userAccountService, @Value("${stripe.key.secret}") String secretKey, ClientRepository clientRepository){
+ public CheckoutServiceImpl(UtilMethods utilMethods, UserAccountService userAccountService, @Value("${stripe.key.secret}") String secretKey, UserRepository userRepository){
      this.utilMethods = utilMethods;
      this.userAccountService = userAccountService;
-     this.clientRepository = clientRepository;
+     this.userRepository = userRepository;
      Stripe.apiKey = secretKey;
  }
 
@@ -37,7 +37,7 @@ public class CheckoutServiceImpl implements CheckoutService {
     public PaymentIntent createPaymentIntent(PaymentRequest paymentRequest, String authorization) throws StripeException {
 
             String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-            User user = clientRepository.findByEmail(username).orElse(null);
+            User user = userRepository.findByEmail(username).orElse(null);
             if(user == null){
                 throw new EntityNotFoundException("User does not exist");
             }
@@ -49,9 +49,7 @@ public class CheckoutServiceImpl implements CheckoutService {
                     .setName(paymentRequest.getCardHolderName())
                     .setEmail(username)
                     .build();
-
             String customerId = Customer.create(CustomerParams).getId();
-
             PaymentIntentCreateParams params =
                     PaymentIntentCreateParams.builder()
                             .setAmount((long) paymentRequest.getAmount())
