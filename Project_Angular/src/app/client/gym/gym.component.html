@@ -43,7 +43,7 @@
         <button class="button-edit"
           *ngIf="!hasActiveSubscription"
           matTooltip="Pay using your card"
-          (click)="goToCheckoutPage(subscription.id)"
+          (click)="goToCheckoutPage(subscription.id, subscription.subscriptionPrice)"
         >
         Get your subscription
         </button>

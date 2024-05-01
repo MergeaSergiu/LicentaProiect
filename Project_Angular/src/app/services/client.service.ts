@@ -10,6 +10,7 @@ import { StatusEnrollResponse } from "../models/statusEnroll-response.model";
 import { UserSubscriptionsDataResponse } from "../models/userSubscriptionData-response.model";
 import { PaymentData } from "../models/payment-data.model";
 import { CollaborationResponse } from "../models/collaboration-response.model";
+import { SubscriptionResponse } from "../models/subscription-response.model";
 
 
 @Injectable({
@@ -73,10 +74,6 @@ public enrollUserToTrainingClass(trainingClassId: number){
 
   public getUserSubscriptionsData(): Observable<UserSubscriptionsDataResponse[]>{
     return this.httpClient.get<UserSubscriptionsDataResponse[]>(`${this.API_PATH}/users/subscriptions`)
-}
-
-  public getSubscriptionById(subscriptionId: number): Observable<any> {
-    return this.httpClient.get<any>(`${this.API_PATH}/subscriptions/${subscriptionId}`)
 }
 
   public createPaymentIntent(paymentData: PaymentData): Observable<any> {

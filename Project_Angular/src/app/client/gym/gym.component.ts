@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AdminService } from '../../services/admin.service';
 import { TrainingClassResponse } from '../../models/trainingclass-response.model';
 import { ClientService } from '../../services/client.service';
@@ -10,7 +10,7 @@ import { SubscriptionResponse } from '../../models/subscription-response.model';
 @Component({
   selector: 'app-gym',
   templateUrl: './gym.component.html',
-  styleUrl: './gym.component.css'
+  styleUrl: './gym.component.css',
 })
 export class GymComponent implements OnInit{
 
@@ -100,8 +100,8 @@ export class GymComponent implements OnInit{
     })
   }
 
-  goToCheckoutPage(subscriptionId: number) {
-    this.router.navigate(['/client/checkout'], { queryParams: { subscId: subscriptionId } });
+  goToCheckoutPage(id: number, subscriptionPrice: number) {
+     this.router.navigate(['/client/checkout'], { state: { price: subscriptionPrice, subscriptionId: id } });
   }
 
 }

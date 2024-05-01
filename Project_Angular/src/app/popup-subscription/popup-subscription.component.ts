@@ -13,25 +13,25 @@ import { UtilComponentComponent } from '../util-component/util-component.compone
 })
 export class PopupSubscriptionComponent {
 
-  SubscriptionResponse:any;
-  constructor(private matDialog: MatDialogRef<PopupSubscriptionComponent>, private adminService: AdminService, private _responseBar: MatSnackBar){}
+  SubscriptionResponse: any;
+  constructor(private matDialog: MatDialogRef<PopupSubscriptionComponent>, private adminService: AdminService, private _responseBar: MatSnackBar) { }
 
-  closePopUp(){
+  closePopUp() {
     this.matDialog.close();
   }
 
-  onSubmitCreateSubscription(form: NgForm){
+  onSubmitCreateSubscription(form: NgForm) {
     const subscriptionData: SubscriptionRequest = {
       subscriptionName: form.value.subscriptionName,
       subscriptionPrice: form.value.subscriptionPrice,
       subscriptionDescription: form.value.subscriptionDescription
-  };
- this.adminService.createSubscription(subscriptionData).subscribe({
-  next: () =>{
-    this.closePopUp();
- }, error: () =>{
-    UtilComponentComponent.openSnackBar("Can not create the subscription", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
-    }
-  });
- }
+    };
+    this.adminService.createSubscription(subscriptionData).subscribe({
+      next: () => {
+        this.closePopUp();
+      }, error: () => {
+        UtilComponentComponent.openSnackBar("Can not create the subscription", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+      }
+    });
+  }
 }

@@ -11,6 +11,7 @@ import { UserSubscriptionsDataResponse } from "../models/userSubscriptionData-re
 import { UserSubscriptionRequest } from "../models/userSubscription-request.model";
 import { ReservationRequestByAdmin } from "../models/reservationByAdmin-request.model";
 import { CourtDetailsResponse } from "../models/court-details-response.model";
+import { SubscriptionResponse } from "../models/subscription-response.model";
 
 
 @Injectable({
@@ -45,8 +46,8 @@ export class AdminService{
     return this.httpClient.post(`${this.API_PATH}/subscriptions`, subscriptionRequest)
   }
 
-  public getSubscriptionById(subscriptionId: number) {
-    return this.httpClient.get(`${this.API_PATH}/subscriptions/${subscriptionId}`)
+  public getSubscriptionById(subscriptionId: number):Observable<SubscriptionResponse> {
+    return this.httpClient.get<SubscriptionResponse>(`${this.API_PATH}/subscriptions/${subscriptionId}`)
   }
 
   public getTimeSlots(court: string): Observable<any>{

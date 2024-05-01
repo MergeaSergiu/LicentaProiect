@@ -14,7 +14,7 @@ import { ReservationdetailsComponent } from "./admin/reservationdetails/reservat
 import { GymdetailsComponent } from "./admin/gymdetails/gymdetails.component";
 import { UserdetailsComponent } from "./admin/userdetails/userdetails.component";
 import { UserSubscriptionsComponent } from "./admin/user-subscriptions/user-subscriptions.component";
-import { CheckoutComponent } from "./checkout/checkout.component";
+import { CheckoutComponent } from "./client/checkout/checkout.component";
 import { TrainersComponent } from "./client/trainers/trainers.component";
 import { HomepageComponent } from "./homepage/homepage.component";
 

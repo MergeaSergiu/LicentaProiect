@@ -51,7 +51,7 @@ export class PopupUpdateSubscriptionComponent {
  this.adminService.updateSubscriptionData(this.inputData.id, subscriptionData).subscribe({
   next: () =>{
    this.closePopUp();
- }, error: () =>{
+  }, error: () =>{
   UtilComponentComponent.openSnackBar("Can not update the data", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
     }
   });

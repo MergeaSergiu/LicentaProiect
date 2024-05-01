@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { environment } from '../../environment';
-import { PaymentData } from '../models/payment-data.model';
-import { ClientService } from '../services/client.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { environment } from '../../../environment';
+import { PaymentData } from '../../models/payment-data.model';
+import { ClientService } from '../../services/client.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UtilComponentComponent } from '../util-component/util-component.component';
+import { UtilComponentComponent } from '../../util-component/util-component.component';
+import { SubscriptionResponse } from '../../models/subscription-response.model';
+import { AdminService } from '../../services/admin.service';
 
 @Component({
   selector: 'app-checkout',
@@ -16,36 +18,20 @@ export class CheckoutComponent implements OnInit {
 
   stripe = Stripe(environment.stripePublishableKey);
   elements: any;
+  price: number;
   clientSecret: any;
-  subscriptionId: number;
   paymentElement: any;
-  subscriptionResponse: any;
+  subscriptionId: number;
+  subscriptionResponse: SubscriptionResponse;
   subscriptionForm: FormGroup;
   paymentData: PaymentData;
 
-  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private clientService: ClientService, private _responseBar: MatSnackBar) { }
+  constructor(private formBuilder: FormBuilder,private clientService: ClientService, private route: ActivatedRoute, private router: Router, private adminService: AdminService, private _responseBar: MatSnackBar) { }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.subscriptionId = params['subscId'];
-    })
-    this.fetchSubscriptionData(this.subscriptionId);
-    this.subscriptionForm = this.formBuilder.group({
-      cardholderName: ['', Validators.required],
-    });
+    this.price = parseFloat(history.state.price);
+    this.subscriptionId = parseInt(history.state.subscriptionId);
     this.setUpStripePaymentForm();
-  }
-
-  goToGymPage() {
-    this.router.navigate(['/client/gym'])
-  }
-
-  fetchSubscriptionData(subscriptionId: number) {
-    this.clientService.getSubscriptionById(subscriptionId).subscribe({
-      next: (response: any) => {
-        this.subscriptionResponse = response;
-      }
-    })
   }
 
   setUpStripePaymentForm() {
@@ -59,7 +45,7 @@ export class CheckoutComponent implements OnInit {
 
     this.paymentData = {
       cardHolderName: form.value.cardHolderName,
-      amount: this.subscriptionResponse.subscriptionPrice * 100,
+      amount: this.price * 100,
       currency: "ron"
     }
     try {
