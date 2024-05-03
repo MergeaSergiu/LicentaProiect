@@ -10,7 +10,6 @@ import { NgForm } from '@angular/forms';
 import { ReservationRequestByAdmin } from '../../models/reservationByAdmin-request.model';
 import { CourtDetailsResponse } from '../../models/court-details-response.model';
 import { ReservationResponse } from '../../models/reservation-response.model';
-import { error } from 'console';
 
 interface HourSchedule {
   time: string;
@@ -60,8 +59,8 @@ export class ReservationdetailsComponent implements OnInit {
   public deleteReservation(id: number) {
     this.clientService.deleteReservation(id).subscribe({
       next: (response: any) => {
-        this.fetchAllReservations();
         UtilComponentComponent.openSnackBar("The reservation was deleted", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
+        this.fetchAllReservations();
       }, error:(error) => {
         UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
@@ -102,7 +101,8 @@ export class ReservationdetailsComponent implements OnInit {
     };
     this.adminService.addReservationForUser(reservationRequest).subscribe({
       next: () => {
-        this.fetchAllReservations();
+      form.reset();
+      this.fetchAllReservations();
         UtilComponentComponent.openSnackBar("Your reservation was created", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
       }, error: (error) => {
         UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);

@@ -45,7 +45,7 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
             TrainerCollaboration trainerCollaboration = trainerCollaborationMapper.createFromDto(user, trainer);
             trainerCollaborationRepository.save(trainerCollaboration);
             String emailTemplateTrainer = utilMethods.loadEmailTemplateFromResource("collabRequestReceive.html");
-            emailTemplateTrainer = emailTemplateTrainer.replace("${email}", trainer.getEmail());
+            emailTemplateTrainer = emailTemplateTrainer.replace("${user}", trainer.getFirstName() + " " + trainer.getLastName());
             emailTemplateTrainer = emailTemplateTrainer.replace("${userName}", user.getFirstName() + " " + user.getLastName());
             emailSender.send(trainer.getEmail(), emailTemplateTrainer, "Collaboration Request");
         } else {
@@ -75,7 +75,7 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
         User user = trainerCollaboration.getUser();
         User trainer = trainerCollaboration.getTrainer();
         String emailTemplateTrainer = utilMethods.loadEmailTemplateFromResource("collabAccepted.html");
-        emailTemplateTrainer = emailTemplateTrainer.replace("${userName}", user.getFirstName() + " " + user.getLastName());
+        emailTemplateTrainer = emailTemplateTrainer.replace("${user}", user.getFirstName() + " " + user.getLastName());
         emailTemplateTrainer = emailTemplateTrainer.replace("${trainerName}", trainer.getFirstName() + " " + trainer.getLastName());
         emailTemplateTrainer = emailTemplateTrainer.replace("${startDate}", LocalDate.now().toString());
         emailSender.send(user.getEmail(), emailTemplateTrainer, "Collaboration Accepted");
@@ -91,7 +91,7 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
         }
         trainerCollaborationRepository.deleteById(collaborationId);
         String emailTemplateTrainer = utilMethods.loadEmailTemplateFromResource("declineEmail.html");
-        emailTemplateTrainer = emailTemplateTrainer.replace("${userName}", user.getFirstName() + " " + user.getLastName());
+        emailTemplateTrainer = emailTemplateTrainer.replace("${user}", user.getFirstName() + " " + user.getLastName());
         emailTemplateTrainer = emailTemplateTrainer.replace("${trainerName}", trainer.getFirstName() + " " + trainer.getLastName());
         emailSender.send(user.getEmail(), emailTemplateTrainer, "Collaboration Declined");
     }

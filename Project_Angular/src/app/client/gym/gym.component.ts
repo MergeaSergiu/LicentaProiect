@@ -67,8 +67,8 @@ export class GymComponent implements OnInit{
   enrollUserToTrainingClass(classId: number){
     this.clientService.enrollUserToTrainingClass(classId).subscribe({
       next:(response) =>{
-        this.fetchUserTrainingClassesData();
         UtilComponentComponent.openSnackBar("You have enrolled to training Class", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
+        this.fetchUserTrainingClassesData();
       },error:(error) =>{
         UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
@@ -89,9 +89,9 @@ export class GymComponent implements OnInit{
   dropOutOfTrainingClass(classId: number){
     this.clientService.unEnrolleUser(classId).subscribe({
       next: () =>{
+        UtilComponentComponent.openSnackBar("You have drop out from training Class", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
         this.fetchTrainingClassData(classId);
         this.fetchUserTrainingClassesData();
-        UtilComponentComponent.openSnackBar("You have drop out from training Class", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       },error: (error) => {
         UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }

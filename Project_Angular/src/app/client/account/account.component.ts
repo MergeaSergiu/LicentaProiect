@@ -32,10 +32,11 @@ export class AccountComponent implements OnInit {
 
   ngOnInit():void{
     this.fetchUserData();
+    this.role = this.registrationService.getRole();
     if(this.role === 'USER'){
       this.fetchUserSubscriptions();
     }
-    this.role = this.registrationService.getRole();
+
     if(this.role === 'TRAINER'){
       this.fetchTrainerClassesData();
     }

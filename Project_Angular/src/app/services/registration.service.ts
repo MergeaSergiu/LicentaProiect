@@ -16,8 +16,6 @@ export class RegistrationService {
   requestHeader = new HttpHeaders({ 'No-Auth': 'True' });
   constructor(private httpClient: HttpClient) {}
 
-   ngOnInit(){}
-
    handleError(error: HttpErrorResponse){
     return throwError (() => (error.error.errorMessage));
    }
@@ -85,7 +83,9 @@ export class RegistrationService {
    }
 
    public clear(){
-    localStorage.clear();
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('jwtRefreshToken');
+    localStorage.removeItem('role');
    }
 
    public isLoggedIn(){

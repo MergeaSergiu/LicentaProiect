@@ -28,30 +28,30 @@ const appRoutes : Routes = [
     canActivate: [authGuard],
     data: {roles: 'USER'},
     children: [
-    {path: 'clientDashboard', component: ClientComponent},
-    { path: 'reservations', component: ReservationComponent},
-    { path: 'gym', component: GymComponent},
-    { path: 'account', component: AccountComponent},
-    { path: 'checkout', component: CheckoutComponent},
-    { path: 'trainers', component: TrainersComponent}
+    {path: 'clientDashboard', component: ClientComponent, canActivate: [authGuard]},
+    { path: 'reservations', component: ReservationComponent, canActivate: [authGuard]},
+    { path: 'gym', component: GymComponent, canActivate: [authGuard]},
+    { path: 'account', component: AccountComponent, canActivate: [authGuard]},
+    { path: 'checkout', component: CheckoutComponent, canActivate: [authGuard]},
+    { path: 'trainers', component: TrainersComponent,canActivate: [authGuard]}
     ]},
     { path: 'admin',
     canActivate: [authGuard],
     data: {roles: 'ADMIN'},
     children: [
-    {path: 'adminDashboard', component: AdminComponent},
-    {path: 'reservations', component: ReservationdetailsComponent},
-    {path: 'gym',component: GymdetailsComponent},
-    {path: 'users', component: UserdetailsComponent},
-    {path: 'account', component: AccountComponent},
-    {path: 'subscriptionHistory', component: UserSubscriptionsComponent}
+    {path: 'adminDashboard', component: AdminComponent, canActivate: [authGuard]},
+    {path: 'reservations', component: ReservationdetailsComponent, canActivate: [authGuard]},
+    {path: 'gym',component: GymdetailsComponent, canActivate: [authGuard]},
+    {path: 'users', component: UserdetailsComponent, canActivate: [authGuard]},
+    {path: 'account', component: AccountComponent, canActivate: [authGuard]},
+    {path: 'subscriptionHistory', component: UserSubscriptionsComponent, canActivate: [authGuard]}
     ]},
     { path: 'trainer',
     canActivate: [authGuard],
     data: {roles: 'TRAINER'},
     children: [
-    { path: 'trainerDashboard', component: TrainerComponent},
-    { path: 'account', component: AccountComponent},
+    { path: 'trainerDashboard', component: TrainerComponent, canActivate: [authGuard]},
+    { path: 'account', component: AccountComponent, canActivate: [authGuard]},
     ]}
 ]
 

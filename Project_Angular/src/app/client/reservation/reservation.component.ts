@@ -183,6 +183,7 @@ export class ReservationComponent implements OnInit {
       next: () => {
         UtilComponentComponent.openSnackBar("Your reservation was created", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
         schedule.reserved = true;
+        this.fetchReservationsForClient();
       },
       error: (error) => {
         UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
