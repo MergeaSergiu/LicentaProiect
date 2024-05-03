@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDate;
 
 @Data
 @Builder
@@ -14,6 +13,6 @@ public class ReservationResponse {
     Integer id;
     String reservationDate;
     String hourSchedule;
-    String clientEmail;
+    String userName;
     String court;
 }

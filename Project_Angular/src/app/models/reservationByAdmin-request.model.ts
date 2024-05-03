@@ -1,4 +1,4 @@
-export class ReservationRequestByAdmin{
+export interface ReservationRequestByAdmin{
     userId: number;
     localDate: string;
     court: string;

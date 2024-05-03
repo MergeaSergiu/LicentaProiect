@@ -1,12 +1,8 @@
 
-
   .mat-expansion-panel {
-    /* Set width */
-    width: 24%; /* Set the desired width, for example, 100% of the parent container */
+    width: 24%;
     margin-left: 10px;
     position: relative;
-  
-    /* Set background color */
     background-color: grey;
     color: White;
   }
@@ -16,29 +12,25 @@
     width: 80%;
   }
 
-  .inputdata{
-    background-color: rgb(200, 150, 0);
-    color: black;
-    border: 2px solid black;
-    border-radius: 10px;
-    outline: none;
-    width: 80%;
-    font-weight: bold;
-    text-align: center;
-  }
-
-
   .user-classes{
+    margin-top: 3%;
     border-radius: 2px solid black;
     justify-content: center;
     display: flex;
 	  align-items: flex-start;
 	  flex-wrap: wrap;
+    margin-bottom: 200px;
   }
 
   .subscription-list{
     position: relative;
-    margin-top: 300px;
+  }
+
+  .divider2{
+    height: 2.0px;
+    width: 80%; 
+    background-color: hsl(0, 0%, 100%);
+    margin: 0px auto; 
   }
 
   .container{
@@ -50,10 +42,10 @@
 
   .trainingClass-card{
     margin: 8px;
-    width: 280px;
-    height: 480px;
-    border: 2px solid black;
-    border-radius: 15px;
+    width: 230px;
+    height: 520px;
+    margin-bottom: 20px;
+    border: 2px solid rgb(255, 255, 255);
   }
 
   .subscriptions{
@@ -65,11 +57,10 @@
 
    .subscription-card{
     margin: 8px;
-    width: 250px;
+    width: 230px;
     height: 460px;
     margin-bottom: 20px;
-    border: 2px solid black;
-    border-radius: 15px;
+    border: 2px solid rgb(255, 255, 255);
   }
 
   .price-user{
@@ -81,7 +72,7 @@
   .info{
     color: black;
     font-size: 16px;
-     font-weight: 700;
+    font-weight: 700;
   }
 
   .section{
@@ -89,7 +80,6 @@
     text-align: center;
     color: #918f8f;  
   }
-
 
   .inner2 {
 		background-color: rgb(255, 255, 255);
@@ -101,9 +91,7 @@
 	}
 
   .card-title{
-    background-color: rgb(111, 202, 111);
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+    background-color: rgb(117, 154, 196);
     justify-content: center;
   }
 
@@ -114,22 +102,25 @@
     margin: 0px auto; 
 }
 
-  .title{
-    font-weight: bold;
-    font-size: 1.25rem;
-    color: rgb(5, 5, 5);
-    margin-top: 15px;
-      
-  }
+.button-edit{
+  background: #263ca9;
+  color: #ffffff;
+  border-radius: 5px;
+  width: 190px;
+  padding: 6px;
+  margin-right: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 2px solid rgb(255, 255, 255);
+}
 
 
   .title-sub{
-    border-bottom: 3px solid white;
-    color: white;
-    background-color: black;
+    color: rgb(255, 255, 255);
     text-align: center;
-    margin-bottom: 10px;
-    margin-top: 10px;
+    margin-bottom: 2%;
+    margin-top: 2%;
   }
 
 

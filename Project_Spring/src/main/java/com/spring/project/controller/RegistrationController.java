@@ -36,7 +36,7 @@ public class RegistrationController {
             message = registrationService.confirmToken(token);
             model.addAttribute("message", message);
         } catch (ConfirmAccountException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("message", e.getMessage());
         }
         return "confirmAccountResponse.html";
     }
@@ -66,7 +66,7 @@ public class RegistrationController {
             message = registrationService.confirmPasswordResetToken(resetToken);
             model.addAttribute("message", message);
         } catch (ResetPasswordException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("message", e.getMessage());
         }
         return "resetPasswordResponse.html";
     }

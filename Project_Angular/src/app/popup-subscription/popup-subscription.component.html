@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Create subscription</h1>
+<div class="title" mat-dialog-title>Create subscription</div>
 <form #authForm="ngForm" (ngSubmit)="onSubmitCreateSubscription(authForm)">
 <div mat-dialog-content>
     <mat-form-field>
@@ -15,7 +15,7 @@
     </mat-form-field>
 </div>
 <div mat-dialog-actions>
-    <button type="submit" mat-raised-button color="primary" [disabled]="!authForm.valid">Save</button> <!-- Disable button if form is not valid -->
+    <button type="submit" mat-raised-button color="primary" [disabled]="!authForm.valid">Save</button>
     <button type="button"mat-raised-button color="warn" (click)="closePopUp()">Close</button>
 </div>
 </form>

@@ -1,5 +1,4 @@
-export class LoginRequest{
+export interface LoginRequest{
     email: string;
     password: string;
-    showPassword: boolean;
 }

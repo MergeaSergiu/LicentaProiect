@@ -1,128 +1,189 @@
 <ng-container *ngIf="role === 'USER'">
-    <!-- Client Navbar Component -->
-    <app-navbar></app-navbar>
-  </ng-container>
-  <ng-container *ngIf="role === 'ADMIN'">
-    <!-- Admin Navbar Component -->
-    <app-navbar-admin></app-navbar-admin>
-  </ng-container>
-
-  <ng-container *ngIf="role === 'TRAINER'">
-    <!-- Admin Navbar Component -->
-    <app-navbar-trainer></app-navbar-trainer>
-  </ng-container>
-
-
-  <mat-card div class="user-profile" >
-    <div class="title">
-    <mat-card-title>Edit Profile</mat-card-title>
-    </div>
-  <div *ngIf="!inEditMode" class="edit-mode-container">
-    <div class="row">
-        <div class="input-container1">
-        <label>First Name</label> 
-        <br>
-        <input type="text" [ngModel]="currentUser?.firstName" (ngModelChange)="currentUser.firstName = $event" [disabled]="!inEditMode">
-    </div>
-    <div class="input-container2">
-        <label>Last Name</label>
-        <br>
-        <input type="text" [ngModel]="currentUser?.lastName" (ngModelChange)="currentUser.lastName = $event" [disabled]="!inEditMode">
-      </div>
-    </div>
-    <div class="row">
-      <div class="input-container3">
-        <label>Email </label>
-        <br>
-        <input type="email" [ngModel]="currentUser?.email" (ngModelChange)="currentUser.email = $event" disabled>
-      </div>
-      <div class="input-container4">
-        <label>Role</label>
-        <br>
-        <input type="text" [ngModel]="currentUser?.role.name" (ngModelChange)="currentUser.role.name = $event" disabled>
-      </div>
-    </div>
-      <div class="buttons">
-    <button type="button" class="button-profile" (click)=" toggleEditMode() "> Edit Profile</button>
-    </div>
-  </div>
-  
-  <div *ngIf="inEditMode">
-    <div class="row">
-      <div class="input-container1">
-        <label>First Name</label>
-        <br>
-        <input type="text" [ngModel]="currentUser?.firstName" (ngModelChange)="currentUser.firstName = $event">
-      </div>
-      <div class="input-container2">
-        <label>Last Name</label>
-        <br>
-        <input type="text" [ngModel]="currentUser?.lastName" (ngModelChange)="currentUser.lastName = $event">
-      </div>
-    </div>
-    <div class="row">
-      <div class="input-container3">
-        <label>Email</label>
-        <br>
-        <input type="email" [ngModel]="currentUser?.email" (ngModelChange)="currentUser.email = $event" disabled>
-      </div>
-      <div class="input-container4">
-        <label>Role</label>
-        <br>
-        <input type="text" [ngModel]="currentUser?.role.name" (ngModelChange)="currentUser.role.name = $event" disabled>
-      </div>
-    </div>
-    <div class="buttons">
-      <button class="button-profile" type="submit" (click)=" saveProfile(currentUser)">Save Data</button>
-      <button class="button-profile" type="button" (click)=" cancelEdit()">Cancel</button>
-    </div>
-  </div>
-</mat-card>
-
-<ng-container *ngIf="role === 'TRAINER'">
-  <mat-expansion-panel  (opened)="panelOpenState = true"
-                        (closed)="panelOpenState = false">
-    <mat-expansion-panel-header>
-    <mat-panel-title class="title">
-     Your Training Classes
-    </mat-panel-title>
-    </mat-expansion-panel-header>
-    <div *ngFor="let classData of traininClassReponse">
-      <div class="inputdata">
-      <p>{{ classData.className }} on {{ classData.localDate }},  Time: {{ classData.startTime }}, Minutes: {{ classData.duration }}</p>
-    </div>
-    </div>
-  </mat-expansion-panel>
-
+  <app-navbar></app-navbar>
+</ng-container>
+<ng-container *ngIf="role === 'ADMIN'">
+  <app-navbar-admin></app-navbar-admin>
 </ng-container>
 
-<div class="user-subs" *ngIf="role === 'USER'">
-    <table mat-table [dataSource]="dataSource" class="user-table">
-      <ng-container matColumnDef="Subscription">
-          <th mat-header-cell *matHeaderCellDef>Subscription</th>
-          <td mat-cell *matCellDef="let subscriptionHistory" style="width: 5%;">{{ subscriptionHistory.subscriptionName }}</td>
-      </ng-container>
-      <ng-container matColumnDef="Price">
-          <th mat-header-cell *matHeaderCellDef>Price</th>
-          <td mat-cell *matCellDef="let subscriptionHistory" style="width: 5%;">{{ subscriptionHistory.subscriptionPrice }}</td>
-      </ng-container>
-      <ng-container matColumnDef="StartDate">
-          <th mat-header-cell *matHeaderCellDef>StartTime</th>
-          <td mat-cell *matCellDef="let subscriptionHistory" style="width: 5%;">{{ subscriptionHistory.startDate }}</td>
-      </ng-container>
-      <ng-container matColumnDef="EndDate">
-          <th mat-header-cell *matHeaderCellDef>EndTime</th>
-          <td mat-cell *matCellDef="let subscriptionHistory" style="width: 5%;">{{ subscriptionHistory.endDate }}</td>
-      </ng-container>  
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'active-subscription': isSubscriptionActive(row.endDate)}"></tr>
-  </table>
-  <mat-paginator #paginator1 [pageSizeOptions]="[2]" showFirstLastButtons></mat-paginator>
+<ng-container *ngIf="role === 'TRAINER'">
+  <app-navbar-trainer></app-navbar-trainer>
+</ng-container>
+
+<div class="container-card">
+  <mat-card div class="user-profile">
+    <div class="title">
+      <mat-card-title>Edit Profile</mat-card-title>
+    </div>
+    <div *ngIf="!inEditMode" class="edit-mode-container">
+      <div class="row">
+        <div class="input-container1">
+          <label>First Name</label>
+          <br />
+          <input
+            type="text"
+            [ngModel]="currentUser?.firstName"
+            (ngModelChange)="currentUser.firstName = $event"
+            [disabled]="!inEditMode"
+          />
+        </div>
+        <div class="input-container2">
+          <label>Last Name</label>
+          <br />
+          <input
+            type="text"
+            [ngModel]="currentUser?.lastName"
+            (ngModelChange)="currentUser.lastName = $event"
+            [disabled]="!inEditMode"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-container3">
+          <label>Email </label>
+          <br />
+          <input
+            type="email"
+            [ngModel]="currentUser?.email"
+            (ngModelChange)="currentUser.email = $event"
+            disabled
+          />
+        </div>
+        <div class="input-container4">
+          <label>Role</label>
+          <br />
+          <input
+            type="text"
+            [ngModel]="currentUser?.role.name"
+            (ngModelChange)="currentUser.role.name = $event"
+            disabled
+          />
+        </div>
+      </div>
+      <div class="buttons">
+        <button type="button" class="button-profile" (click)="toggleEditMode()">
+          Edit Profile
+        </button>
+      </div>
+    </div>
+    <div *ngIf="inEditMode">
+      <div class="row">
+        <div class="input-container1">
+          <label>First Name</label>
+          <br />
+          <input
+            type="text"
+            [ngModel]="currentUser.firstName"
+            (ngModelChange)="currentUser.firstName = $event"
+          />
+        </div>
+        <div class="input-container2">
+          <label>Last Name</label>
+          <br />
+          <input
+            type="text"
+            [ngModel]="currentUser.lastName"
+            (ngModelChange)="currentUser.lastName = $event"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-container3">
+          <label>Email</label>
+          <br />
+          <input
+            type="email"
+            [ngModel]="currentUser?.email"
+            (ngModelChange)="currentUser.email = $event"
+            disabled
+          />
+        </div>
+        <div class="input-container4">
+          <label>Role</label>
+          <br />
+          <input
+            type="text"
+            [ngModel]="currentUser?.role.name"
+            (ngModelChange)="currentUser.role.name = $event"
+            disabled
+          />
+        </div>
+      </div>
+      <div class="buttons">
+        <button
+          class="button-profile"
+          type="submit"
+          (click)="saveProfile(currentUser)"
+        >
+          Save Data
+        </button>
+        <button class="button-profile" type="button" (click)="cancelEdit()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </mat-card>
+</div>
+<div class="trainer-classes" *ngIf="role === 'TRAINER'">
+  <div class="divider2"></div>
+  <div class="title-sub">
+    <h2>Your Training Classes</h2>
+  </div>
+  <div class="subs-container">
+    <div class="subscriptions-list">
+      <ul>
+        <li
+        *ngFor="let classData of traininClassReponse"
+          class="user-sub"
+        >
+          <div class="subscription-info">
+            <span class="text1"
+              ><strong>Training Class:</strong> {{ classData.className }},
+            </span>
+            <span class="text1"
+              ><strong>Date:</strong> {{ classData.localDate }}</span
+            >
+            <br />
+            <span class="text1"
+              ><strong>Start Time:</strong> {{ classData.startTime }}</span
+            >
+            <br />
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
 
-
-
-
-
-
-
+<div class="user-subs" *ngIf="role === 'USER'">
+  <div class="divider2"></div>
+  <div class="title-sub">
+    <h2>Subscritions History</h2>
+  </div>
+  <div class="subs-container">
+  <div class="subscriptions-list">
+    <ul>
+      <li
+        *ngFor="let subscription of userSubscriptionsData"
+        class="user-sub"
+        [ngClass]="{
+          'active-subscription': isSubscriptionActive(subscription.endDate)
+        }"
+      >
+        <div class="subscription-info">
+          <span class="text1"
+            ><strong>Price:</strong> {{ subscription.subscriptionPrice }},
+          </span>
+          <span class="text1"
+            ><strong>Start Time:</strong> {{ subscription.startDate }}</span
+          >
+          <br />
+          <span class="text1"
+            ><strong>End Time:</strong> {{ subscription.endDate }}</span
+          >
+          <br />
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+</div>

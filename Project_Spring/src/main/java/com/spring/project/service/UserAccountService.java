@@ -1,9 +1,5 @@
 package com.spring.project.service;
 import com.spring.project.dto.*;
-import com.spring.project.model.SubscriptionsHistory;
-
-
-import java.util.List;
 
 public interface UserAccountService {
 

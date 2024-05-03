@@ -11,35 +11,32 @@ import { UtilComponentComponent } from "../util-component/util-component.compone
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css']
 })
-export class LoginComponent{
-
-    alertMessage: string;
+export class LoginComponent {
+    showPassword: boolean = false;
     password: string = '';
-    user: LoginRequest | undefined;
 
-    constructor(private registrationService: RegistrationService, private router: Router, public _responseBar: MatSnackBar) { 
+    constructor(private registrationService: RegistrationService, private router: Router, public _responseBar: MatSnackBar) {}
+
+    togglePasswordVisibility() {
+        this.showPassword = !this.showPassword;
     }
 
-    ngOnInit():void{
-        this.user = {} as LoginRequest;
-    }
-    onSubmitLogIn(form: NgForm){
+    onSubmitLogIn(form: NgForm) {
         const logInData: LoginRequest = {
             email: form.value.email,
             password: form.value.password,
-            showPassword: false
         };
         this.registrationService.logIn(logInData).subscribe({
-            next: (response: any) =>{
+            next: (response: any) => {
                 this.registrationService.setRole(response.user_Role);
                 this.registrationService.setToken(response.access_token);
                 this.registrationService.setRefreshToken(response.refresh_token);
                 const role = response.user_Role;
-                if(role === 'USER'){
+                if (role === 'USER') {
                     this.router.navigate(['client/clientDashboard'])
-                }else if(role == 'ADMIN'){
+                } else if (role == 'ADMIN') {
                     this.router.navigate(['admin/adminDashboard'])
-                }else if(role == 'TRAINER'){
+                } else if (role == 'TRAINER') {
                     this.router.navigate(['trainer/trainerDashboard'])
                 }
             },
@@ -47,7 +44,7 @@ export class LoginComponent{
                 UtilComponentComponent.openSnackBar(errorMessage, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
             }
         });
-            form.reset();
+        form.reset();
     }
 
 }

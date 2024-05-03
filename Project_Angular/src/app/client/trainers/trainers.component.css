@@ -1,10 +1,81 @@
-
 .user-collaborations{
-    margin-top: 65px;
+    margin-top: 5%;                                                                                                                                                                                                                                                                                                                                                                                                                                       
     width: 60%;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 15%;
 }
+
+.user-res {
+  border: 3px solid rgb(0, 0, 0);
+  position: relative;
+  width: 330px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  margin: 1em;
+  padding: 1em;
+  background: rgb(255, 255, 255);
+  position: relative;
+  color: rgb(0, 0, 0);
+  border-radius: 5px;
+}
+
+
+.reservation-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  margin-bottom: 7%;
+}
+
+.text1{
+  font-size: 13px;
+   color: #444242;
+}
+
+.reservation-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.divider{
+  height: 0.5px;
+  width: 60%; 
+  background-color: #b3b0b0;
+  margin: 0px auto; 
+}
+
+.info{
+  color: black;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.section{
+  padding: 10px 0;
+  text-align: center;
+  color: #918f8f;  
+}
+
+.info{
+  color: black;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+
+.trainer-card{
+  width: 25%;
+  height: 20%;
+  margin: 8px;
+  margin-bottom: 20px;
+  border: 2px solid black;
+  border-radius: 15px;
+}
+
 
 .user-trainer {
   border: 2px solid rgb(0, 0, 0);
@@ -21,27 +92,23 @@
   border-radius: 12px;
 }
 
-th{
-  background-color: black !important;
-  color: white;
-  color:#D5DDE5;;
-  background:#1b1e24;
-  border-bottom:4px solid #9ea7af;
-  border-right: 1px solid #343a45;
-  font-size:14px;
-  font-weight: 90;
-  padding:24px;
-  text-align:left;
-  vertical-align:middle;
-  }
-
   .title{
-    background-color: rgb(109, 101, 101);
-    color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
     font-size: 32px;
     text-align: center;
     margin-top:2%;
-    border: 2px solid black;
+}
+
+.button-edit{
+  background: #263ca9;
+  color: #ffffff;
+  border-radius: 5px;
+  width: 160px;
+  padding: 6px;
+  margin-right: 5px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 2px solid rgb(255, 255, 255);
 }
 
 .user-trainer:hover{
@@ -49,13 +116,20 @@ th{
 }
 
 tr:hover {
-  background-color: rgb(209, 209, 209); /* Change background color on hover */
+  background-color: rgb(209, 209, 209);
 }
 
 .trainer-list {
-  height: 200px; /* Set maximum height for the scrollable section */
+  height: 200px;
   width: 430px;
-  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-y: auto;
+}
+
+.divider2{
+  height: 2.0px;
+  width: 80%; 
+  background-color: #ffffff;
+  margin: 0px auto; 
 }
 
 
@@ -80,7 +154,8 @@ tr:hover {
   justify-content: center;
   align-items: center;
   margin-top: 40px;
-  border-radius: 20px;
+  border-radius: 10px;
+  margin-bottom: 5%;
   background-color: transparent;
 }
 

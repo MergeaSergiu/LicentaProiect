@@ -1,21 +1,27 @@
 
-
 <div class="container">
 <mat-card class="example-card">
 <form #checkoutForm="ngForm" (ngSubmit)="onSubmit(checkoutForm)">
     <div class="user-info">
+        <div class="card-data">
+            <label>
+                <span class="TextUser">Price</span> 
+            </label>
+            <br>
+            <span> {{price}} RON</span>
+        </div>
+    <div class="card-data">
         <div class="infoName-lable">
             <label for="user-fieldset">
             <span class="TextUser">CardHolder name</span>
             </label>
         </div>
-    <div class="card-user-name">
        <span class="InputContainer">
         <input type="text" class="userName" id="cardHolderName" ngModel name="cardHolderName" placeholder="Full name on the card" required>
        </span> 
     </div>
     </div>
-    <div class="cards-data">
+    <div class="card-data">
         <div class="labelClass">
         <label for="user-fieldset">
             <span class="TextUser">Card information</span>
@@ -25,9 +31,8 @@
         <!-- Stripe card element will be mounted here -->
     </div>
     <div class="text-center">
-        <button type="submit" class="primary" [disabled]="!checkoutForm.valid">Pay</button>
+        <button type="submit" [disabled]="!checkoutForm.valid">Pay</button>
     </div>
-    <div id="card-errors" class="displayError.textContent !=='': 'alert alert-danger mt-1' " ></div>
 </div>
 </form>
 </mat-card>

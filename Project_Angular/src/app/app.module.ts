@@ -48,10 +48,11 @@ import { TrainerComponent } from './trainerDashboard/trainer.component';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { UserSubscriptionsComponent } from './admin/user-subscriptions/user-subscriptions.component';
 import { PopupAddSubForUserComponent } from './popup-add-sub-for-user/popup-add-sub-for-user.component';
-import { CheckoutComponent } from './checkout/checkout.component';
-import { PopupSuccessComponent } from './popup-success/popup-success.component';
+import { CheckoutComponent } from './client/checkout/checkout.component';
 import { TrainersComponent } from './client/trainers/trainers.component';
 import { UtilComponentComponent } from './util-component/util-component.component';
+import { HomepageComponent } from './homepage/homepage.component';
+import { NavbarHomeComponent } from './navbar-home/navbar-home.component';
 
 @NgModule({
   declarations: [
@@ -79,9 +80,10 @@ import { UtilComponentComponent } from './util-component/util-component.componen
     UserSubscriptionsComponent,
     PopupAddSubForUserComponent,
     CheckoutComponent,
-    PopupSuccessComponent,
     TrainersComponent,
-    UtilComponentComponent
+    UtilComponentComponent,
+    HomepageComponent,
+    NavbarHomeComponent
   ],
   imports: [
     BrowserModule,

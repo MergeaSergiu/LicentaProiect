@@ -13,7 +13,7 @@ import lombok.Setter;
 public class UserSubscriptionRequest {
 
     @NotNull
-    private final Integer subscriptionId;
+    private Integer subscriptionId;
     @NotNull
-    private final Integer userId;
+    private Integer userId;
 }

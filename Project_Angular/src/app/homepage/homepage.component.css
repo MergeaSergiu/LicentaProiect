@@ -1,0 +1,46 @@
+.col {
+  background-color: white;
+  text-align: center;
+  margin-top: 5%;
+  background-color: transparent;
+  width: 200px;
+  margin-bottom: 5%;
+  margin-left: 7%;
+  margin-right: 3%;
+
+}
+.image-gallery{
+  width: 500px;
+}
+
+img {
+  width: 290px;
+  height: 200px;
+  margin-right: 10px;
+}
+
+.page {
+  justify-content: center;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.info {
+  color: rgb(255, 255, 255);
+  font-size: larger;
+}
+
+.divider2 {
+  height: 1px;
+  width: 80%;
+  background-color: #ffffff;
+  margin: 0px auto;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+.container{
+  display: flex;
+  align-items: center; 
+}

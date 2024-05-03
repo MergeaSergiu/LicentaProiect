@@ -12,7 +12,6 @@ export class UtilComponentComponent {
   static SnackbarStates = { 
     Success: "success",
     Error: "error",
-    Default: "default"
 }
   
   static openSnackBar(message: string, snackBar: MatSnackBar, status: string){
@@ -22,7 +21,7 @@ export class UtilComponentComponent {
       {
       duration: 2000,
       verticalPosition: 'bottom',
-      panelClass: status == this.SnackbarStates.Success ? 'app-notification-success' : this.SnackbarStates.Error == 'error' ? 'app-notification-error' : 'app-notification-default'
+      panelClass: status == this.SnackbarStates.Success ? 'app-notification-success' : 'app-notification-error'
       }
     );
   }

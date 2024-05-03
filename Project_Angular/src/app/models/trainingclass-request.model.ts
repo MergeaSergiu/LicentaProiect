@@ -1,4 +1,4 @@
-export class TrainingClassRequest{
+export interface TrainingClassRequest{
     className: string;
     duration: number;
     startTime: string;

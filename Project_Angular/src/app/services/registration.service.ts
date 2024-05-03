@@ -5,19 +5,16 @@ import { Observable, catchError, tap, throwError } from 'rxjs';
 import { ResetPasswordRequest } from '../models/resetPass-request.model';
 import { UpdatePasswordRequest } from '../models/updatePassword-request.model';
 import { LoginRequest } from '../models/login-request.model';
-import { JwtRefreshToken } from '../auth/refresh-token.model';
+import { JwtRefreshToken } from '../models/refresh-token.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RegistrationService {
     
-
   API_PATH = "http://localhost:8080/project/api/v1/auth"
   requestHeader = new HttpHeaders({ 'No-Auth': 'True' });
   constructor(private httpClient: HttpClient) {}
-
-   ngOnInit(){}
 
    handleError(error: HttpErrorResponse){
     return throwError (() => (error.error.errorMessage));
@@ -86,7 +83,9 @@ export class RegistrationService {
    }
 
    public clear(){
-    localStorage.clear();
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('jwtRefreshToken');
+    localStorage.removeItem('role');
    }
 
    public isLoggedIn(){

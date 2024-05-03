@@ -1,4 +1,4 @@
-
+<app-navbar-home></app-navbar-home>
 <div class="container">
     <span class="title">Log In</span>
                 <form #loginForm="ngForm" (ngSubmit)="onSubmitLogIn(loginForm)">
@@ -6,13 +6,13 @@
                         <input type="email" placeholder="Email"  id="email" class="form-control" ngModel name="email" required email/>
                     </div>
                     <div class="form-group">
-                        <input [type]="user.showPassword ? 'text' : 'password'" id="password" name="password" class="form-control" placeholder="Password" ngModel required password>
+                        <input type="{{ showPassword ? 'text' : 'password' }}" id="password" name="password" class="form-control" placeholder="Password" ngModel required password>
                     </div>
-                    <div style="color: rgb(0, 0, 0);">
-                        <input type="checkbox" [checked]="user.showPassword" (change)="user.showPassword=!user.showPassword">
+                    <div style="color: rgb(0, 0, 0); font-size: 13px;">
+                        <input type="checkbox" [checked]="showPassword" (change)="togglePasswordVisibility()">
                         Show Password
                     </div>
-                    <br>
+                    <span class="info">Minimun 8 characters: 1 upercase, 1 lowercase, 1 figure</span>
                     <div class="buttons">
                         <button class="login-btn"  type="submit" [disabled]="!loginForm.valid">Log In</button>
                     </div>
@@ -25,14 +25,3 @@
                     </div>
                 </form>
     </div>
-    <div class="bottom-section">
-            <p><mat-icon>phone</mat-icon> +1234567890</p>
-            <p><mat-icon>schedule</mat-icon> 16-23(Gym + Courts)</p>
-            <p><mat-icon>alternate_email</mat-icon> sportarena.com</p>
-    </div>
-
-
-
-
-    
-

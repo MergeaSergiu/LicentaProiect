@@ -1,4 +1,4 @@
-export class UserSubscriptionsDataResponse {
+export interface UserSubscriptionsDataResponse {
   subscriptionName: string;
   subscriptionPrice: number;
   firstName: string;

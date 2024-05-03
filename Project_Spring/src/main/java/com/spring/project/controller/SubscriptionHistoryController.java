@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,24 +24,28 @@ public class SubscriptionHistoryController {
     @Autowired
     private final SubscriptionsHistoryService subscriptionsHistoryService;
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/{userId}/subscriptions")
     public ResponseEntity<List<UserSubscriptionsDataResponse>> getUserSubscriptions(@PathVariable("userId") Long userId){
         List<UserSubscriptionsDataResponse> userSubscriptionsDataResponses =  subscriptionsHistoryService.getUserSubscriptions(userId);
         return new ResponseEntity<>(userSubscriptionsDataResponses, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/subscriptions")
     public ResponseEntity<SubscriptionsHistory> addSubscriptionForUser(@RequestBody UserSubscriptionRequest userSubscriptionRequest){
         SubscriptionsHistory subscriptionsHistory = subscriptionsHistoryService.addSubscriptionForUser(userSubscriptionRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(subscriptionsHistory);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/subscriptions/{subscriptionId}")
     public ResponseEntity<Void> addSubscriptionForUser(@PathVariable("subscriptionId") Long subscriptionId, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
         subscriptionsHistoryService.addSubscriptionForUserByCard(subscriptionId, authorization);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/subscriptions")
     public ResponseEntity<List<UserSubscriptionsDataResponse>> getUserSubscriptions(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
         List<UserSubscriptionsDataResponse> userSubscriptionsDataResponses = subscriptionsHistoryService.getLoggedInUserSubscriptions(authorization);

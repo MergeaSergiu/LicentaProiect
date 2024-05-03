@@ -1,10 +1,6 @@
 package com.spring.project.service;
 
 import com.spring.project.dto.*;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
 
 public interface RegistrationService {
 

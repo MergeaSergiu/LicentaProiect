@@ -1,6 +1,6 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse} from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, catchError, throwError } from "rxjs";
+import { Observable,throwError } from "rxjs";
 import { ReservationResponse } from "../models/reservation-response.model";
 import { SubscriptionRequest } from "../models/subscription-request.model";
 import { TrainerDataResponse } from "../models/trainers-response.model";
@@ -10,6 +10,8 @@ import { RoleRequest } from "../models/role-request.model";
 import { UserSubscriptionsDataResponse } from "../models/userSubscriptionData-response.model";
 import { UserSubscriptionRequest } from "../models/userSubscription-request.model";
 import { ReservationRequestByAdmin } from "../models/reservationByAdmin-request.model";
+import { CourtDetailsResponse } from "../models/court-details-response.model";
+import { SubscriptionResponse } from "../models/subscription-response.model";
 
 
 @Injectable({
@@ -25,7 +27,6 @@ export class AdminService{
    ngOnInit(){}
 
    handleError(error: HttpErrorResponse){
-    console.log(error);
     return throwError (() => (error.error.errorMessage));
    }
 
@@ -45,8 +46,23 @@ export class AdminService{
     return this.httpClient.post(`${this.API_PATH}/subscriptions`, subscriptionRequest)
   }
 
-  public getSubscriptionById(subscriptionId: number) {
-    return this.httpClient.get(`${this.API_PATH}/subscriptions/${subscriptionId}`)
+  public getSubscriptionById(subscriptionId: number):Observable<SubscriptionResponse> {
+    return this.httpClient.get<SubscriptionResponse>(`${this.API_PATH}/subscriptions/${subscriptionId}`)
+  }
+
+  public getTimeSlots(court: string): Observable<any>{
+    return this.httpClient.get<CourtDetailsResponse>(`${this.API_PATH}/details/${court}`)
+  }
+
+  public updateCourtDetails(courtId: number, startTime: number, endTime: number){
+    return this.httpClient.put(`${this.API_PATH}/details/${courtId}`, {}, {params: {
+      startTime: startTime.toString(),
+      endTime: endTime.toString()
+    }})
+  }
+
+  public getCourtsDetails(): Observable<any>{
+    return this.httpClient.get<CourtDetailsResponse[]>(`${this.API_PATH}/details`)
   }
 
   public updateSubscriptionData(subscriptionId:number, subscriptionRequest: SubscriptionRequest){

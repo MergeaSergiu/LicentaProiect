@@ -31,7 +31,7 @@ export class NavbarComponent {
 
   logOut(){
     this.registrationService.clear();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/home']);
   }
 
 

@@ -1,8 +1,28 @@
-tr:hover {
-    background-color: rgb(209, 209, 209); /* Change background color on hover */
+th{
+  background-color: black !important;
+  color: white;
+  color:#D5DDE5;;
+  background:#1b1e24;
+  border-bottom:4px solid #9ea7af;
+  border-right: 1px solid #343a45;
+  font-size:14px;
+  font-weight: 90;
+  padding:24px;
+  text-align:left;
+  vertical-align:middle;
 }
 
-th{
-  background-color: rgb(0, 0, 0) !important;
-  color: white;
+tr:hover {
+  background-color: rgb(209, 209, 209);
+}
+.trainers-table{
+  margin-top: 5%;
+  width: 55%;
+}
+
+.container{
+  justify-content: center;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
 }

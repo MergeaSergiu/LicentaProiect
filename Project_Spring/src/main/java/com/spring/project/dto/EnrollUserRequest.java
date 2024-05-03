@@ -13,12 +13,10 @@ import lombok.Setter;
 @Setter
 public class EnrollUserRequest {
 
-    @NotBlank(message = "emailAddress can not be blank")
-    @NotNull
+    @NotBlank
     private String emailAddress;
 
-    @NotBlank(message = "trainingClass Name can not be blak")
-    @NotNull
+    @NotBlank
     private String trainingClassName;
 
 }

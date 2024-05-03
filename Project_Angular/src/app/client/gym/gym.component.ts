@@ -1,20 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AdminService } from '../../services/admin.service';
 import { TrainingClassResponse } from '../../models/trainingclass-response.model';
 import { ClientService } from '../../services/client.service';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatSnackBar} from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { UtilComponentComponent } from '../../util-component/util-component.component';
+import { SubscriptionResponse } from '../../models/subscription-response.model';
+import { error } from 'console';
 
 @Component({
   selector: 'app-gym',
   templateUrl: './gym.component.html',
-  styleUrl: './gym.component.css'
+  styleUrl: './gym.component.css',
 })
 export class GymComponent implements OnInit{
 
   selectedTrainingClass: TrainingClassResponse;
-  subscriptions = [];
+  subscriptions : SubscriptionResponse[];
   trainingClassesData: TrainingClassResponse[];
   userTrainingClassesData: TrainingClassResponse[];
   selectedTrainingClassId: number;
@@ -47,7 +49,6 @@ export class GymComponent implements OnInit{
     this.adminService.getTrainingClassesData().subscribe({
       next: (response) => {
         this.trainingClassesData = response;
-        console.log(this.trainingClassesData);
       }
     })
   }
@@ -56,7 +57,8 @@ export class GymComponent implements OnInit{
     this.adminService.getTrainingClassData(id).subscribe({
       next:(response) => {
         this.selectedTrainingClass = response;
-  
+      },error:(error) => {
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }
@@ -65,8 +67,8 @@ export class GymComponent implements OnInit{
   enrollUserToTrainingClass(classId: number){
     this.clientService.enrollUserToTrainingClass(classId).subscribe({
       next:(response) =>{
-        this.fetchUserTrainingClassesData();
         UtilComponentComponent.openSnackBar("You have enrolled to training Class", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
+        this.fetchUserTrainingClassesData();
       },error:(error) =>{
         UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
@@ -78,16 +80,20 @@ export class GymComponent implements OnInit{
     this.clientService.getUserTrainingClasses().subscribe({
       next: (response) => {
         this.userTrainingClassesData = response;
+      },error: (error) => {
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }
 
   dropOutOfTrainingClass(classId: number){
     this.clientService.unEnrolleUser(classId).subscribe({
-      next: (response) =>{
+      next: () =>{
+        UtilComponentComponent.openSnackBar("You have drop out from training Class", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
         this.fetchTrainingClassData(classId);
         this.fetchUserTrainingClassesData();
-        UtilComponentComponent.openSnackBar("You have drop out from training Class", this._responseBar, UtilComponentComponent.SnackbarStates.Default);
+      },error: (error) => {
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }
@@ -95,14 +101,13 @@ export class GymComponent implements OnInit{
   fetchSubscriptions(){
     return this.adminService.getAllSubscriptions().subscribe({
       next: (response) => {
-        console.log(response);
         this.subscriptions = response;
       }
     })
   }
 
-  goToCheckoutPage(subscriptionId: number) {
-    this.router.navigate(['/client/checkout'], { queryParams: { subscId: subscriptionId } });
+  goToCheckoutPage(id: number, subscriptionPrice: number) {
+     this.router.navigate(['/client/checkout'], { state: { price: subscriptionPrice, subscriptionId: id } });
   }
 
 }

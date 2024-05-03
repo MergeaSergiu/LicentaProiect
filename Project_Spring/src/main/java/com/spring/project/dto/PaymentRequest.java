@@ -16,8 +16,10 @@ public class PaymentRequest {
 
     @NotBlank
     private String cardHolderName;
+
     @NotNull
     private int amount;
+
     @NotBlank
     private String currency;
 

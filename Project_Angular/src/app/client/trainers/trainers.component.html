@@ -2,75 +2,68 @@
 
 <div class="container">
   <div class="title">Trainers</div>
-    <div class="trainers-container">
-      <div class="trainer-list">
-        <ul>
-          <li *ngFor="let trainer of trainers" class="user-trainer">
-            <div class="trainer-info">
-              <span class="text1"
-                ><strong>Trainer:</strong> {{ trainer.firstName }}
-                {{ trainer.lastName }}
-              </span>
-            </div>
-            <div class="delete-button">
-              <button
-                mat-flat-button
-                color="accent"
-                matTooltip="Send a collaboration request"
-                aria-label="Collaboration"
-                (click)="collabWithTrainer(trainer.id)"
-              >
-                <mat-icon>send</mat-icon>
-              </button>
-            </div>
-          </li>
-        </ul>
-    </div>
+  <div class="trainers-container">
+    <mat-card *ngFor="let trainer of trainers" class="trainer-card">
+      <div class="section">
+        <p>
+          Trainer
+          <br />
+          <span class="info">
+            {{ trainer.firstName }} {{ trainer.lastName }}
+          </span>
+        </p>
+      </div>
+      <div class="divider"></div>
+      <div class="section">
+        <button class="button-edit"
+          matTooltip="Send a collaboration request"
+          aria-label="Collaboration"
+          (click)="collabWithTrainer(trainer.id)"
+        >Collaboration Request
+        </button>
+      </div>
+    </mat-card>
   </div>
+</div>
 
-  <div class="title">Your collaborations</div>
-  <div class="user-collaborations">
-    <table mat-table [dataSource]="dataSource2">
-      <ng-container matColumnDef="Trainer">
-        <th mat-header-cell *matHeaderCellDef>Trainer</th>
-        <td mat-cell *matCellDef="let collaboration" style="width: 5%">
-          {{ collaboration.firstName }} {{ collaboration.lastName }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="Status">
-        <th mat-header-cell *matHeaderCellDef>Status</th>
-        <td mat-cell *matCellDef="let collaboration" style="width: 3%">
-          <ng-container *ngIf="collaboration.collaborationStatus == 'PENDING'">
-            <button
-              mat-raised-button
-              color="primary"
-              (click)="declineRequest(collaboration.collaborationId)"
-            >
-              Remove the collaboration Request
-            </button>
-          </ng-container>
-          <ng-container *ngIf="collaboration.collaborationStatus == 'ACCEPTED'">
-            <span>ACCEPTED</span>
-            <br />
-            <span>Start Date: {{ collaboration.startTime }}</span>
-          </ng-container>
-          <ng-container *ngIf="collaboration.collaborationStatus == 'ENDED'">
-            <span>Collaboration Ended</span>
-            <br />
-            <span
-              >From: {{ collaboration.startTime }} to
-              {{ collaboration.endTime }}</span
-            >
-          </ng-container>
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns2"></tr>
-    </table>
-    <mat-paginator
-      #paginator2
-      [pageSizeOptions]="[4]"
-      showFirstLastButtons
-    ></mat-paginator>
+<div class="divider2"></div>
+
+<div class="title">Collaborations History</div>
+<div class="reservation-container">
+  <div class="reservation-list">
+    <ul>
+      <li *ngFor="let collaboration of userCollaborations" class="user-res">
+        <div class="reservation-info">
+          <span class="text1"
+            ><strong>Trainer:</strong> {{ collaboration.firstName }} {{ collaboration.lastName }}
+          </span>
+          <br>
+          <span class="text1">
+            <ng-container *ngIf="collaboration.collaborationStatus == 'PENDING'">
+              <strong>Status:</strong> PENDING
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="declineRequest(collaboration.collaborationId)"
+              >
+                Remove the collaboration Request
+              </button>
+            </ng-container>
+            <ng-container *ngIf="collaboration.collaborationStatus == 'ACCEPTED'">
+              <strong>Status:</strong> ACCEPTED
+              <br />
+              <span>Start Date: {{ collaboration.startTime }}</span>
+            </ng-container>
+            <ng-container *ngIf="collaboration.collaborationStatus == 'ENDED'">
+              <strong>Status:</strong> ENDED
+              <br />
+              <span>From: {{ collaboration.startTime }} to
+                {{ collaboration.endTime }}</span
+              >
+            </ng-container></span
+          >
+        </div>
+      </li>
+    </ul>
   </div>
 </div>

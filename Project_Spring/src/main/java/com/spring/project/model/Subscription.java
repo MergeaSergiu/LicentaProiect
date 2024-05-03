@@ -24,7 +24,7 @@ public class Subscription {
     @NotNull
     private Double subscriptionPrice;
 
-    @NotNull
+    @NotBlank
     private String subscriptionDescription;
 
 

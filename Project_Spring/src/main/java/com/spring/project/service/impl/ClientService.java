@@ -2,7 +2,7 @@ package com.spring.project.service.impl;
 
 import com.spring.project.mapper.ConfirmationTokenMapper;
 import com.spring.project.model.User;
-import com.spring.project.repository.ClientRepository;
+import com.spring.project.repository.UserRepository;
 import com.spring.project.service.ConfirmationTokenService;
 import com.spring.project.token.ConfirmationToken;
 import jakarta.persistence.EntityExistsException;
@@ -23,34 +23,34 @@ public class ClientService implements UserDetailsService {
 
 
     private PasswordEncoder passwordEncoder;
-    private final static String CLIENT_NOT_FOUND_ERROR = "Client with email %s not found";
-    private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
     private final ConfirmationTokenService confirmationTokenService;
     private final ConfirmationTokenMapper confirmationTokenMapper;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return clientRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException(String.format(CLIENT_NOT_FOUND_ERROR, email)));
+        return userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User does not exist"));
     }
     public String signUpClient(User user) {
-        User userAlreadyExist = clientRepository.findByEmail(user.getEmail()).orElse(null);
+
+        User userAlreadyExist = userRepository.findByEmail(user.getEmail()).orElse(null);
         if(userAlreadyExist == null){
             String token = UUID.randomUUID().toString();
             ConfirmationToken confirmationToken = confirmationTokenMapper.createConfirmationToken(token,LocalDateTime.now(), user);
             String encodedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
-            clientRepository.save(user);
+            userRepository.save(user);
             confirmationTokenService.saveConfirmationToken(confirmationToken);
             return token;
         }
-            if (userAlreadyExist.getEnabled()) {
-                throw new EntityExistsException("Account already exist");
+        if (userAlreadyExist.getEnabled() != null) {
+                throw new EntityExistsException("An account with this email already exist");
             }else {
                 String encodedPassword = passwordEncoder.encode(user.getPassword());
                 userAlreadyExist.setFirstName(user.getFirstName());
                 userAlreadyExist.setLastName(user.getLastName());
                 userAlreadyExist.setPassword(encodedPassword);
-                clientRepository.save(userAlreadyExist);
+                userRepository.save(userAlreadyExist);
 
                 String token = UUID.randomUUID().toString();
                 ConfirmationToken foundConfirmationToken = confirmationTokenService.findTokenByUserId(userAlreadyExist.getId());
@@ -66,7 +66,7 @@ public class ClientService implements UserDetailsService {
 
     public void resetClientPassword(User user, String newPassword) {
         user.setPassword(passwordEncoder.encode(newPassword));
-        clientRepository.save(user);
+        userRepository.save(user);
     }
 
 }

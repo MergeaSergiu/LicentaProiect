@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { AdminService } from '../../services/admin.service';
@@ -8,7 +8,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserDataResponse } from '../../models/user-response.model';
 import { NgForm } from '@angular/forms';
 import { ReservationRequestByAdmin } from '../../models/reservationByAdmin-request.model';
-import { error } from 'console';
+import { CourtDetailsResponse } from '../../models/court-details-response.model';
+import { ReservationResponse } from '../../models/reservation-response.model';
+
+interface HourSchedule {
+  time: string;
+  reserved: boolean;
+}
 
 @Component({
   selector: 'app-reservationdetails',
@@ -17,22 +23,23 @@ import { error } from 'console';
 })
 export class ReservationdetailsComponent implements OnInit {
 
-  reservations = [];
+  reservations : ReservationResponse[];
   users: UserDataResponse[];
   selectedUserId: number; 
   selectedHourSchedule: string;
+  courtDetails: CourtDetailsResponse[];
   selectedCourt: string;
-  displayedColumns: string[] = ['Date', 'HourSchedule', 'Email', 'Court', 'Delete'];
+  displayedColumns: string[] = ['Date', 'HourSchedule', 'User', 'Court', 'Delete'];
+  hourSchedules: HourSchedule[] = [];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor(private adminService: AdminService, private clientService: ClientService, private _responseBar: MatSnackBar) { }
-
-  hourSchedules: string[] = ['16-17', '17-18', '18-19', '19-20', '20-21', '21-22', '22-23'];
-  courts: string[] = ['Tenis', 'Fotball', 'Basketball'];
+  courts: string[] = ['TENNIS', 'FOOTBALL', 'BASKETBALL'];
   
   ngOnInit(): void {
     this.fetchAllReservations();
-    this.fetchAllUsers();
+    this.fetchAllUsersWithUserRole();
+    this.getTimeSlotForCourts();
   }
 
   Filterchange(data: Event) {
@@ -40,19 +47,22 @@ export class ReservationdetailsComponent implements OnInit {
     this.dataSource.filter = value;
   }
 
-  public fetchAllUsers() {
+
+  public fetchAllUsersWithUserRole() {
     return this.adminService.getAllUsers().subscribe({
       next: (response) => {
-        this.users = response;
+        this.users = response.filter(user => user.role.name === 'USER' || user.role.name === 'ADMIN');
       }
     })
   }
 
   public deleteReservation(id: number) {
     this.clientService.deleteReservation(id).subscribe({
-      next: (response: any) => {
+      next: () => {
+        UtilComponentComponent.openSnackBar("The reservation was deleted", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
         this.fetchAllReservations();
-        UtilComponentComponent.openSnackBar("The reservation was deleted", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+      }, error:(error) => {
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }
@@ -74,15 +84,14 @@ export class ReservationdetailsComponent implements OnInit {
 
   getCurrentDate(): Date {
     const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to zero
+    currentDate.setHours(0, 0, 0, 0);
     return currentDate;
   }
 
   onSubmitAddReservationForUser(form: NgForm) {
     const year = form.value.selectedDate.getFullYear();
-    const month = (form.value.selectedDate.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-indexed
+    const month = (form.value.selectedDate.getMonth() + 1).toString().padStart(2, '0');
     const day = form.value.selectedDate.getDate().toString().padStart(2, '0');
-    // Format the date as 'yyyy-mm-dd'
     const formattedDate = `${year}-${month}-${day}`;
     const reservationRequest: ReservationRequestByAdmin = {
       userId: form.value.userId,
@@ -91,14 +100,39 @@ export class ReservationdetailsComponent implements OnInit {
       hourSchedule: form.value.hourSchedule
     };
     this.adminService.addReservationForUser(reservationRequest).subscribe({
-      next: (response) => {
+      next: () => {
         UtilComponentComponent.openSnackBar("Your reservation was created", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
+        form.resetForm();
+        this.fetchAllReservations();
       }, error: (error) => {
         UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }
 
+  deleteUserData(form:NgForm){
+      form.resetForm();
+  }
 
 
+  getTimeSlotForCourts(){
+    this.adminService.getCourtsDetails().subscribe({
+      next: (response) => {
+          this.courtDetails = response;
+      },error:(error) =>{
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+      }
+    })
+  }
+
+  saveCourtDetails(courtId: number, startTime: number, endTime: number){
+    this.adminService.updateCourtDetails(courtId, startTime, endTime).subscribe({
+      next: () => {
+        UtilComponentComponent.openSnackBar("TimeSlots were updated", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
+        this.getTimeSlotForCourts();
+      }, error: (error) =>{
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+      }
+    })
+  }
 }

@@ -1,12 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { AdminService } from '../../services/admin.service';
 import { UserSubscriptionsDataResponse } from '../../models/userSubscriptionData-response.model';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupAddSubForUserComponent } from '../../popup-add-sub-for-user/popup-add-sub-for-user.component';
-import { response } from 'express';
 
 @Component({
   selector: 'app-user-subscriptions',
@@ -17,9 +14,6 @@ export class UserSubscriptionsComponent implements OnInit{
 
   userId: number;
   userSubscriptionsData : UserSubscriptionsDataResponse[];
-  displayedColumns: string[] = ['Subscription', 'Price', 'StartDate', 'EndDate'];
-  dataSource: MatTableDataSource<any>;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(private route: ActivatedRoute, private adminService: AdminService, private dialog: MatDialog){}
    
@@ -34,8 +28,6 @@ export class UserSubscriptionsComponent implements OnInit{
     this.adminService.getUserSubscriptionsData(userId).subscribe({
       next: (response) =>{
         this.userSubscriptionsData = response;
-        this.dataSource = new MatTableDataSource<any>(this.userSubscriptionsData);
-        this.dataSource.paginator = this.paginator;
       }
     })
   }

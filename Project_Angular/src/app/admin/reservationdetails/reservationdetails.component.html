@@ -1,86 +1,190 @@
 <app-navbar-admin></app-navbar-admin>
 <div class="container">
-<div class="continer-table">
-      <mat-form-field>
-        <input matInput (keyup)="Filterchange($event)" placeholder="Enter text">
-      </mat-form-field>
-      <table mat-table [dataSource]="dataSource">
+  <div class="continer-table">
+    <mat-form-field>
+      <input matInput (keyup)="Filterchange($event)" placeholder="Enter text" />
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="Date">
         <th mat-header-cell *matHeaderCellDef>Date</th>
-        <td mat-cell *matCellDef="let reservation" style="width: 5%;">{{ reservation.reservationDate }}</td>
+        <td mat-cell *matCellDef="let reservation" style="width: 5%">
+          {{ reservation.reservationDate }}
+        </td>
       </ng-container>
       <ng-container matColumnDef="HourSchedule">
         <th mat-header-cell *matHeaderCellDef>Hour Schedule</th>
-        <td mat-cell *matCellDef="let reservation" style="width: 5%;">{{ reservation.hourSchedule }}</td>
+        <td mat-cell *matCellDef="let reservation" style="width: 5%">
+          {{ reservation.hourSchedule }}
+        </td>
       </ng-container>
-      <ng-container matColumnDef="Email">
-        <th mat-header-cell *matHeaderCellDef>Email</th>
-        <td mat-cell *matCellDef="let reservation" style="width: 5%;">{{ reservation.clientEmail }}</td>
+      <ng-container matColumnDef="User">
+        <th mat-header-cell *matHeaderCellDef>User</th>
+        <td mat-cell *matCellDef="let reservation" style="width: 5%">
+          {{ reservation.clientName }}
+        </td>
       </ng-container>
       <ng-container matColumnDef="Court">
         <th mat-header-cell *matHeaderCellDef>Court</th>
-        <td mat-cell *matCellDef="let reservation" style="width: 5%;">{{ reservation.court }}</td>
+        <td mat-cell *matCellDef="let reservation" style="width: 5%">
+          {{ reservation.court }}
+        </td>
       </ng-container>
       <ng-container matColumnDef="Delete">
         <th mat-header-cell *matHeaderCellDef>Delete</th>
-        <td mat-cell *matCellDef="let reservation" style="width: 3%;">
-          <ng-container *ngIf="getReservationDate(reservation.reservationDate) >= getCurrentDate()">
-          <button mat-icon-button matTooltip="Delete the reservation" color="warn" aria-label="Delete" (click)="deleteReservation(reservation.id)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </ng-container>
+        <td mat-cell *matCellDef="let reservation" style="width: 3%">
+          <ng-container
+            *ngIf="
+              getReservationDate(reservation.reservationDate) >=
+              getCurrentDate()
+            "
+          >
+            <button
+              mat-icon-button
+              matTooltip="Delete the reservation"
+              color="warn"
+              aria-label="Delete"
+              (click)="deleteReservation(reservation.id)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </ng-container>
         </td>
-    </ng-container>
+      </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-    
-    <mat-paginator #paginator1 [pageSizeOptions]="[5,8]" showFirstLastButtons></mat-paginator>
-</div>
-<div class="create-reservation-form">
-  
-  <form #authForm="ngForm" (ngSubmit)="onSubmitAddReservationForUser(authForm)">
-    <h2 class="title">Add a Reservation</h2>
-    <div mat-dialog-content>
-      <mat-form-field>
-        <mat-label>Select an User</mat-label>
-        <mat-select [(ngModel)]="selectedUserId" name="userId" ngModel required>
-            <mat-option *ngFor="let user of users" [value]="user.id">
-                {{user.firstName}} {{user.lastName}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-    <br>
-    <mat-form-field>
-      <mat-label>Choose a date</mat-label>
-      <input matInput [matDatepicker]="picker" ngModel required name="selectedDate">
-      <mat-hint>MM/DD/YYYY</mat-hint>
-      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-    <br>
-    <mat-form-field>
-      <mat-label>Select a Court</mat-label>
-      <mat-select [(ngModel)]="selectedCourt" name="court" ngModel required>
-        <mat-option *ngFor="let court of courts" [value]="court">
-          {{court}}
-        </mat-option>
-      </mat-select>
-  </mat-form-field>
-  <br>
-  <mat-form-field>
-    <mat-label>Select a HourSchedule</mat-label>
-    <mat-select [(ngModel)]="selectedHourSchedule" name="hourSchedule" ngModel required>
-        <mat-option *ngFor="let hourSchedule of hourSchedules" [value]="hourSchedule">
-            {{hourSchedule}}
-        </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <br>
-    </div>
-    <div mat-dialog-actions>
-      <button type="submit" mat-raised-button color="primary" [disabled]="!authForm.valid">Save</button>
+
+    <mat-paginator
+      #paginator1
+      [pageSizeOptions]="[5, 8]"
+      showFirstLastButtons
+    ></mat-paginator>
   </div>
-  </form>
+  <div class="create-reservation-form">
+    <form
+      #authForm="ngForm"
+      (ngSubmit)="onSubmitAddReservationForUser(authForm)"
+    >
+    <mat-card-header class="form-title">
+      <h2 class="title">Add a reservation</h2>
+    </mat-card-header>
+      <div mat-dialog-content class="form-container">
+        <mat-form-field>
+          <mat-label>Select an User</mat-label>
+          <mat-select
+            [(ngModel)]="selectedUserId"
+            name="userId"
+            ngModel
+            required
+          >
+            <mat-option *ngFor="let user of users" [value]="user.id">
+              {{ user.firstName }} {{ user.lastName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <br />
+        <mat-form-field>
+          <mat-label>Choose a date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            ngModel
+            required
+            name="selectedDate"
+          />
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <br />
+        <mat-form-field>
+          <mat-label>Select a Court</mat-label>
+          <mat-select [(ngModel)]="selectedCourt" name="court" ngModel required>
+            <mat-option *ngFor="let court of courts" [value]="court">
+              {{ court }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <br />
+        <mat-form-field>
+          <mat-label>Time Slots (e.g., 17-18)</mat-label>
+          <input
+            matInput
+            [(ngModel)]="selectedHourSchedule"
+            name="hourSchedule"
+            type="text"
+            required
+          />
+        </mat-form-field>
+        <br />
+      </div>
+      <div class="buttons">
+        <button class="button-edit"
+          type="submit"
+          [disabled]="!authForm.valid"
+        >
+          Save
+        </button>
+        <button class="button-clear"
+          type="button"
+          (click)="deleteUserData(authForm)"
+        >
+          Clear Data
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
+
+<div class="divider2"></div>
+
+<div class="courtDetails">
+  <mat-card *ngFor="let courtDetail of courtDetails" class="court">
+    <mat-card-header class="card-title">
+      <h2 class="title">{{ courtDetail.court }}</h2>
+    </mat-card-header>
+    <div class="edit-mode-container">
+      <p>
+        StartTime
+        <br />
+        <span>
+          <input
+            type="text"
+            [ngModel]="courtDetail?.startTime"
+            (ngModelChange)="courtDetail.startTime = $event"
+          />
+        </span>
+      </p>
+      <p>
+        EndTime
+        <br />
+        <span>
+          <input
+            type="text"
+            [ngModel]="courtDetail?.endTime"
+            (ngModelChange)="courtDetail.endTime = $event"
+          />
+        </span>
+      </p>
+    </div>
+    <div class="buttons">
+      <button
+        type="button"
+        matTooltip="Edit data"
+        class="button-edit"
+        (click)="
+          saveCourtDetails(
+            courtDetail.id,
+            courtDetail.startTime,
+            courtDetail.endTime
+          )
+        "
+      >
+        Save Details
+      </button>
+    </div>
+  </mat-card>
 </div>

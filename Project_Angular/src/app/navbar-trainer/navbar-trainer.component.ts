@@ -15,8 +15,12 @@ export class NavbarTrainerComponent {
     this.router.navigate(['/trainer/account'])
   }
 
+  goToCollaborations(){
+    this.router.navigate(['/trainer/trainerDashboard'])
+  }
+
   public logOut(){
     this.registrationService.clear();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/home']);
   }
 }

@@ -1,19 +1,27 @@
-/* calendar.component.css */
-
-/* calendar.component.css */
-
-  
 .demo-inline-calendar-card {
   width: 280px;
 }
 
+.calendar-container{
+ margin-right: 20%;
+ margin-left: 12%;
+}
 
-.calendar-container {
-  flex: 1; /* Allow the calendar container to grow and fill available space */
+.schedules-list ul{
+  list-style-type: none;
+}
+
+.title{
+  border: 1px solid white;
+  border-radius: 6px;
+  background-color: grey;
+  text-align: center;
 }
 
 .schedule-container {
-  flex: 0 0 180px; /* Fixed width for schedule container */
+  flex: 0 0 180px;
+  margin-right: 2%;
+  text-align: center;
 }
 
 button{
@@ -26,7 +34,7 @@ button{
 }
 
 .button-reservation{
-    background: #162f72;
+    background: #1553af;
     color: #ffffff;
     border-radius: 8px;
     border: 1px solid rgb(255, 255, 255);
@@ -40,12 +48,7 @@ button{
 }
 
 button:disabled{
-  background-color: rgb(169, 89, 89); /* Reduce the opacity to visually indicate that the button is disabled */
-  cursor: not-allowed;
-}
-
-button:disabled{
-  opacity: 0.5; /* Reduce the opacity to visually indicate that the button is disabled */
+  background-color: rgb(200, 47, 47);
   cursor: not-allowed;
 }
 
@@ -54,40 +57,39 @@ button:disabled{
 }
 
 .reservation-card{
-  width: 40px; /* Adjust width as needed */
-  height: 20px; /* Adjust height as needed */
-  margin: 5px; /* Adjust margin as needed */
+  width: 40px;
+  height: 20px; 
+  margin: 5px; 
+}
 
+.title-sub{
+  color: rgb(255, 255, 255);
+  text-align: center;
+  margin-bottom: 2%;
+  margin-top: 2%;
 }
 
 
 .user-res {
-  border: 2px solid rgb(0, 0, 0);
+  border: 3px solid rgb(0, 0, 0);
   position: relative;
   width: 380px;
   height: 80px;
   display: flex;
   align-items: center;
-  margin: 1.5em;
+  margin: 1em;
   padding: 1em;
   background: rgb(255, 255, 255);
   position: relative;
   color: rgb(0, 0, 0);
-  border-radius: 12px;
+  border-radius: 5px;
 }
 
 
 .container{
   display: flex;
-  background-color: rgb(92, 90, 90);
-  border: 2px solid rgb(255, 255, 255);
-  height: 420px;
-  border-radius: 10px;
   margin-top: 5%;
-}
-
-.reservation-info {
-  flex: 1;
+  margin-bottom: 5%;
 }
 
 .reservation-container {
@@ -95,14 +97,15 @@ button:disabled{
   justify-content: center;
   align-items: center;
   margin-top: 40px;
+  margin-bottom: 7%;
 }
 
-.reservation-list {
-  height: 180px; /* Set maximum height for the scrollable section */
-  width: 430px;
-  overflow-y: auto; /* Enable vertical scrolling */
+.divider2{
+  height: 2.0px;
+  width: 80%; 
+  background-color: rgb(255, 255, 255);
+  margin: 0px auto; 
 }
-
 
 .text1{
   font-size: 13px;

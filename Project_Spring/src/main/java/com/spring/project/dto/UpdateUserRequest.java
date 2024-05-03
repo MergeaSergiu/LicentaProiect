@@ -13,8 +13,9 @@ import lombok.Setter;
 public class UpdateUserRequest {
 
     @NotBlank
-    String firstName;
+    private String firstName;
+
     @NotBlank
-    String lastName;
+    private String lastName;
 
 }

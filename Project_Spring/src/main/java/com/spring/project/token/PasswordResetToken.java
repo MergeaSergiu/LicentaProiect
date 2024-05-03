@@ -42,7 +42,7 @@ public class PasswordResetToken {
         this.token = token;
         this.createdAt = LocalDateTime.now();
         this.confirmedAt = null;
-        this.expiredAt = createdAt.plusMinutes(20);
+        this.expiredAt = createdAt.plusMinutes(60);
         this.alreadyUsed = false;
         this.user = user;
     }

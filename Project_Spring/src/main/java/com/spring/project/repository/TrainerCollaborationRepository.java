@@ -34,7 +34,10 @@ public interface TrainerCollaborationRepository extends JpaRepository<TrainerCol
             @Param("statuses") List<CollaborationStatus> statuses
     );
 
+    @Transactional
     void deleteAllByUser_Id(@Param("userId") Long userId);
 
+
+    @Transactional
     void deleteAllByTrainer_Id(@Param("trainerId") Long trainerId);
 }

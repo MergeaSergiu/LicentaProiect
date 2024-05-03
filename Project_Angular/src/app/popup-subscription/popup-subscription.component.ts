@@ -3,7 +3,9 @@ import { FormBuilder, NgForm } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SubscriptionRequest } from '../models/subscription-request.model';
 import { AdminService } from '../services/admin.service';
-import { response } from 'express';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UtilComponentComponent } from '../util-component/util-component.component';
+import { error } from 'console';
 
 @Component({
   selector: 'app-popup-subscription',
@@ -12,25 +14,25 @@ import { response } from 'express';
 })
 export class PopupSubscriptionComponent {
 
-  SubscriptionResponse:any;
-  constructor(private matDialog: MatDialogRef<PopupSubscriptionComponent>, private adminService: AdminService){}
+  SubscriptionResponse: any;
+  constructor(private matDialog: MatDialogRef<PopupSubscriptionComponent>, private adminService: AdminService, private _responseBar: MatSnackBar) { }
 
-  closePopUp(){
+  closePopUp() {
     this.matDialog.close();
   }
 
-  onSubmitCreateSubscription(form: NgForm){
+  onSubmitCreateSubscription(form: NgForm) {
     const subscriptionData: SubscriptionRequest = {
       subscriptionName: form.value.subscriptionName,
       subscriptionPrice: form.value.subscriptionPrice,
       subscriptionDescription: form.value.subscriptionDescription
-  };
- this.adminService.createSubscription(subscriptionData).subscribe({
-  next: (response) =>{
-    this.closePopUp();
-}, error: (any) =>{
-  alert("Can not create a subscription");
-    }
-  });
- }
+    };
+    this.adminService.createSubscription(subscriptionData).subscribe({
+      next: () => {
+        this.closePopUp();
+      }, error: (error) => {
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+      }
+    });
+  }
 }

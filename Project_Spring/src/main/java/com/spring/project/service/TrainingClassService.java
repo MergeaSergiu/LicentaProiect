@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TrainingClassService {
 
-    void createTrainingClass(TrainingClassRequest trainingClass, String authorization);
+    void createTrainingClass(TrainingClassRequest trainingClass);
 
     TrainingClassResponse findById(Long id);
 

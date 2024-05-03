@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Update subscription Data</h1>
+<div class="title" mat-dialog-title>Update subscription Data</div>
 <form #authForm="ngForm" (ngSubmit)="onSubmitUpdateSubscription(authForm)">
 <div mat-dialog-content>
     <mat-form-field>
@@ -8,10 +8,6 @@
     <mat-form-field>
         <mat-label>Subscription Price</mat-label>
         <input matInput name="subscriptionPrice" ngModel required>
-    </mat-form-field>
-    <mat-form-field>
-        <mat-label>Subscription Time</mat-label>
-        <input matInput name="subscriptionTime" ngModel required>
     </mat-form-field>
     <mat-form-field>
         <mat-label>Subscription Description</mat-label>

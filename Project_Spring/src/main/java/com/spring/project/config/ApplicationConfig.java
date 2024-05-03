@@ -1,6 +1,6 @@
 package com.spring.project.config;
 
-import com.spring.project.repository.ClientRepository;
+import com.spring.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,10 +17,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private  final ClientRepository clientRepository;
+    private  final UserRepository userRepository;
 
     public UserDetailsService userDetailsService(){
-        return username -> clientRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Client not found"));
+        return username -> userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Client not found"));
     }
 
     @Bean

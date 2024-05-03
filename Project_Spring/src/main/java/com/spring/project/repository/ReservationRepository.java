@@ -16,7 +16,6 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-
     List<Reservation> findAllByOrderByReservationDateAsc();
 
     List<Reservation> findAllByUser_IdOrderByReservationDateAsc(@Param("id") Long id);
@@ -29,4 +28,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     void deleteAllByUser_Id(@Param("id") Long id);
 
     List<Reservation> findAllByUser_IdAndReservationMadeDate(@Param("userId") Long userId, @Param("currentDate") LocalDate currentDate);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Reservation r WHERE (r.startTime < :startTime OR r.endTime > :endTime) AND r.reservationDate > CURRENT_DATE")
+    void deleteAllReservationBasedOnStartAndEndTime(@Param("startTime") Integer startTime, @Param("endTime") Integer endTime);
 }

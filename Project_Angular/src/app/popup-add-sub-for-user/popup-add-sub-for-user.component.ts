@@ -1,10 +1,10 @@
-import { Component, Inject, InjectionToken } from '@angular/core';
+import { Component, Inject} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AdminService } from '../services/admin.service';
 import { NgForm } from '@angular/forms';
 import { UserSubscriptionRequest } from '../models/userSubscription-request.model';
-import { ActivatedRoute } from '@angular/router';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UtilComponentComponent } from '../util-component/util-component.component';
 @Component({
   selector: 'app-popup-add-sub-for-user',
   templateUrl: './popup-add-sub-for-user.component.html',
@@ -16,7 +16,7 @@ export class PopupAddSubForUserComponent {
   userId: number;
   subscriptions: any[];
   inputData: any;
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any,private matDialog: MatDialogRef<PopupAddSubForUserComponent>, private adminService: AdminService){}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any,private _responseBar: MatSnackBar, private matDialog: MatDialogRef<PopupAddSubForUserComponent>, private adminService: AdminService){}
 
   closePopUp(){
     this.matDialog.close();
@@ -28,14 +28,12 @@ export class PopupAddSubForUserComponent {
   }
 
   public fetchSubscriptions(){
-    return this.adminService.getAllSubscriptions().subscribe(
-      response => {
+    return this.adminService.getAllSubscriptions().subscribe({
+      next: (response) => {
         this.subscriptions = response;
       }
-    )
+  })
   }
-
-
   onSubmitAddSubscription(form: NgForm){
     const userSubscription: UserSubscriptionRequest = {
       subscriptionId: form.value.subscriptionId,
@@ -43,10 +41,10 @@ export class PopupAddSubForUserComponent {
     };
 
     this.adminService.AddUserSubscription(userSubscription).subscribe({
-      next: (response) => {
+      next: () => {
         this.closePopUp();
-      }, error: (any) => {
-        alert("User already has an active subscription");
+      }, error: (error) => {
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     });
   }

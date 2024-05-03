@@ -6,11 +6,9 @@ import { UserDataResponse } from '../../models/user-response.model';
 import { UpdateUserRequest } from '../../models/userdata-request.model';
 import { TrainingClassResponse } from '../../models/trainingclass-response.model';
 import { UserSubscriptionsDataResponse } from '../../models/userSubscriptionData-response.model';
-import { response } from 'express';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { UtilComponentComponent } from '../../util-component/util-component.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { error } from 'console';
 
 @Component({
   selector: 'app-account',
@@ -25,9 +23,6 @@ export class AccountComponent implements OnInit {
   inEditMode = false;
   traininClassReponse: TrainingClassResponse[];
   panelOpenState = false;
-  dataSource: MatTableDataSource<any>;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  displayedColumns: string[] = ['Subscription', 'Price', 'StartDate', 'EndDate'];
   
   constructor(private registrationService: RegistrationService, private router: Router, private clientService: ClientService, private _responseBar: MatSnackBar ) {}
 
@@ -37,8 +32,11 @@ export class AccountComponent implements OnInit {
 
   ngOnInit():void{
     this.fetchUserData();
-    this.fetchUserSubscriptions();
     this.role = this.registrationService.getRole();
+    if(this.role === 'USER'){
+      this.fetchUserSubscriptions();
+    }
+
     if(this.role === 'TRAINER'){
       this.fetchTrainerClassesData();
     }
@@ -49,6 +47,8 @@ export class AccountComponent implements OnInit {
     this.clientService.getUserProfileData().subscribe({
       next: (response) => {
         this.currentUser = response;
+      },error: (error) =>{
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }
@@ -68,10 +68,12 @@ export class AccountComponent implements OnInit {
           lastName: currentUser.lastName
       };
       this.clientService.updateUserData(userDataRequest).subscribe({
-        next: (response) =>{
+        next: () =>{
           this.inEditMode = false;
           this.fetchUserData();
-          UtilComponentComponent.openSnackBar("Your data was updated", this._responseBar, UtilComponentComponent.SnackbarStates.Default);
+          UtilComponentComponent.openSnackBar("Your data was updated", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
+        },error:(error) =>{
+          UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
         }
       })
   }
@@ -81,18 +83,12 @@ export class AccountComponent implements OnInit {
     this.fetchUserData();
   }
 
-  
-  public logout(){
-    this.registrationService.clear();
-    this.router.navigate(['/login']);
-  }
-
   public fetchUserSubscriptions(){
     this.clientService.getUserSubscriptionsData().subscribe({
         next: (response) => {
           this.userSubscriptionsData = response;
-          this.dataSource = new MatTableDataSource<any>(this.userSubscriptionsData);
-          this.dataSource.paginator = this.paginator;
+        },error:(error) =>{
+          UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
         }
     })
   }

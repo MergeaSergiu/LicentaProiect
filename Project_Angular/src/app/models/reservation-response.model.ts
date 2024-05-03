@@ -1,7 +1,7 @@
-export class ReservationResponse{
+export interface ReservationResponse{
     id: number;
     reservationDate: string;
     hourSchedule: string;
-    clientEmail: string;
+    userName: string;
     court: string;
 }

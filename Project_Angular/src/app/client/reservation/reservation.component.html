@@ -12,55 +12,70 @@
     </mat-card>
   </div>
   <div class="schedule-container" *ngIf="selectedDate">
+    <p class="title">
+      Football
+    </p>
+    <div class="reservation-list">
     <ul>
       <li *ngFor="let schedule of hourSchedulesFootball">
-          <button class="button-reservation"
+        <button
+          class="button-reservation"
           matTooltip="Select the time slot"
           [disabled]="schedule.reserved"
           [color]="schedule.reserved ? '' : 'primary'"
-          (click)="
-            saveReservation(selectedDate, schedule, 'FOOTBALL')
-          "
+          (click)="saveReservation(selectedDate, schedule, 'FOOTBALL')"
         >
           {{ schedule.time }}
         </button>
-          
       </li>
     </ul>
   </div>
+  </div>
   <div class="schedule-container" *ngIf="selectedDate">
+    <p class="title">
+      Basketball
+    </p>
+    <div class="reservation-list">
     <ul>
-      <li *ngFor="let schedule of hourSchedulesBasketball"> 
-          <button class="button-reservation"
+      <li *ngFor="let schedule of hourSchedulesBasketball"  >
+        <button
+          class="button-reservation"
           matTooltip="Select the time slot"
           [disabled]="schedule.reserved"
           [color]="schedule.reserved ? '' : 'primary'"
-          (click)="
-            saveReservation(selectedDate, schedule, 'BASKETBALL')
-          "
+          (click)="saveReservation(selectedDate, schedule, 'BASKETBALL')"
         >
           {{ schedule.time }}
         </button>
       </li>
     </ul>
   </div>
+</div>
   <div class="schedule-container" *ngIf="selectedDate">
+    <p class="title">
+      Tennis
+    </p>
+    <div class="reservation-list">
     <ul>
       <li *ngFor="let schedule of hourSchedulesTenis">
-          <button class="button-reservation"
+        <button
+          class="button-reservation"
           matTooltip="Select the time slot"
           [disabled]="schedule.reserved"
           [color]="schedule.reserved ? '' : 'primary'"
           (click)="saveReservation(selectedDate, schedule, 'TENNIS')"
         >
           {{ schedule.time }}
-      </button>
-       
+        </button>
       </li>
     </ul>
   </div>
 </div>
-
+</div>
+<div class="divider2"></div>
+<div class="title-sub">
+  <h2>Reservations History</h2>
+</div>
 <div class="reservation-container">
   <div class="reservation-list">
     <ul>
@@ -93,5 +108,3 @@
     </ul>
   </div>
 </div>
-
-<

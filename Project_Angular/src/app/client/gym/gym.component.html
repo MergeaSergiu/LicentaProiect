@@ -1,7 +1,63 @@
 <app-navbar></app-navbar>
+<div class="subscription-list">
+  <div class="title-sub">
+    <h2>Subscriptions</h2>
+  </div>
+  <div class="subscriptions">
+    <mat-card
+      *ngFor="let subscription of subscriptions"
+      class="subscription-card"
+    >
+      <mat-card-header class="card-title">
+        <h2 class="title">{{ subscription.subscriptionName }}</h2>
+      </mat-card-header>
+      <div class="section">
+        <p>
+          Price
+          <br>
+        <span class="info">
+          {{ subscription.subscriptionPrice }} RON/ month
+        </span>
+      </p>
+      </div>
+      <div class="divider"></div>
+      <div class="section">
+      <p>
+        Description
+        <br>
+        <span class="info">{{ subscription.subscriptionDescription }}
+      </span>
+      </p>
+    </div>
+    <div class="divider"></div>
+    <div class="section">
+      <p>
+        Nr. Days
+        <br>
+        <span class="info"> {{subscription.subscriptionTime}} 
+        </span>
+      </p>
+    </div>
+      <div class="divider"></div>
+      <div class="section">
+        <button class="button-edit"
+          *ngIf="!hasActiveSubscription"
+          matTooltip="Pay using your card"
+          (click)="goToCheckoutPage(subscription.id, subscription.subscriptionPrice)"
+        >
+        Get your subscription
+        </button>
+    </div>
+    </mat-card>
+  </div>
+</div>
+
+<div class="divider2"></div>
+
+
 <div class="trainingClasses">
   <div class="title-sub">
-    <h2>Discover our Training Classes</h2>
+    <h2>Training Classes</h2>
   </div>
 
   <div class="container">
@@ -38,22 +94,19 @@
           <span class="info">{{ trainingClass.intensity }}</span>
         </p>
         </div>
-        
         <div class="divider"></div>
         <div class="section">
         <p>
           Trainer<br>
           <span class="info">
-            Trainer: {{ trainingClass.firstName }} {{ trainingClass.lastName }}
+          {{ trainingClass.firstName }} {{ trainingClass.lastName }}
           </span>
         </p>
       </div>
         <div class="divider"></div>
         <div class="section">
           <button
-            class="button-drop"
-            mat-raised-button
-            color="primary"
+            class="button-edit"
             *ngIf="!isEnrolled"
             (click)="enrollUserToTrainingClass(trainingClass.id)"
           >
@@ -63,8 +116,10 @@
     </mat-card>
   </div>
 
+  <div class="divider2"></div>
   
   <div class="user-classes">
+    <br>
     <mat-expansion-panel
       (opened)="panelOpenState = true"
       (closed)="panelOpenState = false"
@@ -96,57 +151,3 @@
   </div>
 </div>
 
-<div class="subscription-list">
-  <div class="title-sub">
-    <h2>Discover our Subscriptions</h2>
-  </div>
-  <div class="subscriptions">
-    <mat-card
-      *ngFor="let subscription of subscriptions"
-      class="subscription-card"
-    >
-      <mat-card-header class="card-title">
-        <h2 class="title">{{ subscription.subscriptionName }}</h2>
-      </mat-card-header>
-      <div class="section">
-        <p>
-          Preț
-          <br>
-        <span class="price-user">
-          {{ subscription.subscriptionPrice }} RON/ month
-        </span>
-      </p>
-      </div>
-      <div class="divider"></div>
-      <div class="section">
-      <p>
-        Descriere
-        <br>
-        <span class="info">{{ subscription.subscriptionDescription }}
-      </span>
-      </p>
-    </div>
-    <div class="divider"></div>
-    <div class="section">
-      <p>
-        Nr. zile
-        <br>
-        <span class="info"> {{subscription.subscriptionTime}} 
-        </span>
-      </p>
-    </div>
-      <div class="divider"></div>
-      <div class="section">
-        <button
-          *ngIf="!hasActiveSubscription"
-          mat-raised-button
-          matTooltip="Pay using your card"
-          color="primary"
-          (click)="goToCheckoutPage(subscription.id)"
-        >
-          <mat-icon>payment</mat-icon> Get your subscription
-        </button>
-    </div>
-    </mat-card>
-  </div>
-</div>

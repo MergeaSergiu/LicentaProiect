@@ -1,20 +1,22 @@
 package com.spring.project.service.impl;
 
+import com.spring.project.Exception.CreateReservationException;
 import com.spring.project.dto.TrainingClassRequest;
 import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.mapper.TrainingClassMapper;
 import com.spring.project.model.TrainingClass;
 import com.spring.project.model.User;
-import com.spring.project.repository.ClientRepository;
+import com.spring.project.repository.UserRepository;
 import com.spring.project.repository.EnrollmentTrainingClassRepository;
 import com.spring.project.repository.TrainingClassRepository;
 import com.spring.project.service.TrainingClassService;
-import com.spring.project.util.UtilMethods;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,62 +28,57 @@ public class TrainingClassServiceImpl implements TrainingClassService {
     private final TrainingClassRepository trainingClassRepository;
     private final TrainingClassMapper trainingClassMapper;
     private final EnrollmentTrainingClassRepository enrollmentTrainingClassRepository;
-    private final ClientRepository clientRepository;
-    private final UtilMethods utilMethods;
-    private final EmailSenderImpl emailService;
+    private final UserRepository userRepository;
 
-    public void createTrainingClass(TrainingClassRequest trainingClassRequest, String authorization){
-            String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-            User trainer = clientRepository.findById(Long.valueOf(trainingClassRequest.getTrainerId())).orElse(null);
-            if(trainer == null){
-                throw new EntityNotFoundException("Trainer does not exist");
-            }
-            TrainingClass trainingClass = trainingClassMapper.convertFromDto(trainingClassRequest, trainer);
-            trainingClassRepository.save(trainingClass);
-            String emailTemplate = utilMethods.loadEmailTemplateFromResource("trainingClassCreated.html");
-            emailTemplate = emailTemplate.replace("${email}", username);
-            emailTemplate = emailTemplate.replace("${trainingClass}", trainingClassRequest.getClassName());
-            emailService.send(username, emailTemplate, "Training class was created");
+    public void createTrainingClass(TrainingClassRequest trainingClassRequest) {
+        User trainer = userRepository.findById(Long.valueOf(trainingClassRequest.getTrainerId())).orElseThrow(() -> new EntityNotFoundException("Trainer does not exist"));
+        if (!trainer.getRole().getName().equals("TRAINER")) {
+            throw new EntityNotFoundException("User does not have 'TRAINER' role");
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if (LocalDate.parse(trainingClassRequest.getLocalDate(), formatter).isBefore(LocalDate.now())) {
+            throw new CreateReservationException("Can not create a training class in past");
+        }
+
+        TrainingClass trainingClass = trainingClassMapper.convertFromDto(trainingClassRequest, trainer);
+        trainingClassRepository.save(trainingClass);
     }
 
     public TrainingClassResponse findById(Long id) {
-        TrainingClass trainingClass =  trainingClassRepository.findById(id).orElse(null);
-        if(trainingClass == null){
-            throw new EntityNotFoundException("Training Class does not exist");
-        }
+        TrainingClass trainingClass = trainingClassRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Training Class does not exist"));
         return trainingClassMapper.convertToDto(trainingClass);
     }
 
     public void deleteTrainingClass(Long id) {
-        TrainingClass trainingClass = trainingClassRepository.findById(id).orElse(null);
-        if(trainingClass == null){
-            throw new EntityNotFoundException("Training Class does not exist");
-        }
-        enrollmentTrainingClassRepository.deleteAllByTrainingClass_Id(id);
+        TrainingClass trainingClass = trainingClassRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Training Class does not exist"));
+        enrollmentTrainingClassRepository.deleteAllByTrainingClass_Id(trainingClass.getId());
         trainingClassRepository.deleteById(id);
     }
 
     @Override
     public void updateTrainingClass(Long id, TrainingClassRequest trainingClassRequest) {
-        TrainingClass trainingClass = trainingClassRepository.findById(id).orElse(null);
-        if(trainingClass == null){
-            throw new EntityNotFoundException("Training Class does not exist");
-        }
+        TrainingClass trainingClass = trainingClassRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Training Class does not exist"));
 
-        if(trainingClassRepository.getTrainingClassByName(trainingClassRequest.getClassName()) != null && !trainingClassRequest.getClassName().equals(trainingClass.getClassName())){
+        if (trainingClassRepository.getTrainingClassByName(trainingClassRequest.getClassName()) != null && !trainingClassRequest.getClassName().equals(trainingClass.getClassName())) {
             throw new EntityExistsException("There is already already a class with this name");
         }
-        User trainer = clientRepository.findById(Long.valueOf(trainingClassRequest.getTrainerId())).orElse(null);
-        if(trainer == null){
-            throw new EntityNotFoundException("Trainer does not exist");
+        User trainer = userRepository.findById(Long.valueOf(trainingClassRequest.getTrainerId())).orElseThrow(() -> new EntityNotFoundException("Trainer does not exist"));
+        if (!trainer.getRole().getName().equals("TRAINER")) {
+            throw new EntityNotFoundException("User does not have 'TRAINER' role");
         }
-                trainingClass.setClassName(trainingClassRequest.getClassName());
-                trainingClass.setIntensity(trainingClassRequest.getIntensity());
-                trainingClass.setStartTime(trainingClass.getStartTime());
-                trainingClass.setDuration(trainingClassRequest.getDuration());
-                trainingClass.setLocalDate(trainingClassRequest.getLocalDate());
-                trainingClass.setTrainer(trainer);
-                trainingClassRepository.save(trainingClass);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if (LocalDate.parse(trainingClassRequest.getLocalDate(), formatter).isBefore(LocalDate.now())) {
+            throw new CreateReservationException("Can not create a training class in past");
+        }
+
+        trainingClass.setClassName(trainingClassRequest.getClassName());
+        trainingClass.setIntensity(trainingClassRequest.getIntensity());
+        trainingClass.setStartTime(trainingClass.getStartTime());
+        trainingClass.setDuration(trainingClassRequest.getDuration());
+        trainingClass.setLocalDate(trainingClassRequest.getLocalDate());
+        trainingClass.setTrainer(trainer);
+        trainingClassRepository.save(trainingClass);
     }
 
     public List<TrainingClassResponse> getTrainingClasses() {
@@ -89,8 +86,10 @@ public class TrainingClassServiceImpl implements TrainingClassService {
                 .map(trainingClassMapper::convertToDto)
                 .collect(Collectors.toList());
     }
+
     public List<TrainingClass> getTrainingClassesForTrainer(Long id) {
-        return trainingClassRepository.findAllByTrainer_Id(id);
+        User trainer = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Trainer does not exit"));
+        return trainingClassRepository.findAllByTrainer_Id(trainer.getId());
     }
 
 }

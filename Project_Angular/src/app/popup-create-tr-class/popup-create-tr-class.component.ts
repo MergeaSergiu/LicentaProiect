@@ -4,6 +4,8 @@ import { AdminService } from '../services/admin.service';
 import { NgForm } from '@angular/forms';
 import { TrainingClassRequest } from '../models/trainingclass-request.model';
 import { TrainerDataResponse } from '../models/trainers-response.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UtilComponentComponent } from '../util-component/util-component.component';
 
 @Component({
   selector: 'app-popup-create-tr-class',
@@ -14,7 +16,7 @@ export class PopupCreateTrClassComponent {
 
   selectedTrainerId: number;
   trainersData: TrainerDataResponse[];
-  constructor(private matDialog: MatDialogRef<PopupCreateTrClassComponent>, private adminService: AdminService){}
+  constructor(private matDialog: MatDialogRef<PopupCreateTrClassComponent>, private adminService: AdminService,private _responseBar: MatSnackBar){}
 
   closePopUp(){
     this.matDialog.close();
@@ -44,11 +46,10 @@ export class PopupCreateTrClassComponent {
     }
 
     this.adminService.createTrainingClass(trainingClass).subscribe({
-      next: (response) => {
+      next: () => {
         this.closePopUp();
       }, error: (error: any) =>{
-        console.log(error);
-        alert(error)
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     });
   }

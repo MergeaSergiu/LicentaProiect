@@ -25,8 +25,11 @@ public class Reservation {
     @Temporal(TemporalType.DATE)
     private LocalDate reservationDate;
 
-    @NotBlank
-    private String hourSchedule;
+    @NotNull
+    private Integer startTime;
+
+    @NotNull
+    private Integer endTime;
 
     Court court;
 

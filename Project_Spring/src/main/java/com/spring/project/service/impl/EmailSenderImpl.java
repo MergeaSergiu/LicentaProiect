@@ -11,6 +11,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+
 @Service
 @AllArgsConstructor
 public class EmailSenderImpl implements EmailSender {
@@ -27,11 +29,13 @@ public class EmailSenderImpl implements EmailSender {
             mimeMessageHelper.setText(email, true);
             mimeMessageHelper.setTo(to);
             mimeMessageHelper.setSubject(subject);
-            mimeMessageHelper.setFrom("sportsArena@gmail.com");
+            mimeMessageHelper.setFrom("sportsArena@gmail.com", "Sport Arena Center");
             javaMailSender.send(mimeMessage);
         }catch(MessagingException e){
             logger.error("failed to send email", e);
-            throw new IllegalStateException("failed to sent email");
+            throw new IllegalStateException("Failed to sent the email");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
     }
 }
