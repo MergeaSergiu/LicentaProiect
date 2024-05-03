@@ -12,9 +12,13 @@
                 <input type="email" id="email" placeholder="Email" class="form-control" ngModel name="email" required email/>
             </div>
             <div class="form-group">
-                <input type="password" placeholder="Password" id="password" class="form-control" ngModel name="password" required minlength="8"/>
+                <input type="{{ showPassword ? 'text' : 'password' }}" id="password" name="password" class="form-control" placeholder="Password" ngModel required password>
             </div>
-            <br>
+            <div style="color: rgb(0, 0, 0); font-size: 13px;">
+                <input type="checkbox" [checked]="showPassword" (change)="togglePasswordVisibility()">
+                Show Password
+            </div>
+            <span class="info">Minimun 8 characters: 1 upercase, 1 lowercase, 1 figure</span>
             <div class="buttons">
                 <button class="signup-btn" type="submit"  [disabled]="!authForm.valid">Sign Up</button>
                 <button class="login-btn"  type="button" routerLink="/login">Switch to Log In</button> 

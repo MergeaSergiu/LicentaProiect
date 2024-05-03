@@ -14,10 +14,13 @@ import { Router } from "@angular/router";
 })
 export class RecoverPasswordComponent {
 
-    alertMessageResetEmail: string;
-    alertMessageUpdatePassword: string;
+    showPassword: boolean = false;
     resetPasswordFormSubmitted = false;
     constructor(private registrationService: RegistrationService, private _responseBar: MatSnackBar, private router: Router) {
+    }
+
+    togglePasswordVisibility() {
+        this.showPassword = !this.showPassword;
     }
 
     ngOnInit(): void {

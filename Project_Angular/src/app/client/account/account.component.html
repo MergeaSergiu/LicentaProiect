@@ -21,7 +21,7 @@
           <br />
           <input
             type="text"
-            [ngModel]="currentUser?.firstName"
+            [ngModel]="currentUser.firstName"
             (ngModelChange)="currentUser.firstName = $event"
             [disabled]="!inEditMode"
           />
@@ -31,7 +31,7 @@
           <br />
           <input
             type="text"
-            [ngModel]="currentUser?.lastName"
+            [ngModel]="currentUser.lastName"
             (ngModelChange)="currentUser.lastName = $event"
             [disabled]="!inEditMode"
           />
@@ -43,7 +43,7 @@
           <br />
           <input
             type="email"
-            [ngModel]="currentUser?.email"
+            [ngModel]="currentUser.email"
             (ngModelChange)="currentUser.email = $event"
             disabled
           />
@@ -53,7 +53,7 @@
           <br />
           <input
             type="text"
-            [ngModel]="currentUser?.role.name"
+            [ngModel]="currentUser.role.name"
             (ngModelChange)="currentUser.role.name = $event"
             disabled
           />
@@ -72,7 +72,7 @@
           <br />
           <input
             type="text"
-            [ngModel]="currentUser?.firstName"
+            [ngModel]="currentUser.firstName"
             (ngModelChange)="currentUser.firstName = $event"
           />
         </div>
@@ -81,7 +81,7 @@
           <br />
           <input
             type="text"
-            [ngModel]="currentUser?.lastName"
+            [ngModel]="currentUser.lastName"
             (ngModelChange)="currentUser.lastName = $event"
           />
         </div>

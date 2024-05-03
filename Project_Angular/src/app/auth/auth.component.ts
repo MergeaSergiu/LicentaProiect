@@ -12,17 +12,16 @@ import { UtilComponentComponent } from "../util-component/util-component.compone
 })
 export class AuthenticationComponent {
     password: string = '';
-    hide: boolean = true;
+    showPassword: boolean = false;
 
-    ngOnInit(): void {
-        this.registrationService.clear();
+    ngOnInit(): void {}
+
+    togglePasswordVisibility() {
+        this.showPassword = !this.showPassword;
     }
+
 
     constructor(private registrationService: RegistrationService, private _responseBar: MatSnackBar) { }
-
-    togglePasswordVisibility(): void {
-        this.hide = !this.hide;
-    }
 
     onSubmitSignUp(form: NgForm) {
         const signUpData: RegistrationRequest = {

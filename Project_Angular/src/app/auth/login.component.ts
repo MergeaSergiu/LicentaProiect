@@ -12,22 +12,19 @@ import { UtilComponentComponent } from "../util-component/util-component.compone
     styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-
-    alertMessage: string;
+    showPassword: boolean = false;
     password: string = '';
-    user: LoginRequest | undefined;
 
-    constructor(private registrationService: RegistrationService, private router: Router, public _responseBar: MatSnackBar) {
+    constructor(private registrationService: RegistrationService, private router: Router, public _responseBar: MatSnackBar) {}
+
+    togglePasswordVisibility() {
+        this.showPassword = !this.showPassword;
     }
 
-    ngOnInit(): void {
-        this.user = {} as LoginRequest;
-    }
     onSubmitLogIn(form: NgForm) {
         const logInData: LoginRequest = {
             email: form.value.email,
             password: form.value.password,
-            showPassword: false
         };
         this.registrationService.logIn(logInData).subscribe({
             next: (response: any) => {

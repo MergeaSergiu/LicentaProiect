@@ -10,6 +10,12 @@
     border: 2px solid rgb(157, 154, 154);
 }
 
+.info{
+    color: rgb(153, 153, 153);
+    font-size: 10px;
+    font-weight: 700;
+  }
+
 .container .title{
     color: rgb(0, 0, 0);
     font-size: 25px;
@@ -17,7 +23,7 @@
     font-weight: bold;
     line-height: 65px;
     display: block;
-    margin-bottom: 50px;
+    margin-bottom: 5%;
 }
 .container .form{
     padding: 10px 30px 50px 30px;

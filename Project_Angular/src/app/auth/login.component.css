@@ -10,6 +10,12 @@
     border: 2px solid rgb(197, 197, 197);
 }
 
+.info{
+    color: rgb(153, 153, 153);
+    font-size: 10px;
+    font-weight: 700;
+  }
+
 
 .container .title{
     color: rgb(0, 0, 0);
@@ -63,7 +69,7 @@
 
 .button-section2{
     text-align: center;
-    margin-top: 110px;
+    margin-top: 10%;
     font-size: 12px;
 }
 
@@ -71,8 +77,9 @@
     font-size: 13px;
      color: #666666;
 }
+
 .buttons{
-    margin-top: 15px;
+    margin-top: 8%;
 }
 button{
     background: #162f72;
