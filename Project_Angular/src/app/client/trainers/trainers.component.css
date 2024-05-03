@@ -9,7 +9,7 @@
 .user-res {
   border: 3px solid rgb(0, 0, 0);
   position: relative;
-  width: 400px;
+  width: 330px;
   height: 130px;
   display: flex;
   align-items: center;
@@ -106,8 +106,7 @@
   width: 160px;
   padding: 6px;
   margin-right: 5px;
-  font-size: 15px;
-  font-weight: 400;
+  font-size: 12px;
   cursor: pointer;
   border: 2px solid rgb(255, 255, 255);
 }
