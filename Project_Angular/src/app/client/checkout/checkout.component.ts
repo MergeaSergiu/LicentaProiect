@@ -1,13 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { environment } from '../../../environment';
 import { PaymentData } from '../../models/payment-data.model';
 import { ClientService } from '../../services/client.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { FormGroup, NgForm } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UtilComponentComponent } from '../../util-component/util-component.component';
 import { SubscriptionResponse } from '../../models/subscription-response.model';
-import { AdminService } from '../../services/admin.service';
 
 @Component({
   selector: 'app-checkout',
@@ -26,7 +25,7 @@ export class CheckoutComponent implements OnInit {
   subscriptionForm: FormGroup;
   paymentData: PaymentData;
 
-  constructor(private formBuilder: FormBuilder,private clientService: ClientService, private route: ActivatedRoute, private router: Router, private adminService: AdminService, private _responseBar: MatSnackBar) { }
+  constructor(private clientService: ClientService, private router: Router, private _responseBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.price = parseFloat(history.state.price);
@@ -65,13 +64,13 @@ export class CheckoutComponent implements OnInit {
               form.reset();
             } else {
               this.clientService.AddUserSubscriptionByCard(this.subscriptionId).subscribe({
-                next: (response: any) => {
+                next: () => {
                   UtilComponentComponent.openSnackBar("Payment was succesful", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
                   setTimeout(() => {
                     this.router.navigate(['/client/account']);
                   }, 1200);
                 }, error: (error: any) => {
-                  UtilComponentComponent.openSnackBar("We can not register your subscription", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+                  UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
                 }
               })
             }

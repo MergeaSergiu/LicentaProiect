@@ -25,6 +25,7 @@ public class CourtDetailsServiceImpl implements CourtDetailsService {
 
     @Override
     public List<CourtDetailsResponse> getDetails() {
+
         List<CourtDetails> courtDetails = courtDetailsRepository.findAll();
         return courtDetails.stream()
                 .map(courtDetailsMapper::convertToDto)
@@ -33,6 +34,7 @@ public class CourtDetailsServiceImpl implements CourtDetailsService {
 
     @Override
     public CourtDetailsResponse getCourtDetails(String courtName) {
+
         Court court = Court.valueOf(courtName.toUpperCase());
         CourtDetails courtDetails = courtDetailsRepository.findByCourt(court);
         if(courtDetails == null){
@@ -43,16 +45,12 @@ public class CourtDetailsServiceImpl implements CourtDetailsService {
 
     @Override
     public void updateCourtDetails(Long courtId, Integer startTime, Integer endTime) {
-        CourtDetails courtDetails = courtDetailsRepository.findById(courtId).orElse(null);
-        if(courtDetails == null){
-            throw new EntityNotFoundException("There is no court to update the details");
-        }
+
+        CourtDetails courtDetails = courtDetailsRepository.findById(courtId).orElseThrow(() -> new EntityNotFoundException("There is no court to update the details"));
         if(startTime.compareTo(endTime) >= 0){
             throw new EntityNotFoundException("Wrong timeSlots used.");
         }
-
         reservationRepository.deleteAllReservationBasedOnStartAndEndTime(startTime, endTime);
-
         courtDetails.setStartTime(startTime);
         courtDetails.setEndTime(endTime);
         courtDetailsRepository.save(courtDetails);

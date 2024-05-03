@@ -37,7 +37,6 @@ export class TrainersComponent implements OnInit{
     })
   }
 
-
   public fetchAllTrainers(){
     this.adminService.getAllTrainers().subscribe({
       next: (response) => {
@@ -59,9 +58,11 @@ export class TrainersComponent implements OnInit{
 
   declineRequest(collaborationId: number){
     this.clientService.declineRequestForCollaboration(collaborationId).subscribe({
-      next: (response) => {
+      next: () => {
         this.getUserCollaboration();
         UtilComponentComponent.openSnackBar("Your request was deleted", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+      },error: (error) => {
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }

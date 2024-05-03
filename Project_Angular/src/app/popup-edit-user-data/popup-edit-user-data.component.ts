@@ -56,7 +56,7 @@ export class PopupEditUserDataComponent {
     }
 
     this.adminService.updateUserRole(this.inputData.id, roleRequest).subscribe({
-      next: (response) =>{
+      next: () =>{
         this.closePopUp();
       }, error: () =>{
         UtilComponentComponent.openSnackBar("Can not update the role", this._responseBar, UtilComponentComponent.SnackbarStates.Error);

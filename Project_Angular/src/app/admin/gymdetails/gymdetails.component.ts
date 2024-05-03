@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { AdminService } from '../../services/admin.service';
-import { Router } from '@angular/router';
 import { PopupSubscriptionComponent } from '../../popup-subscription/popup-subscription.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupUpdateSubscriptionComponent } from '../../popup-update-subscription/popup-update-subscription.component';
@@ -19,12 +18,12 @@ import { SubscriptionResponse } from '../../models/subscription-response.model';
 })
 export class GymdetailsComponent {
 
-  subscriptions : SubscriptionResponse[];
+  subscriptions: SubscriptionResponse[];
   selectedTrainingClassId: number;
   selectedTrainingClass: TrainingClassResponse;
   trainingClassesData: TrainingClassResponse[];
   trainingClassId: number;
-  constructor(private adminService: AdminService, private dialog: MatDialog, private _responseBar: MatSnackBar) {}
+  constructor(private adminService: AdminService, private dialog: MatDialog, private _responseBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.fetchSubscriptions();
@@ -47,7 +46,7 @@ export class GymdetailsComponent {
 
   public deleteSubscription(id: number) {
     return this.adminService.deleteSubscription(id).subscribe({
-      next: (response) => {
+      next: () => {
         UtilComponentComponent.openSnackBar("Subscription was deleted", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
         this.fetchSubscriptions();
       },
@@ -57,7 +56,7 @@ export class GymdetailsComponent {
     })
   }
 
-  public fetchTrainingClassData(id: number){
+  public fetchTrainingClassData(id: number) {
     this.adminService.getTrainingClassData(id).subscribe(
       response => {
         this.selectedTrainingClass = response;
@@ -65,23 +64,25 @@ export class GymdetailsComponent {
     )
   }
 
-  public fetchAllTrainingClassData(){
-    this.adminService.getTrainingClassesData().subscribe(
-      response => {
+  public fetchAllTrainingClassData() {
+    this.adminService.getTrainingClassesData().subscribe({
+      next: (response) => {
         this.trainingClassesData = response;
       }
-    )
+    })
   }
 
-  public deleteTrainingClass(id: number){
-    this.adminService.deleteTrainingClass(id).subscribe(
-      response => {
+  public deleteTrainingClass(id: number) {
+    this.adminService.deleteTrainingClass(id).subscribe({
+      next: () => {
         this.fetchAllTrainingClassData();
         this.selectedTrainingClassId = null;
         this.selectedTrainingClass = null;
         UtilComponentComponent.openSnackBar("Training class was deleted", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
+      }, error: (error) => {
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
-    )
+    })
   }
 
   OpenCreatePopUp() {
@@ -91,51 +92,53 @@ export class GymdetailsComponent {
       exitAnimationDuration: '700ms'
     });
 
-    _popUp.afterClosed().subscribe(response =>{
+    _popUp.afterClosed().subscribe(response => {
       this.fetchSubscriptions();
     })
   }
 
-  OpenCreateTrainingClassPopUp(){
-      var _popUpTrainingClass = this.dialog.open(PopupCreateTrClassComponent, {
-        width: '50%',
-        enterAnimationDuration: '400ms',
-        exitAnimationDuration: '400ms'
-      });
+  OpenCreateTrainingClassPopUp() {
+    var _popUpTrainingClass = this.dialog.open(PopupCreateTrClassComponent, {
+      width: '50%',
+      enterAnimationDuration: '400ms',
+      exitAnimationDuration: '400ms'
+    });
 
-      _popUpTrainingClass.afterClosed().subscribe(response => {
-        this.fetchAllTrainingClassData();
-      })
+    _popUpTrainingClass.afterClosed().subscribe(response => {
+      this.fetchAllTrainingClassData();
+    })
   }
 
-  OpenEditTrainingClassPopUp(id: number){
+  OpenEditTrainingClassPopUp(id: number) {
     var _popUpEditTrainingClass = this.dialog.open(PopupEditTrClassComponent, {
       width: '50%',
       enterAnimationDuration: '500ms',
       exitAnimationDuration: '500ms',
       data: {
-          id: id
+        id: id
       }
     });
 
-    _popUpEditTrainingClass.afterClosed().subscribe(response =>{
+    _popUpEditTrainingClass.afterClosed().subscribe(response => {
       this.fetchTrainingClassData(id);
       this.fetchAllTrainingClassData();
     })
   }
 
-  OpenEditPopUp(id:number) {
+  OpenEditPopUp(id: number) {
     var _popUp = this.dialog.open(PopupUpdateSubscriptionComponent, {
       width: '50%',
       enterAnimationDuration: '500ms',
       exitAnimationDuration: '500ms',
       data: {
-          id: id
+        id: id
       }
     });
 
-    _popUp.afterClosed().subscribe(response =>{
-      this.fetchSubscriptions();
+    _popUp.afterClosed().subscribe({
+      next: () => {
+        this.fetchSubscriptions();
+      }
     })
   }
 

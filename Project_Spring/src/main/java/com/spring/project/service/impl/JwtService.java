@@ -3,8 +3,6 @@ package com.spring.project.service.impl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,7 +18,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
-    private static final String SECRET_KEY = "3ydqfkokUNlvGpjJL1CwHXPNbL+HjG0PF6VElzLhbabLmDAAYzUPKpXjTi+bn4kd";
+
+    @Value("${secret.key.jwt}")
+    private String secretKey;
 
     @Value("${application.security.jwt.expiration}")
     private long jwtExpiration;
@@ -93,17 +93,13 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] secretBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
+        byte[] secretBytes = secretKey.getBytes(StandardCharsets.UTF_8);
         return new SecretKeySpec(secretBytes, SignatureAlgorithm.HS512.getJcaName());
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities(String jwt) {
         String rolesClaim = extractClientRole(jwt);
-
-        // Split the roles string into a list
         List<String> rolesList = Arrays.asList(rolesClaim.split(","));
-
-        // Convert the list of roles to a list of GrantedAuthority objects
         return rolesList.stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toList());

@@ -23,16 +23,16 @@ public class ClientService implements UserDetailsService {
 
 
     private PasswordEncoder passwordEncoder;
-    private final static String CLIENT_NOT_FOUND_ERROR = "Client with email %s not found";
     private final UserRepository userRepository;
     private final ConfirmationTokenService confirmationTokenService;
     private final ConfirmationTokenMapper confirmationTokenMapper;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException(String.format(CLIENT_NOT_FOUND_ERROR, email)));
+        return userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User does not exist"));
     }
     public String signUpClient(User user) {
+
         User userAlreadyExist = userRepository.findByEmail(user.getEmail()).orElse(null);
         if(userAlreadyExist == null){
             String token = UUID.randomUUID().toString();

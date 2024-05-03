@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { RegistrationService } from "../services/registration.service";
 import { RegistrationRequest } from "../models/registration-request.model";
-import { MatSnackBar, MatSnackBarConfig } from "@angular/material/snack-bar";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { UtilComponentComponent } from "../util-component/util-component.component";
 
 @Component({
@@ -34,8 +34,8 @@ export class AuthenticationComponent {
         this.registrationService.singUp(signUpData).subscribe({
             next: (response) => {
                 UtilComponentComponent.openSnackBar(response.registrationResponse, this._responseBar, UtilComponentComponent.SnackbarStates.Success);
-            }, error: (errorMessage) => {
-                UtilComponentComponent.openSnackBar(errorMessage, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+            }, error: (error) => {
+                UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
             }
         });
         form.reset();

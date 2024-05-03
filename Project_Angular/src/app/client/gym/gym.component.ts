@@ -2,10 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AdminService } from '../../services/admin.service';
 import { TrainingClassResponse } from '../../models/trainingclass-response.model';
 import { ClientService } from '../../services/client.service';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatSnackBar} from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { UtilComponentComponent } from '../../util-component/util-component.component';
 import { SubscriptionResponse } from '../../models/subscription-response.model';
+import { error } from 'console';
 
 @Component({
   selector: 'app-gym',
@@ -56,7 +57,8 @@ export class GymComponent implements OnInit{
     this.adminService.getTrainingClassData(id).subscribe({
       next:(response) => {
         this.selectedTrainingClass = response;
-  
+      },error:(error) => {
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }
@@ -78,16 +80,20 @@ export class GymComponent implements OnInit{
     this.clientService.getUserTrainingClasses().subscribe({
       next: (response) => {
         this.userTrainingClassesData = response;
+      },error: (error) => {
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }
 
   dropOutOfTrainingClass(classId: number){
     this.clientService.unEnrolleUser(classId).subscribe({
-      next: (response) =>{
+      next: () =>{
         this.fetchTrainingClassData(classId);
         this.fetchUserTrainingClassesData();
         UtilComponentComponent.openSnackBar("You have drop out from training Class", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+      },error: (error) => {
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }

@@ -46,7 +46,7 @@ export class PopupCreateTrClassComponent {
     }
 
     this.adminService.createTrainingClass(trainingClass).subscribe({
-      next: (response) => {
+      next: () => {
         this.closePopUp();
       }, error: (error: any) =>{
         UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);

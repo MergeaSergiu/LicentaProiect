@@ -28,11 +28,11 @@ export class PopupAddSubForUserComponent {
   }
 
   public fetchSubscriptions(){
-    return this.adminService.getAllSubscriptions().subscribe(
-      response => {
+    return this.adminService.getAllSubscriptions().subscribe({
+      next: (response) => {
         this.subscriptions = response;
       }
-    )
+  })
   }
   onSubmitAddSubscription(form: NgForm){
     const userSubscription: UserSubscriptionRequest = {

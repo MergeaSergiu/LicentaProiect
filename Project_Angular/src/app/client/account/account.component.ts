@@ -8,6 +8,7 @@ import { TrainingClassResponse } from '../../models/trainingclass-response.model
 import { UserSubscriptionsDataResponse } from '../../models/userSubscriptionData-response.model';
 import { UtilComponentComponent } from '../../util-component/util-component.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { error } from 'console';
 
 @Component({
   selector: 'app-account',
@@ -31,7 +32,9 @@ export class AccountComponent implements OnInit {
 
   ngOnInit():void{
     this.fetchUserData();
-    this.fetchUserSubscriptions();
+    if(this.role === 'USER'){
+      this.fetchUserSubscriptions();
+    }
     this.role = this.registrationService.getRole();
     if(this.role === 'TRAINER'){
       this.fetchTrainerClassesData();
@@ -43,6 +46,8 @@ export class AccountComponent implements OnInit {
     this.clientService.getUserProfileData().subscribe({
       next: (response) => {
         this.currentUser = response;
+      },error: (error) =>{
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }
@@ -65,7 +70,9 @@ export class AccountComponent implements OnInit {
         next: () =>{
           this.inEditMode = false;
           this.fetchUserData();
-          UtilComponentComponent.openSnackBar("Your data was updated", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+          UtilComponentComponent.openSnackBar("Your data was updated", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
+        },error:(error) =>{
+          UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
         }
       })
   }
@@ -75,16 +82,12 @@ export class AccountComponent implements OnInit {
     this.fetchUserData();
   }
 
-  
-  public logout(){
-    this.registrationService.clear();
-    this.router.navigate(['/login']);
-  }
-
   public fetchUserSubscriptions(){
     this.clientService.getUserSubscriptionsData().subscribe({
         next: (response) => {
           this.userSubscriptionsData = response;
+        },error:(error) =>{
+          UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
         }
     })
   }

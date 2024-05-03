@@ -5,7 +5,7 @@ import { Observable, catchError, tap, throwError } from 'rxjs';
 import { ResetPasswordRequest } from '../models/resetPass-request.model';
 import { UpdatePasswordRequest } from '../models/updatePassword-request.model';
 import { LoginRequest } from '../models/login-request.model';
-import { JwtRefreshToken } from '../auth/refresh-token.model';
+import { JwtRefreshToken } from '../models/refresh-token.model';
 
 @Injectable({
   providedIn: 'root'

@@ -43,7 +43,9 @@
             "scripts": [],
             "server": "src/main.server.ts",
             "prerender": true,
-            "ssr": false
+            "ssr": {
+              "entry": "server.ts"
+            }
           },
           "configurations": {
             "production": {
@@ -84,7 +86,6 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "externalDependencies":[""],
             "buildTarget": "Project_Angular:build"
           }
         },

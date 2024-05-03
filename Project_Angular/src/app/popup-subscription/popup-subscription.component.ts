@@ -5,6 +5,7 @@ import { SubscriptionRequest } from '../models/subscription-request.model';
 import { AdminService } from '../services/admin.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UtilComponentComponent } from '../util-component/util-component.component';
+import { error } from 'console';
 
 @Component({
   selector: 'app-popup-subscription',
@@ -29,8 +30,8 @@ export class PopupSubscriptionComponent {
     this.adminService.createSubscription(subscriptionData).subscribe({
       next: () => {
         this.closePopUp();
-      }, error: () => {
-        UtilComponentComponent.openSnackBar("Can not create the subscription", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+      }, error: (error) => {
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     });
   }

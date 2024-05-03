@@ -34,114 +34,83 @@ public class TrainerCollaborationServiceImpl implements TrainerCollaborationServ
 
     @Override
     public void sendCollaborationRequest(Long trainerId, String authorization) {
-            String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-            User user = userRepository.findByEmail(username).orElse(null);
-            if(user == null){
-                throw new EntityNotFoundException("User does not exist");
-            }
-            User trainer = userRepository.findById(trainerId).orElse(null);
-            if(trainer == null){
-                throw new EntityNotFoundException("Trainer does not exist");
-            }
-                List<CollaborationStatus> activeStatuses = Arrays.asList(CollaborationStatus.ACCEPTED, CollaborationStatus.PENDING);
-                List<TrainerCollaboration> existingCollaboration = trainerCollaborationRepository.findByUserAndCollaborationStatusIn(user, activeStatuses);
-                if(existingCollaboration.size() == 0) {
-                    TrainerCollaboration trainerCollaboration = trainerCollaborationMapper.createFromDto(user,trainer);
-                    trainerCollaborationRepository.save(trainerCollaboration);
-                    String emailTemplateTrainer = utilMethods.loadEmailTemplateFromResource("collabRequestReceive.html");
-                    emailTemplateTrainer = emailTemplateTrainer.replace("${email}", trainer.getEmail());
-                    emailTemplateTrainer = emailTemplateTrainer.replace("${userName}", user.getFirstName() + " " + user.getLastName());
-                    emailSender.send(trainer.getEmail(), emailTemplateTrainer, "Collaboration Request");
-                    String emailTemplateUser = utilMethods.loadEmailTemplateFromResource("collabRequestSent.html");
-                    emailTemplateUser = emailTemplateUser.replace("${user}", user.getFirstName()+" " + user.getLastName());
-                    emailTemplateUser = emailTemplateUser.replace("${trainerName}", trainer.getFirstName() + " " + trainer.getLastName());
-                    emailSender.send(username, emailTemplateUser, "Collaboration Request");
-                }else{
-                    throw new EntityExistsException("There is already an active collaboration");
-                }
+        User user = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
+        User trainer = userRepository.findById(trainerId).orElse(null);
+        if (trainer == null || !trainer.getRole().getName().equals("TRAINER")) {
+            throw new EntityNotFoundException("Trainer does not exist");
+        }
+        List<CollaborationStatus> activeStatuses = Arrays.asList(CollaborationStatus.ACCEPTED, CollaborationStatus.PENDING);
+        List<TrainerCollaboration> existingCollaboration = trainerCollaborationRepository.findByUserAndCollaborationStatusIn(user, activeStatuses);
+        if (existingCollaboration.size() == 0) {
+            TrainerCollaboration trainerCollaboration = trainerCollaborationMapper.createFromDto(user, trainer);
+            trainerCollaborationRepository.save(trainerCollaboration);
+            String emailTemplateTrainer = utilMethods.loadEmailTemplateFromResource("collabRequestReceive.html");
+            emailTemplateTrainer = emailTemplateTrainer.replace("${email}", trainer.getEmail());
+            emailTemplateTrainer = emailTemplateTrainer.replace("${userName}", user.getFirstName() + " " + user.getLastName());
+            emailSender.send(trainer.getEmail(), emailTemplateTrainer, "Collaboration Request");
+        } else {
+            throw new EntityExistsException("There is already an active collaboration");
+        }
 
     }
 
     @Override
     public List<TrainerCollaborationResponse> getCollaborationForTrainer(String authorization) {
-            String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-            User currentTrainer = userRepository.findByEmail(username).orElse(null);
-            if(currentTrainer == null){
-                throw new EntityNotFoundException("Trainer does not exist");
-            }
-            List<TrainerCollaboration> collaborationListForTrainer = trainerCollaborationRepository.findAllByTrainer_Id(currentTrainer.getId());
-            if(collaborationListForTrainer.size() > 0) {
-                return collaborationListForTrainer.stream()
-                        .map(trainerCollaborationMapper::convertToDtoForTrainer).collect(Collectors.toList());
-            }
-            else{
-                return new ArrayList<>();
-            }
+        User currentTrainer = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
+        List<TrainerCollaboration> collaborationListForTrainer = trainerCollaborationRepository.findAllByTrainer_Id(currentTrainer.getId());
+        if (collaborationListForTrainer.size() > 0) {
+            return collaborationListForTrainer.stream()
+                    .map(trainerCollaborationMapper::convertToDtoForTrainer).collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     @Override
     public void acceptUserCollaboration(Long collaborationId) {
-            TrainerCollaboration trainerCollaboration = trainerCollaborationRepository.findById(collaborationId).orElse(null);
-            if(trainerCollaboration == null){
-                throw new EntityNotFoundException("Trainer Collaboration does not exist");
-            }
-                trainerCollaboration.setCollaborationStatus(CollaborationStatus.ACCEPTED);
-                trainerCollaboration.setStartDate(LocalDate.now());
-                trainerCollaborationRepository.save(trainerCollaboration);
-                User user = trainerCollaboration.getUser();
-                User trainer = trainerCollaboration.getTrainer();
-                String emailTemplateTrainer = utilMethods.loadEmailTemplateFromResource("collabAccepted.html");
-                emailTemplateTrainer = emailTemplateTrainer.replace("${userName}", user.getFirstName() + " " + user.getLastName());
-                emailTemplateTrainer = emailTemplateTrainer.replace("${trainerName}", trainer.getFirstName() + " " + trainer.getLastName());
-                emailTemplateTrainer = emailTemplateTrainer.replace("${startDate}", LocalDate.now().toString());
-                emailSender.send(user.getEmail(), emailTemplateTrainer, "Collaboration Accepted");
+        TrainerCollaboration trainerCollaboration = trainerCollaborationRepository.findById(collaborationId).orElseThrow(() -> new EntityNotFoundException("Trainer Collaboration does not exist"));
+        trainerCollaboration.setCollaborationStatus(CollaborationStatus.ACCEPTED);
+        trainerCollaboration.setStartDate(LocalDate.now());
+        trainerCollaborationRepository.save(trainerCollaboration);
+        User user = trainerCollaboration.getUser();
+        User trainer = trainerCollaboration.getTrainer();
+        String emailTemplateTrainer = utilMethods.loadEmailTemplateFromResource("collabAccepted.html");
+        emailTemplateTrainer = emailTemplateTrainer.replace("${userName}", user.getFirstName() + " " + user.getLastName());
+        emailTemplateTrainer = emailTemplateTrainer.replace("${trainerName}", trainer.getFirstName() + " " + trainer.getLastName());
+        emailTemplateTrainer = emailTemplateTrainer.replace("${startDate}", LocalDate.now().toString());
+        emailSender.send(user.getEmail(), emailTemplateTrainer, "Collaboration Accepted");
     }
 
     @Override
     public void declineUserCollaboration(Long collaborationId, String authorization) {
-            String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-            User user = userRepository.findByEmail(username).orElse(null);
-            if(user == null) {
-                throw new EntityNotFoundException("User does not exist");
-            }
-            TrainerCollaboration trainerCollaboration = trainerCollaborationRepository.findById(collaborationId).orElse(null);
-            if(trainerCollaboration == null){
-                throw new EntityNotFoundException("Collaboration does not exist");
-            }
-            User trainer = trainerCollaboration.getTrainer();
-            if(trainer == null){
-                throw new EntityNotFoundException("Trainer does not exist");
-            }
-                trainerCollaborationRepository.deleteById(collaborationId);
-                String emailTemplateTrainer = utilMethods.loadEmailTemplateFromResource("declineEmail.html");
-                emailTemplateTrainer = emailTemplateTrainer.replace("${userName}", user.getFirstName() + " " + user.getLastName());
-                emailTemplateTrainer = emailTemplateTrainer.replace("${trainerName}", trainer.getFirstName() + " " + trainer.getLastName());
-                emailSender.send(user.getEmail(), emailTemplateTrainer, "Collaboration Declined");
+        User user = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
+        TrainerCollaboration trainerCollaboration = trainerCollaborationRepository.findById(collaborationId).orElseThrow(() -> new EntityNotFoundException("Collaboration does not exist"));
+        User trainer = trainerCollaboration.getTrainer();
+        if (trainer == null) {
+            throw new EntityNotFoundException("Trainer does not exist");
+        }
+        trainerCollaborationRepository.deleteById(collaborationId);
+        String emailTemplateTrainer = utilMethods.loadEmailTemplateFromResource("declineEmail.html");
+        emailTemplateTrainer = emailTemplateTrainer.replace("${userName}", user.getFirstName() + " " + user.getLastName());
+        emailTemplateTrainer = emailTemplateTrainer.replace("${trainerName}", trainer.getFirstName() + " " + trainer.getLastName());
+        emailSender.send(user.getEmail(), emailTemplateTrainer, "Collaboration Declined");
     }
 
     @Override
     public void finishCollaboration(Long collaborationId) {
-            TrainerCollaboration trainerCollaboration = trainerCollaborationRepository.findById(collaborationId).orElse(null);
-            if(trainerCollaboration == null){
-                throw new EntityNotFoundException("This collaboration does not exist");
-            }
-            trainerCollaborationRepository.updateCollaborationStatus(trainerCollaboration.getId(), LocalDate.now(), CollaborationStatus.ENDED);
+        TrainerCollaboration trainerCollaboration = trainerCollaborationRepository.findById(collaborationId).orElseThrow(() -> new EntityNotFoundException("This collaboration does not exist"));
+        trainerCollaborationRepository.updateCollaborationStatus(trainerCollaboration.getId(), LocalDate.now(), CollaborationStatus.ENDED);
     }
 
     @Override
     public List<TrainerCollaborationResponse> getCollaborationForUser(String authorization) {
-            String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-            User currentUser = userRepository.findByEmail(username).orElse(null);
-            if(currentUser == null){
-                throw new EntityNotFoundException("User does not exist");
-            }
-            List<TrainerCollaboration> collaborationListForTrainer = trainerCollaborationRepository.findAllByUser_Id(currentUser.getId());
-            if(collaborationListForTrainer.size() > 0) {
-                return collaborationListForTrainer.stream()
-                        .map(trainerCollaborationMapper::convertToDtoForUser).collect(Collectors.toList());
-            }
-            else{
-                return new ArrayList<>();
-            }
+        User currentUser = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
+        List<TrainerCollaboration> collaborationListForTrainer = trainerCollaborationRepository.findAllByUser_Id(currentUser.getId());
+        if (collaborationListForTrainer.size() > 0) {
+            return collaborationListForTrainer.stream()
+                    .map(trainerCollaborationMapper::convertToDtoForUser).collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
+        }
     }
 }

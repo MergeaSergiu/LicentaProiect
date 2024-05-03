@@ -10,6 +10,7 @@ import { NgForm } from '@angular/forms';
 import { ReservationRequestByAdmin } from '../../models/reservationByAdmin-request.model';
 import { CourtDetailsResponse } from '../../models/court-details-response.model';
 import { ReservationResponse } from '../../models/reservation-response.model';
+import { error } from 'console';
 
 interface HourSchedule {
   time: string;
@@ -38,7 +39,7 @@ export class ReservationdetailsComponent implements OnInit {
   
   ngOnInit(): void {
     this.fetchAllReservations();
-    this.fetchAllUsers();
+    this.fetchAllUsersWithUserRole();
     this.getTimeSlotForCourts();
   }
 
@@ -48,10 +49,10 @@ export class ReservationdetailsComponent implements OnInit {
   }
 
 
-  public fetchAllUsers() {
+  public fetchAllUsersWithUserRole() {
     return this.adminService.getAllUsers().subscribe({
       next: (response) => {
-        this.users = response;
+        this.users = response.filter(user => user.role.name === 'USER' || user.role.name === 'ADMIN');
       }
     })
   }
@@ -60,7 +61,9 @@ export class ReservationdetailsComponent implements OnInit {
     this.clientService.deleteReservation(id).subscribe({
       next: (response: any) => {
         this.fetchAllReservations();
-        UtilComponentComponent.openSnackBar("The reservation was deleted", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+        UtilComponentComponent.openSnackBar("The reservation was deleted", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
+      }, error:(error) => {
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     })
   }

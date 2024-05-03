@@ -11,12 +11,9 @@ public class PasswordValidator implements Predicate<String> {
 
     @Override
     public boolean test(String s) {
-
         String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$";
         Pattern pattern = Pattern.compile(passwordRegex);
-
         Matcher matcher = pattern.matcher(s);
-
         return matcher.matches();
     }
 }

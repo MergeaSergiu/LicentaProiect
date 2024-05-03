@@ -35,70 +35,60 @@ public class SubscriptionsHistoryServiceImpl implements SubscriptionsHistoryServ
 
     @Override
     public SubscriptionsHistory addSubscriptionForUser(UserSubscriptionRequest userSubscriptionRequest) {
-        User user = userRepository.findById(Long.valueOf(userSubscriptionRequest.getUserId())).orElse(null);
-        if(user == null){
-            throw new EntityNotFoundException("User does not exist");
+        User user = userRepository.findById(Long.valueOf(userSubscriptionRequest.getUserId())).orElseThrow(() -> new EntityNotFoundException("User does not exist"));
+
+        if (user.getRole().getName().equals("TRAINER")) {
+            throw new EntityNotFoundException("Trainers already have access to all subscriptions");
         }
-        Subscription subscription = subscriptionRepository.findById(Long.valueOf(userSubscriptionRequest.getSubscriptionId())).orElse(null);
-        if(subscription ==null){
-            throw new EntityExistsException("Subscription does not exist");
-        }
+
+        Subscription subscription = subscriptionRepository.findById(Long.valueOf(userSubscriptionRequest.getSubscriptionId())).orElseThrow(() -> new EntityExistsException("Subscription does not exist"));
+
         SubscriptionsHistory activeSubscription = subscriptionHistoryRepository.findActiveSubscriptionForUser(user.getId(), LocalDate.now());
-        if(activeSubscription != null){
+        if (activeSubscription != null) {
             throw new EntityExistsException("User already has an active subscription");
         }
-            SubscriptionsHistory subscriptionsHistory = subscriptionHistoryMapper.convertFromDto(user,subscription);
-            subscriptionHistoryRepository.save(subscriptionsHistory);
-            return subscriptionsHistory;
+        SubscriptionsHistory subscriptionsHistory = subscriptionHistoryMapper.convertFromDto(user, subscription);
+        subscriptionHistoryRepository.save(subscriptionsHistory);
+        return subscriptionsHistory;
     }
 
     @Override
     public List<UserSubscriptionsDataResponse> getLoggedInUserSubscriptions(String authorization) {
-        String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-        User user = userRepository.findByEmail(username).orElse(null);
-        if(user == null){
-            throw new EntityNotFoundException("User does not exist");
-        }
-            List<SubscriptionsHistory> subscriptionsHistoryListForUser = subscriptionHistoryRepository.findByUser_IdOrderBySubscriptionEndTimeAsc(user.getId());
-            return subscriptionsHistoryListForUser.stream()
-                    .map(subscriptionHistoryMapper::convertToDto).collect(Collectors.toList());
+        User user = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
+        List<SubscriptionsHistory> subscriptionsHistoryListForUser = subscriptionHistoryRepository.findByUser_IdOrderBySubscriptionEndTimeAsc(user.getId());
+        return subscriptionsHistoryListForUser.stream()
+                .map(subscriptionHistoryMapper::convertToDto).collect(Collectors.toList());
     }
 
     @Override
     public List<UserSubscriptionsDataResponse> getUserSubscriptions(Long id) {
-        User user = userRepository.findById(id).orElse(null);
-        if(user == null){
-            throw new EntityNotFoundException("User does not exist");
-        }
-        List<SubscriptionsHistory> subscriptionsHistoryListForUser = subscriptionHistoryRepository.findByUser_IdOrderBySubscriptionEndTimeAsc(id);
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User does not exist"));
+        List<SubscriptionsHistory> subscriptionsHistoryListForUser = subscriptionHistoryRepository.findByUser_IdOrderBySubscriptionEndTimeAsc(user.getId());
         return subscriptionsHistoryListForUser.stream()
-                    .map(subscriptionHistoryMapper::convertToDto).collect(Collectors.toList());
-
+                .map(subscriptionHistoryMapper::convertToDto).collect(Collectors.toList());
     }
 
     @Override
     public void addSubscriptionForUserByCard(Long subscriptionId, String authorization) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String username = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-            User user = userRepository.findByEmail(username).orElse(null);
-            if(user == null){
-                throw new EntityNotFoundException("User does not exist");
-            }
-            Subscription subscription = subscriptionRepository.findById(subscriptionId).orElse(null);
-            if(subscription == null){
-                throw new EntityNotFoundException("Subscription does not exist");
-            }
-            SubscriptionsHistory activeSubscription = subscriptionHistoryRepository.findActiveSubscriptionForUser(user.getId(), LocalDate.now());
-            if(activeSubscription != null){
-                throw new EntityExistsException("User already has a active subscription");
-            }
-                SubscriptionsHistory subscriptionsHistory = subscriptionHistoryMapper.convertFromDto(user,subscription);
-                subscriptionHistoryRepository.save(subscriptionsHistory);
-                String emailTemplate = utilMethods.loadEmailTemplateFromResource("paymentResponse.html");
-                emailTemplate = emailTemplate.replace("${user}", user.getFirstName()+" " + user.getLastName());
-                emailTemplate = emailTemplate.replace("${subscription}", subscription.getSubscriptionName());
-                emailTemplate = emailTemplate.replace("${price}", subscription.getSubscriptionPrice().toString());
-                emailTemplate = emailTemplate.replace("${date}", LocalDateTime.now().format(formatter));
-                emailService.send(username, emailTemplate, "Payment billing");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        User user = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
+
+        if (user.getRole().getName().equals("TRAINER")) {
+            throw new EntityNotFoundException("Trainers already have access to all subscriptions");
+        }
+        Subscription subscription = subscriptionRepository.findById(subscriptionId).orElseThrow(() -> new EntityNotFoundException("Subscription does not exist"));
+
+        SubscriptionsHistory activeSubscription = subscriptionHistoryRepository.findActiveSubscriptionForUser(user.getId(), LocalDate.now());
+        if (activeSubscription != null) {
+            throw new EntityExistsException("User already has a active subscription");
+        }
+        SubscriptionsHistory subscriptionsHistory = subscriptionHistoryMapper.convertFromDto(user, subscription);
+        subscriptionHistoryRepository.save(subscriptionsHistory);
+        String emailTemplate = utilMethods.loadEmailTemplateFromResource("paymentResponse.html");
+        emailTemplate = emailTemplate.replace("${user}", user.getFirstName() + " " + user.getLastName());
+        emailTemplate = emailTemplate.replace("${subscription}", subscription.getSubscriptionName());
+        emailTemplate = emailTemplate.replace("${price}", subscription.getSubscriptionPrice().toString());
+        emailTemplate = emailTemplate.replace("${date}", LocalDateTime.now().format(formatter));
+        emailService.send(user.getEmail(), emailTemplate, "Payment billing");
     }
 }

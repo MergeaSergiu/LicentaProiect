@@ -50,7 +50,7 @@ const appRoutes : Routes = [
     canActivate: [authGuard],
     data: {roles: 'TRAINER'},
     children: [
-    {path: 'trainerDashboard', component: TrainerComponent},
+    { path: 'trainerDashboard', component: TrainerComponent},
     { path: 'account', component: AccountComponent},
     ]}
 ]

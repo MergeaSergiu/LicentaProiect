@@ -33,11 +33,11 @@ export class PopupEditTrClassComponent {
   }
 
   public fetchTrainersData(){
-    return this.adminService.getAllTrainers().subscribe(
-      response => {
+    return this.adminService.getAllTrainers().subscribe({
+      next: (response) => {
         this.trainersData = response;
       }
-    )
+  })
   }
 
   setPopUpData(id: number){

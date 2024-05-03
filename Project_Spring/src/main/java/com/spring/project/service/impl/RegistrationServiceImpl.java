@@ -81,12 +81,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (!isValidEmail) {
             throw new EmailNotAvailableException("Email does not respect the criteria");
         }
-
-        User user = userRepository.findByEmail(resetPassEmailRequest.getEmail()).orElse(null);
-        if(user == null){
-            throw new EntityNotFoundException("There is no account with this email");
-        }
-
+        User user = userRepository.findByEmail(resetPassEmailRequest.getEmail()).orElseThrow(() -> new EntityNotFoundException("There is no account with this email"));
         String resetToken = UUID.randomUUID().toString();
         PasswordResetToken passwordResetToken = new PasswordResetToken(
                 resetToken,
@@ -111,10 +106,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                         authenticationRequest.getPassword()
                 )
         );
-        User user = userRepository.findByEmail(authenticationRequest.getEmail()).orElse(null);
-        if(user == null){
-            throw new EntityNotFoundException("User does not exist");
-        }
+        User user = userRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow(() -> new EntityNotFoundException("User does not exist"));
         String jwt = jwtService.generateToken(user.getEmail(), user.getRole().getName());
         String refreshJwt = jwtService.generateRefreshToken(user.getEmail(), user.getRole().getName());
         String userRole = jwtService.extractClientRole(jwt);
