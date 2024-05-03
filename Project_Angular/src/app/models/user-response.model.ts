@@ -1,6 +1,6 @@
 import { Role } from "./role.model";
 
-export class UserDataResponse {
+export interface UserDataResponse {
     id: number;
     firstName: string;
     lastName: string;

@@ -1,4 +1,4 @@
-export class CollaborationResponse{
+export interface CollaborationResponse{
     collaborationId: number;
     firstName: string;
     lastName: string;

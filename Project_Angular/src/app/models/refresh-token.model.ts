@@ -1,3 +1,3 @@
-export class JwtRefreshToken {
+export interface JwtRefreshToken {
     refreshToken: string;
 }

@@ -1,3 +1,3 @@
-export class StatusEnrollResponse{
+export interface StatusEnrollResponse{
     status: string;
 }

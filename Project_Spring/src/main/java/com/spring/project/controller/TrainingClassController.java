@@ -5,7 +5,6 @@ import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.service.TrainingClassService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,7 +35,7 @@ public class TrainingClassController {
         return new ResponseEntity<>(trainingClassResponse, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('TRAINER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{trainingClassId}")
     public ResponseEntity<String> deleteTrainingClass(@PathVariable("trainingClassId") Long trainingClassId){
         trainingClassService.deleteTrainingClass(trainingClassId);

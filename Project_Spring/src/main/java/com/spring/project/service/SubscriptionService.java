@@ -2,10 +2,7 @@ package com.spring.project.service;
 
 import com.spring.project.dto.CreateSubscriptionRequest;
 import com.spring.project.dto.SubscriptionResponse;
-import com.spring.project.model.Subscription;
-
 import java.util.List;
-import java.util.Optional;
 
 public interface SubscriptionService {
 

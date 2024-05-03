@@ -1,4 +1,4 @@
-export class SubscriptionResponse {
+export interface SubscriptionResponse {
     id: number;
     subscriptionName: string;
     subscriptionPrice: number;

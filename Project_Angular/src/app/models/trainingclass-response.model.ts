@@ -1,4 +1,4 @@
-export class TrainingClassResponse{
+export interface TrainingClassResponse{
     id: number;
     className: string;
     duration: number;

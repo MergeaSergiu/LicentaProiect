@@ -1,3 +1,3 @@
-export class RoleRequest{
+export interface RoleRequest{
     id: number;
 }

@@ -1,4 +1,4 @@
-export class RegistrationRequest{
+export interface RegistrationRequest{
     firstName: string;
     lastName: string;
     email: string;

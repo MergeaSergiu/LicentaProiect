@@ -1,4 +1,4 @@
-export class CourtDetailsResponse {
+export interface CourtDetailsResponse {
     id: number;
     court: string;
     startTime: number;

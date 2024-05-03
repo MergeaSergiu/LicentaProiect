@@ -7,6 +7,7 @@ import { TrainingClassResponse } from '../models/trainingclass-response.model';
 import { TrainingClassRequest } from '../models/trainingclass-request.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UtilComponentComponent } from '../util-component/util-component.component';
+import { error } from 'console';
 
 @Component({
   selector: 'app-popup-edit-tr-class',
@@ -42,8 +43,8 @@ export class PopupEditTrClassComponent {
 
   setPopUpData(id: number){
     this.fetchTrainersData();
-    this.adminService.getTrainingClassData(id).subscribe(
-      response => {
+    this.adminService.getTrainingClassData(id).subscribe({
+     next: (response) => {
         this.editData= response;
        if (this.authForm) {
         this.authForm.form.patchValue({
@@ -55,7 +56,10 @@ export class PopupEditTrClassComponent {
           trainerId: this.editData.trainerId
         });
       }
-    })
+    },error: (error) => {
+      UtilComponentComponent.openSnackBar("Can not update the training class", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+    }
+  })
   }
 
   OnSubmitUpdateClassData(form: NgForm){
