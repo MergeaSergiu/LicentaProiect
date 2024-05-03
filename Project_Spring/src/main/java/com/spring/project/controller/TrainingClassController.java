@@ -43,7 +43,7 @@ public class TrainingClassController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PreAuthorize("hasRole('TRAINER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<Void> createTrainingClass(@RequestBody TrainingClassRequest trainingClassRequest) {
         trainingClassService.createTrainingClass(trainingClassRequest);

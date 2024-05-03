@@ -13,6 +13,6 @@ public class ReservationResponse {
     Integer id;
     String reservationDate;
     String hourSchedule;
-    String clientEmail;
+    String userName;
     String court;
 }

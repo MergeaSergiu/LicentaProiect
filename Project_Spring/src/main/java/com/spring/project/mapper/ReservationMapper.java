@@ -6,7 +6,6 @@ import com.spring.project.dto.ReservationResponse;
 import com.spring.project.model.Court;
 import com.spring.project.model.User;
 import com.spring.project.model.Reservation;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -23,7 +22,7 @@ public class ReservationMapper {
                 .reservationDate(reservation.getReservationDate().toString())
                 .hourSchedule(hourSchedule)
                 .court(reservation.getCourt().toString())
-                .clientEmail(reservation.getUser().getEmail())
+                .userName(reservation.getUser().getFirstName() + " " + reservation.getUser().getLastName())
                 .build();
     }
 

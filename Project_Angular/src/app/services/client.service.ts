@@ -1,16 +1,14 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, catchError, throwError } from "rxjs";
+import { Observable, throwError } from "rxjs";
 import { ReservationResponse } from "../models/reservation-response.model";
 import { ReservationRequest } from "../models/reservation-request.model";
 import { UserDataResponse } from "../models/user-response.model";
 import { UpdateUserRequest } from "../models/userdata-request.model";
 import { TrainingClassResponse } from "../models/trainingclass-response.model";
-import { StatusEnrollResponse } from "../models/statusEnroll-response.model";
 import { UserSubscriptionsDataResponse } from "../models/userSubscriptionData-response.model";
 import { PaymentData } from "../models/payment-data.model";
 import { CollaborationResponse } from "../models/collaboration-response.model";
-import { SubscriptionResponse } from "../models/subscription-response.model";
 
 
 @Injectable({

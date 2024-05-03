@@ -1,6 +1,6 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse} from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, catchError, throwError } from "rxjs";
+import { Observable,throwError } from "rxjs";
 import { ReservationResponse } from "../models/reservation-response.model";
 import { SubscriptionRequest } from "../models/subscription-request.model";
 import { TrainerDataResponse } from "../models/trainers-response.model";
