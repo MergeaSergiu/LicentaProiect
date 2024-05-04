@@ -62,7 +62,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         User user = userMapper.convertFromDto(request,role);
         String receivedToken = clientService.signUpClient(user);
 
-        String link = "http://localhost:8080/project/api/v1/auth/confirm?token=" + receivedToken;
+        String link = "https://sport-center-cc69b9715563.herokuapp.com/project/api/v1/auth/confirm?token=" + receivedToken;
         String emailTemplate = utilMethods.loadEmailTemplateFromResource("confirmAccountEmail.html");
         emailTemplate = emailTemplate.replace("${user}", user.getFirstName()+" " + user.getLastName());
         emailTemplate = emailTemplate.replace("${resetLink}",link);
@@ -88,7 +88,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 user
         );
         passwordResetTokenServiceImpl.savePasswordResetToken(passwordResetToken);
-        String link = "http://localhost:8080/project/api/v1/auth/confirmResetToken?resetToken=" + resetToken;
+        String link = "https://sport-center-cc69b9715563.herokuapp.com/project/api/v1/auth/confirmResetToken?resetToken=" + resetToken;
         String emailTemplate = utilMethods.loadEmailTemplateFromResource("resetPasswordEmail.html");
         emailTemplate = emailTemplate.replace("${user}", user.getFirstName()+" " + user.getLastName());
         emailTemplate = emailTemplate.replace("${resetLink}",link);

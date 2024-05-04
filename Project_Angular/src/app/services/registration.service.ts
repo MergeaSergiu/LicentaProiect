@@ -12,7 +12,7 @@ import { JwtRefreshToken } from '../models/refresh-token.model';
 })
 export class RegistrationService {
     
-  API_PATH = "http://3.87.173.27:5000/project/api/v1/auth"
+  API_PATH = "https://sport-center-cc69b9715563.herokuapp.com/project/api/v1/auth"
   requestHeader = new HttpHeaders({ 'No-Auth': 'True' });
   constructor(private httpClient: HttpClient) {}
 
