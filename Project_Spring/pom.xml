@@ -118,6 +118,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>springboot-app</finalName>
 	</build>
 
 </project>
