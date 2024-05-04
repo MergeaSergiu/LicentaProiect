@@ -16,7 +16,7 @@ import { CollaborationResponse } from "../models/collaboration-response.model";
   })
 export class ClientService{
 
-  API_PATH = "http://localhost:8080/project/api/v1"
+  API_PATH = "http://3.87.173.27:5000/project/api/v1"
   requestHeader = new HttpHeaders({ 'No-Auth': 'True' });
 
 
