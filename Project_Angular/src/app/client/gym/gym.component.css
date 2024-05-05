@@ -1,9 +1,9 @@
 
   .mat-expansion-panel {
-    width: 24%;
+    width: 290px;
     margin-left: 10px;
     position: relative;
-    background-color: grey;
+    background-color: white;
     color: White;
   }
 
@@ -42,7 +42,7 @@
 
   .trainingClass-card{
     margin: 8px;
-    width: 230px;
+    width: 260px;
     height: 520px;
     margin-bottom: 20px;
     border: 2px solid rgb(255, 255, 255);
@@ -57,7 +57,7 @@
 
    .subscription-card{
     margin: 8px;
-    width: 230px;
+    width: 270px;
     height: 460px;
     margin-bottom: 20px;
     border: 2px solid rgb(255, 255, 255);
@@ -75,6 +75,12 @@
     font-weight: 700;
   }
 
+  .info2{
+    color: black;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
   .section{
     padding: 10px 0;
     text-align: center;
@@ -83,7 +89,7 @@
 
   .inner2 {
 		background-color: rgb(255, 255, 255);
-		border: 2px solid white;
+		border: 2px solid rgb(0, 0, 0);
     border-radius: 7px;
 	  position: relative;
 		overflow: hidden;

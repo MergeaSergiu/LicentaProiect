@@ -3,8 +3,7 @@
 }
 
 .calendar-container{
- margin-right: 20%;
- margin-left: 12%;
+ margin-right: 120px;
 }
 
 .schedules-list ul{
@@ -19,9 +18,10 @@
 }
 
 .schedule-container {
-  flex: 0 0 180px;
+  flex: 0 0 160px;
   margin-right: 2%;
   text-align: center;
+  width: 100%;
 }
 
 button{
@@ -43,7 +43,7 @@ button{
     margin-bottom: 4px;
     line-height: 1.2;
     text-transform: uppercase;
-    width: 140px;
+    width: 120px;
     height: 40px;
 }
 
@@ -116,6 +116,25 @@ button:disabled{
   list-style-type: none;
   padding: 0;
   margin: 0;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column; 
+    align-items: center;
+  }
+
+  .calendar-container {
+    margin-right: 0;
+    margin-bottom: 20px; 
+  }
+
+  .schedule-container {
+    flex: 0 0 auto;
+    width: 100%; 
+    margin-right: 0; 
+    text-align: center; 
+  }
 }
 
 

@@ -45,8 +45,10 @@ export class CheckoutComponent implements OnInit {
     this.paymentData = {
       cardHolderName: form.value.cardHolderName,
       amount: this.price * 100,
-      currency: "ron"
+      currency: "ron",
+      subscriptionId: this.subscriptionId
     }
+    
     try {
       this.clientService.createPaymentIntent(this.paymentData).subscribe({
         next: (response: any) => {

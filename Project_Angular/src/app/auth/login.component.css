@@ -104,7 +104,7 @@ button:hover {
   }
 
   button:disabled{
-    opacity: 0.5; /* Reduce the opacity to visually indicate that the button is disabled */
+    opacity: 0.5;
     cursor: not-allowed;
   }
 

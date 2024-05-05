@@ -23,4 +23,7 @@ public class PaymentRequest {
     @NotBlank
     private String currency;
 
+    @NotNull
+    private Long subscriptionId;
+
 }
