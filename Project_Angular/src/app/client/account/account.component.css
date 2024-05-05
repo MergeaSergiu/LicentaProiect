@@ -179,9 +179,5 @@ button {
 }
 
 .active-subscription {
-  background-color: rgb(
-    159,
-    201,
-    159
-  ); /* Change to your desired background color for active subscriptions */
+  background-color: rgb(159,201,159);
 }

@@ -25,7 +25,6 @@ export class UserdetailsComponent implements OnInit {
   selectedUserId: number;
   selectedUser: number;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild('roleSelect') roleSelect: MatSelect;
   roles: Role[] = [
     { id: 1, name: "USER" },
     { id: 2, name: "ADMIN" },

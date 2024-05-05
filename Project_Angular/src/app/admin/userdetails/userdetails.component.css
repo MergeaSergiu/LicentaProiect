@@ -1,8 +1,14 @@
 .user-table{
     margin-top: 4%;
-    width: 60%;
-    margin-left: auto;
+    max-width: 60%;
     margin-right: auto;
+}
+
+.container{
+  justify-content: center;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
 
 th{
@@ -20,5 +26,5 @@ th{
   }
 
   tr:hover {
-    background-color: rgb(209, 209, 209); /* Change background color on hover */
+    background-color: rgb(209, 209, 209);
 }

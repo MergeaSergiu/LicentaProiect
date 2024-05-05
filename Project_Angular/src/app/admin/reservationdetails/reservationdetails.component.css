@@ -95,17 +95,14 @@ th{
   margin: 0px auto; 
 }
 
-.courtDetail{
-  margin-left: 10%;
-  width: 100%;
-}
-
 .courtDetails{
   margin-top: 2%;
   text-align: center;
   justify-content: center;
   display: flex;
+  flex-wrap: wrap;
 	flex-direction: row;
+  width: 100%;
 
 }
 
@@ -144,6 +141,7 @@ th{
 
 .court{
   border: 2px solid rgb(255, 255, 255);
+  width: 200px;
 }
 
 tr:hover {
