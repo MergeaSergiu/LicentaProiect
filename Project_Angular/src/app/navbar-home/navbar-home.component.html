@@ -1,9 +1,43 @@
-<mat-toolbar>Sport Arena
-
+<nav class="navbar navbar-expand-lg bg-black text-white">
+  <div class="container-fluid">
+    <span>Sport Arena</span>
     <div class="spacer"></div>
-
-<button mat-button (click)="goToLogin()">Login</button>
-<button mat-button (click)="goToSignup()">Signup</button>
-<button mat-button (click)="goToHomePage()">Home</button>
-</mat-toolbar>
-
+    <button class="navbar-toggler" type="button" style="background-color: rgb(228, 226, 226);" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <button
+            class="button-style"
+            mat-button
+            style="color: white"
+            (click)="goToLogin()"
+          >
+            Login
+          </button>
+        </li>
+        <li class="nav-item">
+          <button
+            class="button-style"
+            mat-button
+            style="color: white"
+            (click)="goToSignup()"
+          >
+            Signup
+          </button>
+        </li>
+        <li class="nav-item">
+          <button
+            class="button-style"
+            mat-button
+            style="color: white"
+            (click)="goToHomePage()"
+          >
+            Home
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

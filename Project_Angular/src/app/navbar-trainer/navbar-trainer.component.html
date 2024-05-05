@@ -1,9 +1,24 @@
-<mat-toolbar>Sport Arena
 
-    <div class="spacer"></div>
-
-<button mat-button (click)="goToCollaborations()">Collaborations</button>
-<button mat-button (click)="goToProfile()">Account</button>
-<button mat-button class="logout"(click)="logOut()">Logout</button>
-</mat-toolbar>
+<nav class="navbar navbar-expand-lg bg-black text-white">
+    <div class="container-fluid">
+      <span>Sport Arena</span>
+      <div class="spacer"></div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <button class="button-style" mat-button style="color: white;" (click)="goToCollaborations()">Collaborations</button>
+              </li>
+            <li class="nav-item">
+                <button class="button-style" mat-button style="color: white;" (click)="goToProfile()">Account</button>
+              </li>
+            <li class="nav-item">
+                <button class="logout" mat-button style="color: white;" (click)="logOut()">Logout</button>
+              </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
