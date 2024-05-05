@@ -7,6 +7,15 @@
     height: 100vh; 
 }
 
+.payment-card{
+  width: 30vw;
+  align-self: center;
+  border-radius: 7px;
+  border: 2px solid black;
+  padding: 25px;
+  width: 480px;
+}
+
   .card-data{
     margin-bottom: 5%;
   }
@@ -33,11 +42,3 @@
   #card-element {
     margin-bottom: 5%;
   }
-
-  form {
-    width: 30vw;
-    align-self: center;
-    border-radius: 7px;
-    border: 2px solid black;
-    padding: 30px;
-  } 
