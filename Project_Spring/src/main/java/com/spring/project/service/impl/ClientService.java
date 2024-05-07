@@ -31,12 +31,13 @@ public class ClientService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User does not exist"));
     }
+
     public String signUpClient(User user) {
 
         User userAlreadyExist = userRepository.findByEmail(user.getEmail()).orElse(null);
-        if(userAlreadyExist == null){
+        if (userAlreadyExist == null) {
             String token = UUID.randomUUID().toString();
-            ConfirmationToken confirmationToken = confirmationTokenMapper.createConfirmationToken(token,LocalDateTime.now(), user);
+            ConfirmationToken confirmationToken = confirmationTokenMapper.createConfirmationToken(token, LocalDateTime.now(), user);
             String encodedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
             userRepository.save(user);
@@ -44,24 +45,24 @@ public class ClientService implements UserDetailsService {
             return token;
         }
         if (userAlreadyExist.getEnabled() != null) {
-                throw new EntityExistsException("An account with this email already exist");
-            }else {
-                String encodedPassword = passwordEncoder.encode(user.getPassword());
-                userAlreadyExist.setFirstName(user.getFirstName());
-                userAlreadyExist.setLastName(user.getLastName());
-                userAlreadyExist.setPassword(encodedPassword);
-                userRepository.save(userAlreadyExist);
+            throw new EntityExistsException("An account with this email already exist");
+        } else {
+            String encodedPassword = passwordEncoder.encode(user.getPassword());
+            userAlreadyExist.setFirstName(user.getFirstName());
+            userAlreadyExist.setLastName(user.getLastName());
+            userAlreadyExist.setPassword(encodedPassword);
+            userRepository.save(userAlreadyExist);
 
-                String token = UUID.randomUUID().toString();
-                ConfirmationToken foundConfirmationToken = confirmationTokenService.findTokenByUserId(userAlreadyExist.getId());
-                foundConfirmationToken.setToken(token);
-                foundConfirmationToken.setConfirmedAt(null);
-                foundConfirmationToken.setCreatedAt(LocalDateTime.now());
-                foundConfirmationToken.setExpiredAt(LocalDateTime.now().plusMinutes(60));
-                foundConfirmationToken.setUser(userAlreadyExist);
-                confirmationTokenService.saveConfirmationToken(foundConfirmationToken);
-                return token;
-            }
+            String token = UUID.randomUUID().toString();
+            ConfirmationToken foundConfirmationToken = confirmationTokenService.findTokenByUserId(userAlreadyExist.getId());
+            foundConfirmationToken.setToken(token);
+            foundConfirmationToken.setConfirmedAt(null);
+            foundConfirmationToken.setCreatedAt(LocalDateTime.now());
+            foundConfirmationToken.setExpiredAt(LocalDateTime.now().plusMinutes(60));
+            foundConfirmationToken.setUser(userAlreadyExist);
+            confirmationTokenService.saveConfirmationToken(foundConfirmationToken);
+            return token;
+        }
     }
 
     public void resetClientPassword(User user, String newPassword) {
