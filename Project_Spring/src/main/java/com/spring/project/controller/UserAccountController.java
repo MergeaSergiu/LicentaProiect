@@ -4,7 +4,6 @@ import com.spring.project.dto.*;
 import com.spring.project.service.TrainerService;
 import com.spring.project.service.UserAccountService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +18,8 @@ import java.util.List;
 @RequestMapping(path = "/project/api/v1/users")
 public class UserAccountController {
 
-    @Autowired
     private final UserAccountService userAccountService;
 
-    @Autowired
     private final TrainerService trainerService;
 
     @GetMapping("/profile")

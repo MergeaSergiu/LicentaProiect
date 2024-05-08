@@ -5,7 +5,6 @@ import com.spring.project.dto.ReservationRequestByAdmin;
 import com.spring.project.dto.ReservationResponse;
 import com.spring.project.service.ReservationService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ReservationController {
 
-    @Autowired
     private final ReservationService reservationService;
 
     @PreAuthorize("hasRole('ADMIN')")

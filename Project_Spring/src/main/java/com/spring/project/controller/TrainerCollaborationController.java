@@ -3,7 +3,6 @@ package com.spring.project.controller;
 import com.spring.project.dto.TrainerCollaborationResponse;
 import com.spring.project.service.TrainerCollaborationService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,6 @@ import java.util.List;
 @RequestMapping(path= "project/api/v1/collaboration/users")
 public class TrainerCollaborationController {
 
-    @Autowired
     private final TrainerCollaborationService trainerCollaborationService;
 
     @PreAuthorize("hasRole('USER')")

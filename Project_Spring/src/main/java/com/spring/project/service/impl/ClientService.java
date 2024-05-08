@@ -40,17 +40,19 @@ public class ClientService implements UserDetailsService {
             ConfirmationToken confirmationToken = confirmationTokenMapper.createConfirmationToken(token, LocalDateTime.now(), user);
             String encodedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
+            user.setEnabled(false);
             userRepository.save(user);
             confirmationTokenService.saveConfirmationToken(confirmationToken);
             return token;
         }
-        if (userAlreadyExist.getEnabled() != null) {
+        if (userAlreadyExist.getEnabled()) {
             throw new EntityExistsException("An account with this email already exist");
         } else {
             String encodedPassword = passwordEncoder.encode(user.getPassword());
             userAlreadyExist.setFirstName(user.getFirstName());
             userAlreadyExist.setLastName(user.getLastName());
             userAlreadyExist.setPassword(encodedPassword);
+            userAlreadyExist.setEnabled(false);
             userRepository.save(userAlreadyExist);
 
             String token = UUID.randomUUID().toString();

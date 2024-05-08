@@ -4,7 +4,6 @@ import com.spring.project.dto.CreateSubscriptionRequest;
 import com.spring.project.dto.SubscriptionResponse;
 import com.spring.project.service.SubscriptionService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 public class SubscriptionController {
 
-    @Autowired
     private final SubscriptionService subscriptionService;
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")

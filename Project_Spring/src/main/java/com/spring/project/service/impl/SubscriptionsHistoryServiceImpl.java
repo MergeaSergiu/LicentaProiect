@@ -36,7 +36,9 @@ public class SubscriptionsHistoryServiceImpl implements SubscriptionsHistoryServ
     @Override
     public SubscriptionsHistory addSubscriptionForUser(UserSubscriptionRequest userSubscriptionRequest) {
         User user = userRepository.findById(Long.valueOf(userSubscriptionRequest.getUserId())).orElseThrow(() -> new EntityNotFoundException("User does not exist"));
-
+        if (!user.getEnabled()) {
+            throw new EntityNotFoundException("This account is not enabled");
+        }
         if (user.getRole().getName().equals("TRAINER")) {
             throw new EntityNotFoundException("Trainers already have access to all subscriptions");
         }

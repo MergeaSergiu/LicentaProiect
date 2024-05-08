@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class TrainerServiceImpl implements TrainerService {
 
-    @Autowired
     private final TrainingClassServiceImpl trainingClassServiceImpl;
     private final TrainingClassMapper trainingClassMapper;
     private final UtilMethods utilMethods;

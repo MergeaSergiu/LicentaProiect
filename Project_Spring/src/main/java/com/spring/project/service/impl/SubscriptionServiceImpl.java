@@ -19,10 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class SubscriptionServiceImpl implements SubscriptionService {
 
-    @Autowired
     private final SubscriptionRepository subscriptionRepository;
-
-    @Autowired
     private final SubscriptionMapper subscriptionMapper;
 
     public void saveSubscription(CreateSubscriptionRequest createSubscriptionRequest) {
