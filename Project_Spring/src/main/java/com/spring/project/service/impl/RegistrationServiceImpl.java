@@ -101,7 +101,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest){
         User user = userRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow(() -> new EntityNotFoundException("User does not exist"));
-        if(user.getEnabled() == null){
+        if(!user.getEnabled()){
             throw new EntityNotFoundException("Account is not confirmed");
         }
         authenticationManager.authenticate(
