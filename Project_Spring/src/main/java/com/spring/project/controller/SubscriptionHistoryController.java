@@ -6,7 +6,6 @@ import com.spring.project.dto.UserSubscriptionsDataResponse;
 import com.spring.project.model.SubscriptionsHistory;
 import com.spring.project.service.SubscriptionsHistoryService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import java.util.List;
 @AllArgsConstructor
 public class SubscriptionHistoryController {
 
-    @Autowired
     private final SubscriptionsHistoryService subscriptionsHistoryService;
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")

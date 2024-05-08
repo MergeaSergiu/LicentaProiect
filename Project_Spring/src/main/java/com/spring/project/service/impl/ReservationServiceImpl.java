@@ -37,7 +37,9 @@ public class ReservationServiceImpl implements ReservationService {
 
     public void saveReservation(ReservationRequest reservationRequest, String authorization) {
         User user = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-
+        if (!user.getEnabled()) {
+            throw new EntityNotFoundException("This account is not enabled");
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         if (LocalDate.parse(reservationRequest.getLocalDate(), formatter).isBefore(LocalDate.now())) {
             throw new CreateReservationException("Can not create reservations in past");

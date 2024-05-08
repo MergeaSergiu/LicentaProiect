@@ -4,7 +4,6 @@ import com.spring.project.dto.TrainingClassRequest;
 import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.service.TrainingClassService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 public class TrainingClassController {
 
-    @Autowired
     private final TrainingClassService trainingClassService;
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")

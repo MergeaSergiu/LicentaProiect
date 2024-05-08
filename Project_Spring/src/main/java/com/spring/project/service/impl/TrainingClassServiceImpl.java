@@ -32,6 +32,9 @@ public class TrainingClassServiceImpl implements TrainingClassService {
 
     public void createTrainingClass(TrainingClassRequest trainingClassRequest) {
         User trainer = userRepository.findById(Long.valueOf(trainingClassRequest.getTrainerId())).orElseThrow(() -> new EntityNotFoundException("Trainer does not exist"));
+        if (!trainer.getEnabled()) {
+            throw new EntityNotFoundException("Trainer account is not enabled");
+        }
         if (!trainer.getRole().getName().equals("TRAINER")) {
             throw new EntityNotFoundException("User does not have 'TRAINER' role");
         }
@@ -65,6 +68,10 @@ public class TrainingClassServiceImpl implements TrainingClassService {
         User trainer = userRepository.findById(Long.valueOf(trainingClassRequest.getTrainerId())).orElseThrow(() -> new EntityNotFoundException("Trainer does not exist"));
         if (!trainer.getRole().getName().equals("TRAINER")) {
             throw new EntityNotFoundException("User does not have 'TRAINER' role");
+        }
+
+        if (!trainer.getEnabled()) {
+            throw new EntityNotFoundException("Trainer account is not enabled");
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

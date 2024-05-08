@@ -3,7 +3,6 @@ package com.spring.project.controller;
 import com.spring.project.dto.*;
 import com.spring.project.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,9 +16,7 @@ import java.util.List;
 @RequestMapping(path = "project/api/v1/users")
 public class UserController {
 
-    @Autowired
     private final UserService userService;
-
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping

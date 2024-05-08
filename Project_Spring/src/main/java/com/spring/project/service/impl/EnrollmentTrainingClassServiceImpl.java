@@ -23,7 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EnrollmentTrainingClassServiceImpl implements EnrollmentTrainingClassService {
 
-    @Autowired
     private final EnrollmentTrainingClassRepository enrollmentTrainingClassRepository;
     private final UtilMethods utilMethods;
     private final TrainingClassRepository trainingClassRepository;
