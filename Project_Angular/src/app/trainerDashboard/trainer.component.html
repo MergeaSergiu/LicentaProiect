@@ -30,7 +30,7 @@
         </ng-container>
         <ng-container matColumnDef="Period">
             <th mat-header-cell *matHeaderCellDef>Time Period</th>
-            <td mat-cell *matCellDef="let collaboration" style="width: 4%;">
+            <td mat-cell *matCellDef="let collaboration" style="width: 8%;">
                 <ng-container *ngIf="collaboration.collaborationStatus == 'PENDING'">
                     <button mat-raised-button color="primary" (click)="acceptRequest(collaboration.collaborationId)">Accept</button>
                     <button mat-raised-button color="warn" (click)="declineRequest(collaboration.collaborationId)">Decline</button>
