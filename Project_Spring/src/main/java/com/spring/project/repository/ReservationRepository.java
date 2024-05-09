@@ -31,6 +31,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM Reservation r WHERE (r.startTime < :startTime OR r.endTime > :endTime) AND r.reservationDate > CURRENT_DATE")
-    void deleteAllReservationBasedOnStartAndEndTime(@Param("startTime") Integer startTime, @Param("endTime") Integer endTime);
+    @Query("DELETE FROM Reservation r WHERE (r.startTime < :startTime OR r.endTime > :endTime) AND r.reservationDate > CURRENT_DATE AND r.court = :court")
+    void deleteAllReservationBasedOnStartAndEndTime(@Param("startTime") Integer startTime, @Param("endTime") Integer endTime, @Param("court") Court court);
 }
