@@ -1,5 +1,6 @@
 package com.spring.project.service.impl;
 
+import com.spring.project.Exception.CreateReservationException;
 import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.mapper.EnrollmentClassMapper;
 import com.spring.project.mapper.TrainingClassMapper;
@@ -16,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +42,11 @@ public class EnrollmentTrainingClassServiceImpl implements EnrollmentTrainingCla
         EnrollmentTrainingClass enrollmentTrainingClassForUser = enrollmentTrainingClassRepository.findByTrainingClass_IdAndUser_Id(trainingClassId, user.getId());
         if (enrollmentTrainingClassForUser != null) {
             throw new EntityExistsException("User already enrolled to this class");
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if (LocalDate.parse(trainingClass.getLocalDate(), formatter).isBefore(LocalDate.now())) {
+            throw new CreateReservationException("Can not create a training class in past");
         }
         EnrollmentTrainingClass enrollmentTrainingClass = enrollmentClassMapper.createEnrollmentForUser(trainingClass, user);
         enrollmentTrainingClassRepository.save(enrollmentTrainingClass);
