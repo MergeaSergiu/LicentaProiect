@@ -50,7 +50,7 @@ public class CourtDetailsServiceImpl implements CourtDetailsService {
         if(startTime.compareTo(endTime) >= 0){
             throw new EntityNotFoundException("Wrong timeSlots used.");
         }
-        reservationRepository.deleteAllReservationBasedOnStartAndEndTime(startTime, endTime);
+        reservationRepository.deleteAllReservationBasedOnStartAndEndTime(startTime, endTime, courtDetails.getCourt());
         courtDetails.setStartTime(startTime);
         courtDetails.setEndTime(endTime);
         courtDetailsRepository.save(courtDetails);
