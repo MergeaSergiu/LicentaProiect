@@ -17,7 +17,7 @@ export class TrainerComponent implements OnInit {
   constructor(private clientService: ClientService, private _responseBar: MatSnackBar) { }
 
   collaborations: CollaborationResponse[];
-  displayedColumns: string[] = ['User Name', 'Email','Status', 'Period'];
+  displayedColumns: string[] = ['User Name', 'User Email','Status', 'Period'];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
