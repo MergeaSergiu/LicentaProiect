@@ -15,6 +15,7 @@ public class TrainerCollaborationResponse {
     private Long collaborationId;
     private String firstName;
     private String lastName;
+    private String email;
     private LocalDate startTime;
     private LocalDate endTime;
     private CollaborationStatus collaborationStatus;
