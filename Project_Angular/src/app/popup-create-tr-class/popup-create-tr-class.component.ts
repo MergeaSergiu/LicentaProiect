@@ -27,11 +27,11 @@ export class PopupCreateTrClassComponent {
   }
 
   public fetchTrainersData(){
-    return this.adminService.getAllTrainers().subscribe(
-      response => {
+    return this.adminService.getAllTrainers().subscribe({
+      next: (response) => {
         this.trainersData = response;
       }
-    )
+  })
   }
 
   onSubmitCreateTrainingClass(form: NgForm){

@@ -6,6 +6,7 @@ import { ClientService } from '../../services/client.service';
 import { CollaborationResponse } from '../../models/collaboration-response.model';
 import { MatSnackBar} from '@angular/material/snack-bar';
 import { UtilComponentComponent } from '../../util-component/util-component.component';
+import { TrainerDataResponse } from '../../models/trainers-response.model';
 
 @Component({
   selector: 'app-trainers',
@@ -15,7 +16,7 @@ import { UtilComponentComponent } from '../../util-component/util-component.comp
 export class TrainersComponent implements OnInit{
 
   constructor(private adminService: AdminService, private clientService: ClientService, private _responseBar: MatSnackBar){}
-  trainers: any[];
+  trainers: TrainerDataResponse[];
   userCollaborations: CollaborationResponse[];
   displayedColumns2: string[] = ['Trainer', 'Status'];
   dataSource2: MatTableDataSource<any>;

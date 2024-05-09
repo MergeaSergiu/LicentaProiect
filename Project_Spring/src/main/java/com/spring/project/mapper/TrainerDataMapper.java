@@ -12,6 +12,7 @@ public class TrainerDataMapper {
                 .id(Math.toIntExact(trainer.getId()))
                 .firstName(trainer.getFirstName())
                 .lastName(trainer.getLastName())
+                .email(trainer.getEmail())
                 .build();
     }
 }

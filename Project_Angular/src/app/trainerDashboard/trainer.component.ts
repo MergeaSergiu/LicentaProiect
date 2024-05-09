@@ -17,7 +17,7 @@ export class TrainerComponent implements OnInit {
   constructor(private clientService: ClientService, private _responseBar: MatSnackBar) { }
 
   collaborations: CollaborationResponse[];
-  displayedColumns: string[] = ['User Name', 'Status', 'Period'];
+  displayedColumns: string[] = ['User Name', 'User Email','Status', 'Period'];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -32,7 +32,7 @@ export class TrainerComponent implements OnInit {
 
   public getCollaborationForTrainer() {
     this.clientService.getTrainerCollaborations().subscribe({
-      next: (response: any) => {
+      next: (response) => {
         this.collaborations = response;
         this.dataSource = new MatTableDataSource<any>(this.collaborations);
         this.dataSource.paginator = this.paginator;
