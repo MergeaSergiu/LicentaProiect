@@ -6,8 +6,8 @@ import com.spring.project.email.EmailSender;
 import com.spring.project.mapper.AuthenticationMapper;
 import com.spring.project.mapper.PasswordResetMapper;
 import com.spring.project.mapper.UserMapper;
-import com.spring.project.model.User;
 import com.spring.project.model.Role;
+import com.spring.project.model.User;
 import com.spring.project.repository.UserRepository;
 import com.spring.project.repository.RoleRepository;
 import com.spring.project.service.PasswordResetTokenService;
@@ -31,6 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private EmailValidator emailValidator;
     private PasswordValidator passwordValidator;
+    private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -39,7 +40,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final PasswordResetTokenServiceImpl passwordResetTokenServiceImpl;
     private final EmailSender emailSender;
     private final PasswordResetTokenService passwordResetTokenService;
-    private final RoleRepository roleRepository;
     private final AuthenticationMapper authenticationMapper;
     private final PasswordResetMapper passwordResetMapper;
     private final UserMapper userMapper;
@@ -47,16 +47,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
 
     public RegistrationResponse register(RegistrationRequest request){
-        boolean isValidEmail = emailValidator.test(request.getEmail());
-        if(!isValidEmail){
-            throw new EmailNotAvailableException("Email is not valid");
-        }
-        boolean isValidPassword = passwordValidator.test(request.getPassword());
-        if(!isValidPassword){
-            throw new InvalidCredentialsException("Password do not respect the criteria");
-        }
         Role role = roleRepository.findByName("USER");
-        if(role == null){
+        if(role == null) {
             throw new EntityNotFoundException("Can not create an user account");
         }
         User user = userMapper.convertFromDto(request,role);

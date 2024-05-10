@@ -72,9 +72,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponseContainer> handleConstraintViolationException(ConstraintViolationException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
-
+        String errorMessage = ex.getMessage();
+        int startIndex = errorMessage.indexOf("messageTemplate='") + "messageTemplate='".length();
+        int endIndex = errorMessage.indexOf("'", startIndex);
+        String message = errorMessage.substring(startIndex, endIndex);
         errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
-        errorResponseContainer.setErrorMessage("Can not process the request.One field may be invalid.");
+        errorResponseContainer.setErrorMessage(message);
         return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
     }
 
