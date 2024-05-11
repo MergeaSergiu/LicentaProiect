@@ -21,18 +21,20 @@ public class TrainingClass {
     private Long id;
 
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z]+(\\s[a-zA-Z]+)*$", message = "Subscription name must contain only letters")
+    @Pattern(regexp = "^[a-zA-Z]+(\\s[a-zA-Z]+)*$", message = "Class name must contain only letters")
     private String className;
 
-    private int duration;
+    @NotNull(message = "Duration Time should not be empty")
+    private Integer duration;
 
-    @NotBlank
+    @NotBlank(message = "Intensity should not be empty")
     private String intensity;
 
-    @NotBlank
+    @NotBlank(message = "StartTime should not be empty")
+    @Pattern(regexp = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$", message = "Start time should be in the format hh:mm")
     private String startTime;
 
-    @NotBlank
+    @NotBlank(message = "localDate should not be empty")
     private String localDate;
 
     @ManyToOne

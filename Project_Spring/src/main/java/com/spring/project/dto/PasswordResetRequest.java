@@ -1,7 +1,6 @@
 package com.spring.project.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Data
@@ -10,11 +9,8 @@ import lombok.*;
 @Setter
 @Getter
 public class PasswordResetRequest {
-
-    @NotBlank
     private String newPassword;
 
-    @NotBlank
     private String confirmedPassword;
 
     @JsonProperty("token")

@@ -36,7 +36,7 @@ public class CardDataValidation {
             throw new IllegalArgumentException("Invalid cardHolderName format. It should contain only letters and optional whitespace between names.");
         }
 
-        if(paymentRequest.getSubscriptionId() ==null){
+        if(paymentRequest.getSubscriptionId() == null){
             throw new IllegalArgumentException("No subscription is related for this payment");
         }
 

@@ -90,9 +90,18 @@ public class ReservationServiceImpl implements ReservationService {
             throw new IllegalArgumentException("Can not create a reservation for a Trainer");
         }
 
+        if(reservationRequestByAdmin.getHourSchedule() == null){
+            throw new IllegalArgumentException("HourSchedule should not be null");
+        }
+
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         if (LocalDate.parse(reservationRequestByAdmin.getLocalDate(), formatter).isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Can not create reservations in past");
+        }
+
+        if(reservationRequestByAdmin.getCourt() == null){
+            throw new IllegalArgumentException("Court should not be empty");
         }
 
         Court court = Court.valueOf(reservationRequestByAdmin.getCourt());

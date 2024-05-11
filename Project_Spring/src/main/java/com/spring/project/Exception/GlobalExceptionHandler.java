@@ -26,12 +26,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponseContainer> handleIllegalArgumentException(IllegalArgumentException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
-        String errorMessage = ex.getMessage();
-        int startIndex = errorMessage.indexOf("messageTemplate='") + "messageTemplate='".length();
-        int endIndex = errorMessage.indexOf("'", startIndex);
-        String message = errorMessage.substring(startIndex, endIndex);
+
         errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
-        errorResponseContainer.setErrorMessage(message);
+        errorResponseContainer.setErrorMessage(ex.getMessage());
         return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
     }
 

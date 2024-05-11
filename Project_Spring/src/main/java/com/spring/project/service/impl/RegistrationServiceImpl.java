@@ -149,7 +149,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     public PasswordResetResponse updateClientPassword(PasswordResetRequest passwordResetRequest) {
         PasswordResetToken passwordResetToken = passwordResetTokenService.getToken(passwordResetRequest.getToken()).orElseThrow();
         User user = passwordResetToken.getUser();
-
+        if(passwordResetRequest.getNewPassword() == null || passwordResetRequest.getConfirmedPassword() == null){
+            throw new IllegalArgumentException("Password can not be null");
+        }
         boolean isValidPassword = passwordValidator.test(passwordResetRequest.getNewPassword());
         if (!isValidPassword) {
             throw new ResetPasswordException("Password must respect the criteria");

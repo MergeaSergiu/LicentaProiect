@@ -12,10 +12,7 @@ import lombok.Setter;
 @Setter
 public class UpdateUserRequest {
 
-    @NotBlank
     private String firstName;
-
-    @NotBlank
     private String lastName;
 
 }
