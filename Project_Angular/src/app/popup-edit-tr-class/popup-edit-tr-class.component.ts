@@ -76,8 +76,8 @@ export class PopupEditTrClassComponent {
   this.adminService.updateTrainingClass(this.inputData.id, trainingClass).subscribe({
       next: () =>{
         this.closePopUp();
-      }, error : () =>{
-        UtilComponentComponent.openSnackBar("Can not update the training class", this._responseBar, UtilComponentComponent.SnackbarStates.Error);
+      }, error : (error) =>{
+        UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     });
   }

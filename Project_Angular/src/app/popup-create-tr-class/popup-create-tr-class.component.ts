@@ -16,43 +16,43 @@ export class PopupCreateTrClassComponent {
 
   selectedTrainerId: number;
   trainersData: TrainerDataResponse[];
-  constructor(private matDialog: MatDialogRef<PopupCreateTrClassComponent>, private adminService: AdminService,private _responseBar: MatSnackBar){}
+  constructor(private matDialog: MatDialogRef<PopupCreateTrClassComponent>, private adminService: AdminService, private _responseBar: MatSnackBar) { }
 
-  closePopUp(){
+  closePopUp() {
     this.matDialog.close();
   }
 
-  ngOnInit(): void{
+  ngOnInit(): void {
     this.fetchTrainersData();
   }
 
-  public fetchTrainersData(){
+  public fetchTrainersData() {
     return this.adminService.getAllTrainers().subscribe({
       next: (response) => {
         this.trainersData = response;
       }
-  })
+    })
   }
 
-  onSubmitCreateTrainingClass(form: NgForm){
+  onSubmitCreateTrainingClass(form: NgForm) {
 
     const trainingClass: TrainingClassRequest = {
-          className: form.value.className,
-          duration: form.value.duration,
-          startTime: form.value.startTime,
-          intensity: form.value.intensity,
-          localDate: form.value.localDate,
-          trainerId: form.value.trainerId
+      className: form.value.className,
+      duration: form.value.duration,
+      startTime: form.value.startTime,
+      intensity: form.value.intensity,
+      localDate: form.value.localDate,
+      trainerId: form.value.trainerId
     }
 
     this.adminService.createTrainingClass(trainingClass).subscribe({
       next: () => {
         this.closePopUp();
-      }, error: (error: any) =>{
+      }, error: (error) => {
         UtilComponentComponent.openSnackBar(error, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
       }
     });
   }
 
-  
+
 }
