@@ -12,6 +12,5 @@ import lombok.*;
 @Setter
 public class RoleRequest {
 
-    @NotNull
     private Integer id;
 }

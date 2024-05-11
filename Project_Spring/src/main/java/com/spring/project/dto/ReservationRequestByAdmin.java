@@ -13,12 +13,8 @@ import lombok.Setter;
 @Builder
 public class ReservationRequestByAdmin {
 
-    @NotBlank
     private Long userId;
-    @NotBlank
     private String localDate;
-    @NotBlank
     private String hourSchedule;
-    @NotBlank
     private String court;
 }

@@ -12,8 +12,6 @@ import lombok.Setter;
 @Setter
 public class UserSubscriptionRequest {
 
-    @NotNull
     private Integer subscriptionId;
-    @NotNull
     private Integer userId;
 }
