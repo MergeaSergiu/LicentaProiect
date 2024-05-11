@@ -1,6 +1,5 @@
 package com.spring.project.service.impl;
 
-import com.spring.project.Exception.CreateReservationException;
 import com.spring.project.dto.TrainingClassRequest;
 import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.mapper.TrainingClassMapper;
@@ -33,14 +32,14 @@ public class TrainingClassServiceImpl implements TrainingClassService {
     public void createTrainingClass(TrainingClassRequest trainingClassRequest) {
         User trainer = userRepository.findById(Long.valueOf(trainingClassRequest.getTrainerId())).orElseThrow(() -> new EntityNotFoundException("Trainer does not exist"));
         if (!trainer.getEnabled()) {
-            throw new EntityNotFoundException("Trainer account is not enabled");
+            throw new IllegalArgumentException("Trainer account is not enabled");
         }
         if (!trainer.getRole().getName().equals("TRAINER")) {
-            throw new EntityNotFoundException("User does not have 'TRAINER' role");
+            throw new IllegalArgumentException("User does not have 'TRAINER' role");
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         if (LocalDate.parse(trainingClassRequest.getLocalDate(), formatter).isBefore(LocalDate.now())) {
-            throw new CreateReservationException("Can not create a training class in past");
+            throw new IllegalArgumentException("Can not create a training class in past");
         }
 
         TrainingClass trainingClass = trainingClassMapper.convertFromDto(trainingClassRequest, trainer);
@@ -67,16 +66,16 @@ public class TrainingClassServiceImpl implements TrainingClassService {
         }
         User trainer = userRepository.findById(Long.valueOf(trainingClassRequest.getTrainerId())).orElseThrow(() -> new EntityNotFoundException("Trainer does not exist"));
         if (!trainer.getRole().getName().equals("TRAINER")) {
-            throw new EntityNotFoundException("User does not have 'TRAINER' role");
+            throw new IllegalArgumentException("User does not have 'TRAINER' role");
         }
 
         if (!trainer.getEnabled()) {
-            throw new EntityNotFoundException("Trainer account is not enabled");
+            throw new IllegalArgumentException("Trainer account is not enabled");
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         if (LocalDate.parse(trainingClassRequest.getLocalDate(), formatter).isBefore(LocalDate.now())) {
-            throw new CreateReservationException("Can not create a training class in past");
+            throw new IllegalArgumentException("Can not create a training class in past");
         }
 
         trainingClass.setClassName(trainingClassRequest.getClassName());

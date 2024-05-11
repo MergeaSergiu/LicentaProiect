@@ -14,27 +14,8 @@ import org.springframework.security.core.AuthenticationException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(CreateReservationException.class)
-    public ResponseEntity<ErrorResponseContainer> handleCreateReservationException(CreateReservationException ex){
-        ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
-
-        errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
-        errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(EntityExistsException.class)
     public ResponseEntity<ErrorResponseContainer> handleEntityExistsException(EntityExistsException ex){
-        ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
-
-        errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
-        errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
-    }
-
-
-    @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<ErrorResponseContainer> handleInvalidCredentialsException(InvalidCredentialsException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
 
         errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
@@ -45,18 +26,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponseContainer> handleIllegalArgumentException(IllegalArgumentException ex){
         ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
-
+        String errorMessage = ex.getMessage();
+        int startIndex = errorMessage.indexOf("messageTemplate='") + "messageTemplate='".length();
+        int endIndex = errorMessage.indexOf("'", startIndex);
+        String message = errorMessage.substring(startIndex, endIndex);
         errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
-        errorResponseContainer.setErrorMessage(ex.getMessage());
-        return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(EmailNotAvailableException.class)
-    public ResponseEntity<ErrorResponseContainer> handleEmailNotAvailableException(EmailNotAvailableException ex){
-        ErrorResponseContainer errorResponseContainer = new ErrorResponseContainer();
-
-        errorResponseContainer.setHttpStatusCode(HttpStatus.BAD_REQUEST.value());
-        errorResponseContainer.setErrorMessage(ex.getMessage());
+        errorResponseContainer.setErrorMessage(message);
         return new ResponseEntity<>(errorResponseContainer, HttpStatus.BAD_REQUEST);
     }
 

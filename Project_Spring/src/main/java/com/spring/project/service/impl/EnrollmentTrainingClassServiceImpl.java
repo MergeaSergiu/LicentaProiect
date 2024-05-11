@@ -1,6 +1,5 @@
 package com.spring.project.service.impl;
 
-import com.spring.project.Exception.CreateReservationException;
 import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.mapper.EnrollmentClassMapper;
 import com.spring.project.mapper.TrainingClassMapper;
@@ -14,7 +13,6 @@ import com.spring.project.util.UtilMethods;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -46,7 +44,7 @@ public class EnrollmentTrainingClassServiceImpl implements EnrollmentTrainingCla
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         if (LocalDate.parse(trainingClass.getLocalDate(), formatter).isBefore(LocalDate.now())) {
-            throw new CreateReservationException("Can not create a training class in past");
+            throw new IllegalArgumentException("Can not create a training class in past");
         }
         EnrollmentTrainingClass enrollmentTrainingClass = enrollmentClassMapper.createEnrollmentForUser(trainingClass, user);
         enrollmentTrainingClassRepository.save(enrollmentTrainingClass);
@@ -88,7 +86,7 @@ public class EnrollmentTrainingClassServiceImpl implements EnrollmentTrainingCla
 
         int compare = Long.compare(enrollmentTrainingClass.getUser().getId(), user.getId());
         if (compare != 0) {
-            throw new EntityNotFoundException("User tried to delete other user enrollment");
+            throw new IllegalArgumentException("User tried to delete other user enrollment");
         }
         enrollmentTrainingClassRepository.deleteByTrainingClassIdAndUserId(trainingClassId, user.getId());
     }

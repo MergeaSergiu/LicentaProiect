@@ -71,7 +71,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         String requestClientEmail = resetPassEmailRequest.getEmail();
         boolean isValidEmail = emailValidator.test(requestClientEmail);
         if (!isValidEmail) {
-            throw new EmailNotAvailableException("Email does not respect the criteria");
+            throw new IllegalArgumentException("Email does not respect the criteria");
         }
         User user = userRepository.findByEmail(resetPassEmailRequest.getEmail()).orElseThrow(() -> new EntityNotFoundException("There is no account with this email"));
         String resetToken = UUID.randomUUID().toString();

@@ -7,7 +7,6 @@ import com.spring.project.model.TrainingClass;
 import com.spring.project.service.TrainerService;
 import com.spring.project.util.UtilMethods;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

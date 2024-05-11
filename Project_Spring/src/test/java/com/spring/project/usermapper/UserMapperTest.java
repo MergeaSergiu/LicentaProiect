@@ -1,7 +1,5 @@
 package com.spring.project.usermapper;
 
-import com.spring.project.Exception.EmailNotAvailableException;
-import com.spring.project.Exception.InvalidCredentialsException;
 import com.spring.project.dto.RegistrationRequest;
 import com.spring.project.mapper.UserMapper;
 import com.spring.project.model.Role;
@@ -52,7 +50,7 @@ UserMapperTest {
                 .password("Password1")
                 .build();
 
-        assertThrows(EmailNotAvailableException.class, () -> userMapper.convertFromDto(registrationRequest, role));
+        assertThrows(IllegalArgumentException.class, () -> userMapper.convertFromDto(registrationRequest, role));
     }
 
     @Test
@@ -68,7 +66,7 @@ UserMapperTest {
                 .password("Password1")
                 .build();
 
-        assertThrows(EmailNotAvailableException.class, () -> userMapper.convertFromDto(registrationRequest, role));
+        assertThrows(IllegalArgumentException.class, () -> userMapper.convertFromDto(registrationRequest, role));
     }
 
     @Test
@@ -84,7 +82,7 @@ UserMapperTest {
                 .password("Password1")
                 .build();
 
-        assertThrows(EmailNotAvailableException.class, () -> userMapper.convertFromDto(registrationRequest, role));
+        assertThrows(IllegalArgumentException.class, () -> userMapper.convertFromDto(registrationRequest, role));
     }
 
     @Test
@@ -100,7 +98,7 @@ UserMapperTest {
                 .password("adasdasd123")
                 .build();
 
-        assertThrows(InvalidCredentialsException.class, () -> userMapper.convertFromDto(registrationRequest, role));
+        assertThrows(IllegalArgumentException.class, () -> userMapper.convertFromDto(registrationRequest, role));
     }
 
     @Test
@@ -116,7 +114,7 @@ UserMapperTest {
                 .password(null)
                 .build();
 
-        assertThrows(InvalidCredentialsException.class, () -> userMapper.convertFromDto(registrationRequest, role));
+        assertThrows(IllegalArgumentException.class, () -> userMapper.convertFromDto(registrationRequest, role));
     }
 
     @Test
@@ -271,7 +269,7 @@ UserMapperTest {
                 .email("asdas01213@yahoo123.com")
                 .password("Password1")
                 .build();
-        assertThrows(InvalidCredentialsException.class, () -> userMapper.convertFromDto(registrationRequest,role));
+        assertThrows(IllegalArgumentException.class, () -> userMapper.convertFromDto(registrationRequest,role));
 
     }
 
@@ -290,7 +288,7 @@ UserMapperTest {
                 .email("asdas01213@yahoo123.com")
                 .password("Password1")
                 .build();
-        assertThrows(InvalidCredentialsException.class, () -> userMapper.convertFromDto(registrationRequest,role));
+        assertThrows(IllegalArgumentException.class, () -> userMapper.convertFromDto(registrationRequest,role));
 
     }
 
@@ -309,7 +307,7 @@ UserMapperTest {
                 .email("asdas01213@yahoo123.com")
                 .password("Password1")
                 .build();
-        assertThrows(InvalidCredentialsException.class, () -> userMapper.convertFromDto(registrationRequest,role));
+        assertThrows(IllegalArgumentException.class, () -> userMapper.convertFromDto(registrationRequest,role));
 
     }
 
