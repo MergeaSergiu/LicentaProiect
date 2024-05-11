@@ -1,6 +1,5 @@
 package com.spring.project.service.impl;
 
-import com.spring.project.Exception.CreateReservationException;
 import com.spring.project.dto.TrainingClassRequest;
 import com.spring.project.dto.TrainingClassResponse;
 import com.spring.project.mapper.TrainingClassMapper;
@@ -31,16 +30,27 @@ public class TrainingClassServiceImpl implements TrainingClassService {
     private final UserRepository userRepository;
 
     public void createTrainingClass(TrainingClassRequest trainingClassRequest) {
+        if(trainingClassRequest.getTrainerId() == null){
+            throw new IllegalArgumentException("No trainer is associate with this class");
+        }
         User trainer = userRepository.findById(Long.valueOf(trainingClassRequest.getTrainerId())).orElseThrow(() -> new EntityNotFoundException("Trainer does not exist"));
         if (!trainer.getEnabled()) {
-            throw new EntityNotFoundException("Trainer account is not enabled");
+            throw new IllegalArgumentException("Trainer account is not enabled");
         }
         if (!trainer.getRole().getName().equals("TRAINER")) {
-            throw new EntityNotFoundException("User does not have 'TRAINER' role");
+            throw new IllegalArgumentException("User does not have 'TRAINER' role");
+        }
+
+        if(trainingClassRequest.getLocalDate() == null){
+            throw new IllegalArgumentException("Date is null");
+        }
+        if(!trainingClassRequest.getLocalDate().matches("^\\d{4}-\\d{2}-\\d{2}$")){
+            throw new IllegalArgumentException("Date format is not valid");
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         if (LocalDate.parse(trainingClassRequest.getLocalDate(), formatter).isBefore(LocalDate.now())) {
-            throw new CreateReservationException("Can not create a training class in past");
+            throw new IllegalArgumentException("Can not create a training class in past");
         }
 
         TrainingClass trainingClass = trainingClassMapper.convertFromDto(trainingClassRequest, trainer);
@@ -60,6 +70,10 @@ public class TrainingClassServiceImpl implements TrainingClassService {
 
     @Override
     public void updateTrainingClass(Long id, TrainingClassRequest trainingClassRequest) {
+
+        if(trainingClassRequest.getTrainerId() == null){
+            throw new IllegalArgumentException("No trainer is associate with this class");
+        }
         TrainingClass trainingClass = trainingClassRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Training Class does not exist"));
 
         if (trainingClassRepository.getTrainingClassByName(trainingClassRequest.getClassName()) != null && !trainingClassRequest.getClassName().equals(trainingClass.getClassName())) {
@@ -67,21 +81,28 @@ public class TrainingClassServiceImpl implements TrainingClassService {
         }
         User trainer = userRepository.findById(Long.valueOf(trainingClassRequest.getTrainerId())).orElseThrow(() -> new EntityNotFoundException("Trainer does not exist"));
         if (!trainer.getRole().getName().equals("TRAINER")) {
-            throw new EntityNotFoundException("User does not have 'TRAINER' role");
+            throw new IllegalArgumentException("User does not have 'TRAINER' role");
         }
 
         if (!trainer.getEnabled()) {
-            throw new EntityNotFoundException("Trainer account is not enabled");
+            throw new IllegalArgumentException("Trainer account is not enabled");
+        }
+
+        if(trainingClassRequest.getLocalDate() == null){
+            throw new IllegalArgumentException("Date is null");
+        }
+
+        if(!trainingClassRequest.getLocalDate().matches("^\\d{4}-\\d{2}-\\d{2}$")){
+            throw new IllegalArgumentException("Date format is not valid");
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         if (LocalDate.parse(trainingClassRequest.getLocalDate(), formatter).isBefore(LocalDate.now())) {
-            throw new CreateReservationException("Can not create a training class in past");
+            throw new IllegalArgumentException("Can not create a training class in past");
         }
-
         trainingClass.setClassName(trainingClassRequest.getClassName());
         trainingClass.setIntensity(trainingClassRequest.getIntensity());
-        trainingClass.setStartTime(trainingClass.getStartTime());
+        trainingClass.setStartTime(trainingClassRequest.getStartTime());
         trainingClass.setDuration(trainingClassRequest.getDuration());
         trainingClass.setLocalDate(trainingClassRequest.getLocalDate());
         trainingClass.setTrainer(trainer);

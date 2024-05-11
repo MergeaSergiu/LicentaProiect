@@ -37,7 +37,6 @@ public class SubscriptionController {
     @GetMapping("/{subscriptionId}")
     public ResponseEntity<SubscriptionResponse> getSubscriptionById(@PathVariable("subscriptionId") Long subscriptionId){
         SubscriptionResponse subscriptionResponse = subscriptionService.getSubscriptionById(subscriptionId);
-        Double a = subscriptionResponse.getSubscriptionPrice();
         return new ResponseEntity<>(subscriptionResponse, HttpStatus.OK);
     }
 

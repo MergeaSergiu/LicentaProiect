@@ -13,10 +13,7 @@ import lombok.Setter;
 @Setter
 public class EnrollUserRequest {
 
-    @NotBlank
     private String emailAddress;
-
-    @NotBlank
     private String trainingClassName;
 
 }

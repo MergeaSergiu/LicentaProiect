@@ -1,6 +1,5 @@
 package com.spring.project.service.impl;
 
-import com.spring.project.Exception.CreateReservationException;
 import com.spring.project.dto.ReservationRequest;
 import com.spring.project.dto.ReservationRequestByAdmin;
 import com.spring.project.dto.ReservationResponse;
@@ -39,7 +38,7 @@ public class ReservationServiceImpl implements ReservationService {
         User user = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         if (LocalDate.parse(reservationRequest.getLocalDate(), formatter).isBefore(LocalDate.now())) {
-            throw new CreateReservationException("Can not create reservations in past");
+            throw new IllegalArgumentException("Can not create reservations in past");
         }
         Court court = Court.valueOf(reservationRequest.getCourt());
         CourtDetails courtDetails = courtDetailsRepository.findByCourt(court);
@@ -50,24 +49,24 @@ public class ReservationServiceImpl implements ReservationService {
         Integer endTime = Integer.parseInt(parts[1]);
 
         if (startTime.compareTo(courtDetails.getStartTime()) < 0 || endTime.compareTo(courtDetails.getEndTime()) > 0) {
-            throw new CreateReservationException("Time slots are outside the court time slots");
+            throw new IllegalArgumentException("Time slots are outside the court time slots");
         }
 
         if (startTime.compareTo(endTime) >= 0) {
-            throw new CreateReservationException("Start time is before the end Time");
+            throw new IllegalArgumentException("Start time is before the end Time");
         }
         if (endTime - startTime > 1) {
-            throw new CreateReservationException("You can not make reservation for more than 1 hour");
+            throw new IllegalArgumentException("You can not make reservation for more than 1 hour");
         }
 
         boolean existingReservation = reservationRepository.findAll().stream().anyMatch(reservation -> reservation.getReservationDate().toString().equals(reservationRequest.getLocalDate()) && (reservation.getStartTime().compareTo(startTime)) == 0 && reservation.getCourt().equals(court));
 
         if (existingReservation) {
-            throw new CreateReservationException("There is a reservation at the same moment created");
+            throw new IllegalArgumentException("There is a reservation at the same moment created");
         }
         List<Reservation> reservationsForCurrentDayForUser = reservationRepository.findAllByUser_IdAndReservationMadeDate(user.getId(), LocalDate.now());
         if (reservationsForCurrentDayForUser.size() >= 3) {
-            throw new CreateReservationException("You reached the reservations limit per day");
+            throw new IllegalArgumentException("You reached the reservations limit per day");
         }
         Reservation reservation = reservationMapper.convertFromDto(reservationRequest, user, startTime, endTime);
         reservationRepository.save(reservation);
@@ -88,12 +87,21 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         if (user.getRole().getName().equals("TRAINER")) {
-            throw new CreateReservationException("Can not create a reservation for a Trainer");
+            throw new IllegalArgumentException("Can not create a reservation for a Trainer");
         }
+
+        if(reservationRequestByAdmin.getHourSchedule() == null){
+            throw new IllegalArgumentException("HourSchedule should not be null");
+        }
+
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         if (LocalDate.parse(reservationRequestByAdmin.getLocalDate(), formatter).isBefore(LocalDate.now())) {
-            throw new CreateReservationException("Can not create reservations in past");
+            throw new IllegalArgumentException("Can not create reservations in past");
+        }
+
+        if(reservationRequestByAdmin.getCourt() == null){
+            throw new IllegalArgumentException("Court should not be empty");
         }
 
         Court court = Court.valueOf(reservationRequestByAdmin.getCourt());
@@ -105,24 +113,24 @@ public class ReservationServiceImpl implements ReservationService {
         Integer endTime = Integer.parseInt(parts[1]);
 
         if (startTime.compareTo(courtDetails.getStartTime()) < 0 || endTime.compareTo(courtDetails.getEndTime()) > 0) {
-            throw new EntityNotFoundException("Choose other timeSlots");
+            throw new IllegalArgumentException("Choose other timeSlots");
         }
 
         if (startTime.compareTo(endTime) >= 0) {
-            throw new EntityNotFoundException("Start time is before the end Time");
+            throw new IllegalArgumentException("Start time is before the end Time");
         }
         if (endTime - startTime > 1) {
-            throw new EntityNotFoundException("You can not make reservation for more than 1 hour");
+            throw new IllegalArgumentException("You can not make reservation for more than 1 hour");
         }
 
         boolean existingReservation = reservationRepository.findAll().stream().anyMatch(reservation -> reservation.getReservationDate().toString().equals(reservationRequestByAdmin.getLocalDate()) && (reservation.getStartTime().compareTo(Integer.parseInt(reservationRequestByAdmin.getHourSchedule().split("-")[0])) == 0) && reservation.getCourt().equals(Court.valueOf(reservationRequestByAdmin.getCourt())));
         if (existingReservation) {
-            throw new CreateReservationException("There is a reservation at the same moment created");
+            throw new IllegalArgumentException("There is a reservation at the same moment created");
         }
 
         List<Reservation> reservationsForCurrentDayForUser = reservationRepository.findAllByUser_IdAndReservationMadeDate(user.getId(), LocalDate.now());
         if (reservationsForCurrentDayForUser.size() >= 3) {
-            throw new CreateReservationException("User reached the limit of 3 reservations per day");
+            throw new IllegalArgumentException("User reached the limit of 3 reservations per day");
         }
 
         Reservation reservation = reservationMapper.convertDtoAdminReservation(reservationRequestByAdmin, user, startTime, endTime);
@@ -146,7 +154,7 @@ public class ReservationServiceImpl implements ReservationService {
     public void deleteReservation(Long id, String authorization) {
 
         User user = utilMethods.extractUsernameFromAuthorizationHeader(authorization);
-        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new CreateReservationException("Reservation does not exist"));
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Reservation does not exist"));
         if (reservation.getUser() == null) {
             throw new EntityNotFoundException("There is no user associated with this reservation");
         }
@@ -159,7 +167,7 @@ public class ReservationServiceImpl implements ReservationService {
             }
         }
         if (reservation.getReservationDate().isBefore(LocalDate.now())) {
-            throw new CreateReservationException("Reservation is in the past.");
+            throw new IllegalArgumentException("Reservation is in the past.");
         }
         reservationRepository.deleteById(id);
     }

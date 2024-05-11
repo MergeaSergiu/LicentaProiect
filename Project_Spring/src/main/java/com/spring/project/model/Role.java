@@ -9,6 +9,8 @@ import lombok.*;
 @Setter
 @EqualsAndHashCode
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Entity
 @Table(name="_roles")
 public class Role {

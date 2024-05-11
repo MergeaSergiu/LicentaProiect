@@ -15,4 +15,5 @@ public class EmailValidator implements Predicate<String> {
         Matcher matcher = pattern.matcher(s);
         return matcher.matches();
     }
+
 }
