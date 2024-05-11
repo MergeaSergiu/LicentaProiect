@@ -1,7 +1,6 @@
 package com.spring.project.dto;
 
 
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Data
