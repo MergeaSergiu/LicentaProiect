@@ -90,8 +90,8 @@ public class ReservationServiceImpl implements ReservationService {
             throw new IllegalArgumentException("Can not create a reservation for a Trainer");
         }
 
-        if(reservationRequestByAdmin.getHourSchedule() == null){
-            throw new IllegalArgumentException("HourSchedule should not be null");
+        if(reservationRequestByAdmin.getHourSchedule() == null || !reservationRequestByAdmin.getHourSchedule().matches("\\d{1,2}-\\d{1,2}")){
+            throw new IllegalArgumentException("HourSchedule should not be invalid format");
         }
 
 
