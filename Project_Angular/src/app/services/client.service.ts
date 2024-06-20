@@ -44,12 +44,11 @@ export class ClientService{
     return this.httpClient.delete<any>(`${this.API_PATH}/reservations/${reservationId}`)
   }
 
-  public getUserProfileData(): Observable<UserDataResponse>{
-    return this.httpClient.get<UserDataResponse>(`${this.API_PATH}/users/profile`)
+public getUserProfileData(): Observable<UserDataResponse>{
+  return this.httpClient.get<UserDataResponse>(`${this.API_PATH}/users/profile`)
 }
 
-
-public updateUserData(updateUserRequest:UpdateUserRequest): Observable<any>{
+public updateUserData(updateUserRequest:UpdateUserRequest): Observable<UpdateUserRequest>{
   return this.httpClient.put<UpdateUserRequest>(`${this.API_PATH}/users`, updateUserRequest)
 }
 

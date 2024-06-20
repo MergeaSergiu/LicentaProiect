@@ -40,7 +40,6 @@ public class JwtService {
 
     public String generateToken(String email, String role){
         Map<String,Object> extraClaims = new HashMap<>();
-        extraClaims.put("sub", email);
         extraClaims.put("role", role);
         return generateToken(extraClaims, email, jwtExpiration);
     }
@@ -60,9 +59,8 @@ public class JwtService {
 
     public String generateRefreshToken(String email, String role){
         Map<String,Object> extraClaims = new HashMap<>();
-        extraClaims.put("sub", email);
         extraClaims.put("role", role);
-        return generateToken(extraClaims, email,refreshExpiration);
+        return generateToken(extraClaims, email, refreshExpiration);
     }
 
 
