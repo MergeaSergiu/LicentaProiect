@@ -16,7 +16,7 @@ import { CollaborationResponse } from "../models/collaboration-response.model";
   })
 export class ClientService{
 
-  API_PATH = "https://sport-center-cc69b9715563.herokuapp.com/project/api/v1"
+  API_PATH = "http://localhost:8080/project/api/v1"
   requestHeader = new HttpHeaders({ 'No-Auth': 'True' });
 
 

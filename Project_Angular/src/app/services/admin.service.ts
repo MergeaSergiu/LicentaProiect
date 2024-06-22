@@ -20,7 +20,7 @@ import { SubscriptionResponse } from "../models/subscription-response.model";
 export class AdminService{
   
 
-  API_PATH = "https://sport-center-cc69b9715563.herokuapp.com/project/api/v1";
+  API_PATH = "http://localhost:8080/project/api/v1";
 
   constructor(private httpClient: HttpClient) {}
    
