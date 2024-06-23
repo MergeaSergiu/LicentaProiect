@@ -23,14 +23,7 @@ export class RecoverPasswordComponent {
         this.showPassword = !this.showPassword;
     }
 
-    ngOnInit(): void {
-        const lastSubmittedForm = localStorage.getItem('lastSubmittedForm');
-        if (lastSubmittedForm === 'resetPasswordForm') {
-            this.resetPasswordFormSubmitted = false;
-        } else if (lastSubmittedForm === 'updatePasswordForm') {
-            this.resetPasswordFormSubmitted = true;
-        }
-    }
+    ngOnInit(): void {}
 
     onSubmitResetPassword(form: NgForm) {
         const resetPassRequest: ResetPasswordRequest = {
@@ -40,12 +33,10 @@ export class RecoverPasswordComponent {
             next: (response: any) => {
                 this.registrationService.setResetPassToken(response.token);
                 this.resetPasswordFormSubmitted = true;
-                localStorage.setItem('lastSubmittedForm', 'updatePasswordForm');
                 UtilComponentComponent.openSnackBar("Confirm the request in the email", this._responseBar, UtilComponentComponent.SnackbarStates.Success);
             }, error: (errorMessage) => {
                 UtilComponentComponent.openSnackBar(errorMessage, this._responseBar, UtilComponentComponent.SnackbarStates.Error);
                 this.resetPasswordFormSubmitted = false;
-                localStorage.setItem('lastSubmittedForm', 'resetPasswordForm');
             }
         });
         form.reset();
