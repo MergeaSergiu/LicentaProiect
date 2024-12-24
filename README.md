@@ -8,7 +8,7 @@ Reset Password: Users can reset their password. The request requires confirmatio
 ####
 Reservations for Sports Fields: Users can easily book sports fields for their preferred times, ensuring availability and eliminating scheduling conflicts.
 ####
-Gym Subscriptions with Card Payments: The application provides a secure and seamless payment gateway for purchasing and renewing gym memberships.
+Gym Subscriptions with Card Payments: The application provides a secure and seamless payment gateway for purchasing and renewing gym memberships, using Stripe API
 ####
 Enrollment in Training Classes: Users can explore and enroll in various training programs offered by the center.
 ####
